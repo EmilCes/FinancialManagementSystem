@@ -1,0 +1,91 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:FinancialManagementSystem.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="250" d:DesignHeight="150"
+        MaxHeight="530" MaxWidth="780" CanResize="False"
+        x:Class="FinancialManagementSystem.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="FinancialManagementSystem"
+        WindowStartupLocation="CenterScreen"
+        Background="White"
+        ExtendClientAreaToDecorationsHint="True">
+    
+    <Window.Styles>
+        <Style Selector="TextBox:focus">
+            <Setter Property="BorderBrush" Value="{x:Null}"></Setter>
+            <Setter Property="BorderThickness" Value="0"></Setter>
+            <Setter Property="Foreground" Value="Gray"></Setter>
+            <Setter Property="Background" Value="#B6B6B6"></Setter>
+        </Style>
+    </Window.Styles>
+    
+    <Panel>
+        
+        <Grid ColumnDefinitions="*,*" RowDefinitions="*">
+            
+            <StackPanel Grid.Column="0" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                        Spacing="10">
+                
+                <TextBlock Grid.Column="0" Text="Iniciar Sesión" 
+                           Margin="0, 0, 0, 25"
+                           FontSize="25"
+                           FontFamily="{StaticResource MontserratFont}"
+                           FontStretch="Expanded"
+                           FontWeight="Bold"
+                           TextAlignment="Center" Foreground="Black"
+                           VerticalAlignment="Top"/>
+                
+                <TextBox Watermark="Correo" Height="40" Margin="35, 10, 35, 0"
+                         Background="#eee" Foreground="#B6B6B6" FontSize="13"
+                         FontFamily="{StaticResource MontserratFont}"/>
+                <TextBox Watermark="Contraseña" Height="40" PasswordChar="*" Margin="35, 10, 35, 0"
+                         Background="#eee" Foreground="#B6B6B6" FontSize="13"
+                         FontFamily="{StaticResource MontserratFont}"/>
+                
+                <TextBlock Text="¿Olvidaste tu contraseña?" HorizontalAlignment="Center"
+                           Margin="0, 20, 0, 15"
+                           Foreground="#A1A1A1" 
+                           FontFamily="{StaticResource MontserratFont}"/>
+                
+                <Button Content="Iniciar Sesión" HorizontalAlignment="Center"
+                        Background="#512da8"
+                        Margin="0, 20, 0, 0"
+                        Foreground="White"
+                        FontFamily="{StaticResource MontserratFont}"/>
+                
+            </StackPanel>
+            
+            <Border Grid.Column="1" Background="#512da8" CornerRadius="150 0 0 100">
+                <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                            Spacing="10">
+                
+                    <TextBlock Grid.Column="0" Text="Hola, ¿Primera vez?" 
+                               Margin="0, 0, 0, 25"
+                               FontSize="25"
+                               FontFamily="{StaticResource MontserratFont}"
+                               FontStretch="Expanded"
+                               FontWeight="Bold"
+                               TextAlignment="Center" Foreground="White"
+                               VerticalAlignment="Top"/>
+                
+                    <TextBlock Text="¿Es tu primera vez iniciando sesión?" HorizontalAlignment="Center"
+                               Margin="0, 20, 0, 15"
+                               Foreground="WhiteSmoke" 
+                               FontFamily="{StaticResource MontserratFont}"/>
+                
+                    <Button Content="Activar 2FA" HorizontalAlignment="Center"
+                            Background="Transparent"
+                            BorderBrush="White"
+                            Margin="0, 20, 0, 0"
+                            Foreground="White"
+                            FontFamily="{StaticResource MontserratFont}"
+                            Command="{Binding StartAnimation }"/>
+                
+                </StackPanel>
+            </Border>
+        </Grid>
+        
+    </Panel>
+</Window>

@@ -1,0 +1,214 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:FinancialManagementSystem.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="250" d:DesignHeight="150"
+        MaxHeight="530" MaxWidth="780" CanResize="False"
+        x:Class="FinancialManagementSystem.Views.Login"
+        x:DataType="vm:LoginViewModel"
+        Title="FinancialManagementSystem"
+        WindowStartupLocation="CenterScreen"
+        Background="White"
+        ExtendClientAreaToDecorationsHint="True">
+    
+    <Window.Styles>
+        <Style Selector="TextBox:focus">
+            <Setter Property="BorderBrush" Value="{x:Null}"></Setter>
+            <Setter Property="BorderThickness" Value="0"></Setter>
+            <Setter Property="Foreground" Value="Gray"></Setter>
+            <Setter Property="Background" Value="#B6B6B6"></Setter>
+        </Style>
+    </Window.Styles>
+    
+    <Panel>
+        
+        <Grid ColumnDefinitions="*,*" RowDefinitions="*">
+            
+            <StackPanel Grid.Column="0" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                        Spacing="10" IsVisible="{Binding ShowLoginView}">
+                
+                <TextBlock Grid.Column="0" Text="Iniciar Sesión" 
+                           Margin="0, 0, 0, 25"
+                           FontSize="25"
+                           FontFamily="{StaticResource MontserratFont}"
+                           FontStretch="Expanded"
+                           FontWeight="Bold"
+                           TextAlignment="Center" Foreground="Black"
+                           VerticalAlignment="Top"/>
+                
+                <TextBox Watermark="Correo" Height="40" Margin="35, 10, 35, 0"
+                         Background="#eee" Foreground="#686868" FontSize="13"
+                         FontFamily="{StaticResource MontserratFont}"
+                         Text="{Binding Email, Mode=TwoWay}"/>
+                <TextBox Watermark="Contraseña" Height="40" PasswordChar="*" Margin="35, 10, 35, 0"
+                         Background="#eee" Foreground="#686868" FontSize="13"
+                         FontFamily="{StaticResource MontserratFont}"
+                         Text="{Binding Password, Mode=TwoWay}"/>
+                
+                <TextBlock Text="¿Olvidaste tu contraseña?" HorizontalAlignment="Center"
+                           Margin="0, 20, 0, 15"
+                           Foreground="#A1A1A1" 
+                           FontFamily="{StaticResource MontserratFont}"/>
+                
+                <Button Content="Continuar" HorizontalAlignment="Center"
+                        Background="#512da8"
+                        Margin="0, 20, 0, 0"
+                        Foreground="White"
+                        FontFamily="{StaticResource MontserratFont}"
+                        Command="{Binding LoginCommand}"/>
+                
+            </StackPanel>
+            
+            <StackPanel Name="StackPanelVerifyCode" Grid.Column="0" Grid.Row="0" 
+                        HorizontalAlignment="Stretch" VerticalAlignment="Center" Spacing="10"
+                        IsVisible="{Binding ShowCodeView}">
+                
+                <TextBlock Text="Ingresa el Código" Margin="0, 0, 0, 25" FontSize="25"
+                           FontFamily="{StaticResource MontserratFont}"
+                           FontStretch="Expanded" FontWeight="Bold" TextAlignment="Center" Foreground="Black"
+                           VerticalAlignment="Top" IsVisible="{Binding ShowCodeView}"/>
+                
+                <TextBox Watermark="Código" Height="40" Margin="35, 10, 35, 0"
+                         Background="#eee" Foreground="#686868" FontSize="13"
+                         FontFamily="{StaticResource MontserratFont}"
+                         Text="{Binding Code2Fa, Mode=TwoWay}"/>
+                
+                <Button Content="Iniciar Sesion" HorizontalAlignment="Center"
+                        Background="#512da8"
+                        Margin="0, 20, 0, 0"
+                        Foreground="White"
+                        FontFamily="{StaticResource MontserratFont}"
+                        Command="{Binding VerifyCommand}"/>
+                
+            </StackPanel>
+            
+            <Border Name="BorderLogin" Grid.Column="1" Background="#512da8" 
+                    CornerRadius="150 0 0 100">
+                
+                <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                            Spacing="10">
+                
+                    <TextBlock Grid.Column="0" Text="Hola, ¿Primera vez?" 
+                               Margin="0, 0, 0, 25"
+                               FontSize="25"
+                               FontFamily="{StaticResource MontserratFont}"
+                               FontStretch="Expanded"
+                               FontWeight="Bold"
+                               TextAlignment="Center" Foreground="White"
+                               VerticalAlignment="Top"/>
+                
+                    <TextBlock Text="¿Es tu primera vez iniciando sesión?" HorizontalAlignment="Center"
+                               Margin="0, 20, 0, 15"
+                               Foreground="WhiteSmoke" 
+                               FontFamily="{StaticResource MontserratFont}"/>
+                
+                    <Button Content="Activar 2FA" HorizontalAlignment="Center"
+                            Background="Transparent"
+                            BorderBrush="White"
+                            Margin="0, 20, 0, 0"
+                            Foreground="White"
+                            FontFamily="{StaticResource MontserratFont}"
+                            Click="Button_Active2FA"/>
+                
+                </StackPanel>
+            </Border>
+            
+            <Border Name="BorderActive2Fa" IsVisible="False" Grid.Column="0" Background="#512da8" 
+                    CornerRadius="0 150 100 0">
+                
+                <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                            Spacing="10">
+                
+                    <TextBlock Grid.Column="0" Text="Activacion" 
+                               Margin="0, 0, 0, 25"
+                               FontSize="25"
+                               FontFamily="{StaticResource MontserratFont}"
+                               FontStretch="Expanded"
+                               FontWeight="Bold"
+                               TextAlignment="Center" Foreground="White"
+                               VerticalAlignment="Top"/>
+                
+                    <TextBlock Text="Autenticación de 2 Factores" HorizontalAlignment="Center"
+                               Margin="0, 20, 0, 15"
+                               Foreground="WhiteSmoke" 
+                               FontFamily="{StaticResource MontserratFont}"/>
+                
+                    <Button Content="Regresar" HorizontalAlignment="Center"
+                            Background="Transparent"
+                            BorderBrush="White"
+                            Margin="0, 20, 0, 0"
+                            Foreground="White"
+                            FontFamily="{StaticResource MontserratFont}"
+                            Click="Button_Login"/>
+                
+                </StackPanel>
+            </Border>
+            
+            <StackPanel Name="StackPanelActive2Fa" IsVisible="False" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                        Spacing="10">
+                
+                <TextBlock Grid.Column="0" Text="Ingresa tus credenciales" 
+                           Margin="0, 0, 0, 25"
+                           FontSize="25"
+                           FontFamily="{StaticResource MontserratFont}"
+                           FontStretch="Expanded"
+                           FontWeight="Bold"
+                           TextAlignment="Center" Foreground="Black"
+                           VerticalAlignment="Top"/>
+                
+                <TextBox Watermark="Correo" Height="40" Margin="35, 10, 35, 0"
+                         Background="#eee" Foreground="#686868" FontSize="13"
+                         FontFamily="{StaticResource MontserratFont}"
+                         Text="{Binding Email, Mode=TwoWay}"/>
+                <TextBox Watermark="Contraseña" Height="40" PasswordChar="*" Margin="35, 10, 35, 0"
+                         Background="#eee" Foreground="#686868" FontSize="13"
+                         FontFamily="{StaticResource MontserratFont}"
+                         Text="{Binding Password, Mode=TwoWay}"/>
+                
+                <Button Content="Siguiente" HorizontalAlignment="Center"
+                        Background="#512da8"
+                        Margin="0, 20, 0, 0"
+                        Foreground="White"
+                        FontFamily="{StaticResource MontserratFont}"
+                        Command="{Binding Enable2Fa}"
+                        Click="Button_QrCode"/>
+                
+            </StackPanel>
+            
+            <StackPanel Name="StackPanelQr" IsVisible="False" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                        Spacing="10">
+                
+                <TextBlock Grid.Column="0" Text="Escanea el Código QR" 
+                           Margin="0, 0, 0, 25"
+                           FontSize="25"
+                           FontFamily="{StaticResource MontserratFont}"
+                           FontStretch="Expanded"
+                           FontWeight="Bold"
+                           TextAlignment="Center" Foreground="Black"
+                           VerticalAlignment="Top"/>
+                
+                <Image Source="{Binding QrCodeImage^}"
+                       Margin="35, 10, 35, 0"
+                       Width="200"
+                       Height="200"
+                       MaxWidth="300"/>
+                
+                <TextBox Watermark="Código" Height="40" Margin="35, 10, 35, 0"
+                         Background="#eee" Foreground="#686868" FontSize="13"
+                         FontFamily="{StaticResource MontserratFont}"
+                         Text="{Binding Code2Fa, Mode=TwoWay}"/>
+                
+                <Button Content="Iniciar Sesion" HorizontalAlignment="Center"
+                        Background="#512da8"
+                        Margin="0, 20, 0, 0"
+                        Foreground="White"
+                        FontFamily="{StaticResource MontserratFont}"
+                        Command="{Binding VerifyCommand}"/>
+                
+            </StackPanel>
+            
+        </Grid>
+        
+    </Panel>
+</Window>

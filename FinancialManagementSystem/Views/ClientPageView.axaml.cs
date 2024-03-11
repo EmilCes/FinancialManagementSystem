@@ -1,13 +1,13 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
 namespace FinancialManagementSystem.Views;
 
-public partial class MainWindow : Window
+public partial class ClientPageView : UserControl
 {
-    public MainWindow()
+    public ClientPageView()
     {
         InitializeComponent();
     }
-    
 }

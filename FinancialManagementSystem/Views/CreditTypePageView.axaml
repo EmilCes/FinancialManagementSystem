@@ -1,0 +1,149 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="FinancialManagementSystem.Views.CreditTypePageView">
+    
+    <Grid RowDefinitions="*,6*"
+          Background="Transparent">
+           
+        <Border Grid.Row="0"
+            Background="#613ED0"
+            Margin="18, 20, 18, 0"
+            CornerRadius="12.5">
+            <TextBlock Text="Crédito" 
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Center"
+                       Margin="40, 15"
+                       Foreground="White" 
+                       FontSize="24"
+                       FontFamily="{StaticResource MontserratFont}"/>
+        </Border>
+    
+        <Border Grid.Row="1" 
+                Background="#F8F8F8"
+                BorderBrush="#B7B9BD"
+                BorderThickness="0.5,0,0.5,2"
+                Margin="18, 18, 18, 18"
+                CornerRadius="12.5"
+                BoxShadow="">
+            
+            <Grid ColumnDefinitions="*, *"
+                  RowDefinitions="*, 3*, *">
+                
+                <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+                    <TextBlock Text="Registrar Crédito" 
+                               HorizontalAlignment="Left"
+                               Margin="35, 15"
+                               Foreground="Black" 
+                               FontSize="24"
+                               FontFamily="{StaticResource MontserratFont}"/>
+                    <Separator Background="Black"
+                               BorderThickness="0.5"
+                               Margin="35,0,35,0"/>
+                </StackPanel>
+                
+                <StackPanel Grid.Column="0" Grid.Row="1"
+                            Spacing="10">
+                    <TextBox Watermark="Descripción" 
+                             Height="40" 
+                             Margin="35, 10, 35, 0"
+                             Background="#eee" 
+                             Foreground="#686868" 
+                             FontSize="16"
+                             FontFamily="{StaticResource MontserratFont}"
+                             BorderBrush="#613ED0"
+                             BorderThickness="0,0,0,2"
+                            />
+                    <TextBox Watermark="Tasa de Interés" 
+                             Height="40" 
+                             Margin="35, 10, 35, 0"
+                             Background="#eee" 
+                             Foreground="#686868" 
+                             FontSize="16"
+                             FontFamily="{StaticResource MontserratFont}"
+                             BorderBrush="#613ED0"
+                             BorderThickness="0,0,0,2"
+                    />
+                    <TextBox Watermark="Estado" 
+                             Height="40" 
+                             Margin="35, 10, 35, 0"
+                             Background="#eee" 
+                             Foreground="#686868" 
+                             FontSize="16"
+                             FontFamily="{StaticResource MontserratFont}"
+                             BorderBrush="#613ED0"
+                             BorderThickness="0,0,0,2"
+                    />
+                    <TextBox Watermark="Plazo" 
+                             Height="40" 
+                             Margin="35, 10, 35, 0"
+                             Background="#eee" 
+                             Foreground="#686868" 
+                             FontSize="16"
+                             FontFamily="{StaticResource MontserratFont}"
+                             BorderBrush="#613ED0"
+                             BorderThickness="0,0,0,2"
+                    />
+                    <TextBox Watermark="IVA" 
+                             Height="40" 
+                             Margin="35, 10, 35, 0"
+                             Background="#eee" 
+                             Foreground="#686868" 
+                             FontSize="16"
+                             FontFamily="{StaticResource MontserratFont}"
+                             BorderBrush="#613ED0"
+                             BorderThickness="0,0,0,2"
+                    />
+                </StackPanel>
+                
+                <Border Grid.Column="1" Grid.Row="1" 
+                        Background="#F8F8F8"
+                        BorderBrush="#B7B9BD"
+                        BorderThickness="0.5,0,0.5,2"
+                        Margin="15,5,35,0"
+                        CornerRadius="12.5"
+                        BoxShadow="">
+                    <!--
+                        <DataGrid ItemsSource="{Binding People}"        
+                              GridLinesVisibility="All"
+                              BorderThickness="1" BorderBrush="Gray">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="First Name"  Binding="{Binding FirstName}"/>
+                            <DataGridTextColumn Header="Last Name" Binding="{Binding LastName}" />
+                            <DataGridCheckBoxColumn Header="Fictitious?" Binding="{Binding IsFictitious}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    -->
+                </Border>
+                
+                <StackPanel Grid.Column="1" Grid.Row="2"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Center"
+                            Spacing="10">
+                    <Button Content="Registrar Crédito" HorizontalAlignment="Center"
+                            Background="#512da8"
+                            Margin="0, 20, 0, 0"
+                            Foreground="White"
+                            FontFamily="{StaticResource MontserratFont}"
+                            Height="40"
+                            Width="150"
+                            CornerRadius="5"
+                            />
+                    <Button Content="Cancelar" HorizontalAlignment="Center"
+                            Background="#FF3204"
+                            Margin="0, 20, 0, 0"
+                            Foreground="White"
+                            FontFamily="{StaticResource MontserratFont}"
+                            Height="40"
+                            Width="150"
+                            CornerRadius="5"
+                    />
+                </StackPanel>
+                
+            </Grid>
+        </Border>
+    </Grid>
+    
+</UserControl>

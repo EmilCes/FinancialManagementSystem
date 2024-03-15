@@ -4,6 +4,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using FinancialManagementSystem.Models;
 using FinancialManagementSystem.Models.Helpers;
 using FinancialManagementSystem.Services.Authentication;
 using ReactiveUI;
@@ -17,7 +18,8 @@ public partial class LoginViewModel : ViewModelBase
     //To make a login we need: Access Token, Name, Role, Refresh Token?
 
     private readonly IAuthenticationService _authenticationService;
-    
+
+
     [ObservableProperty]
     private string _email;
     [ObservableProperty]
@@ -50,6 +52,7 @@ public partial class LoginViewModel : ViewModelBase
             AuthenticationResponse response = await _authenticationService.AuthenticateAsync(request);
             //TODO: Save tokens
             //TODO: Verify MFA is enabled
+            
 
             ShowCodeView = true;
             ShowLoginView = false;
@@ -75,7 +78,14 @@ public partial class LoginViewModel : ViewModelBase
         try
         {
             VerificationResponse response = await _authenticationService.VerifyAsync(request);
-            //TODO: Save Access Token
+
+            Employee.Instance.FirstName = response.firstName;
+            Employee.Instance.LastName = response.lastName;
+            Employee.Instance.AccessToken = response.accessToken;
+            Employee.Instance.Role = response.role;
+            
+            Console.WriteLine(Employee.Instance.ToString());
+            
             ChangeWindowToMainMenu();
         }
         catch (ApiException ex)

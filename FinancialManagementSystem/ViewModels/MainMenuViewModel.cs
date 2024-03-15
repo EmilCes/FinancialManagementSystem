@@ -5,11 +5,15 @@ using Avalonia.Controls;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using FinancialManagementSystem.Models;
 
 namespace FinancialManagementSystem.ViewModels;
 
 public partial class MainMenuViewModel : ViewModelBase
 {
+    [ObservableProperty] 
+    private string _username;
+    
     [ObservableProperty]
     private bool _isPaneOpen = true;
 
@@ -18,6 +22,13 @@ public partial class MainMenuViewModel : ViewModelBase
 
     [ObservableProperty] 
     private ListItemTemplate? _selectedListItem;
+
+    public MainMenuViewModel()
+    {
+        Employee employee = Employee.Instance;
+        string username = employee.FirstName + " " + employee.LastName;
+        Username = username;
+    }
 
     partial void OnSelectedListItemChanged(ListItemTemplate? value)
     {
@@ -30,7 +41,8 @@ public partial class MainMenuViewModel : ViewModelBase
     public ObservableCollection<ListItemTemplate> Items { get; } = new()
     {
         new ListItemTemplate(typeof(HomePageViewModel), "Menu Principal", "HomeRegular"),
-        new ListItemTemplate(typeof(ClientPageViewModel), "Registrar Cliente", "PeopleCommunityRegular")
+        new ListItemTemplate(typeof(ClientPageViewModel), "Registrar Cliente", "PeopleCommunityRegular"),
+        new ListItemTemplate(typeof(CreditTypePageViewModel), "Registrar politica", "")
     };
 }
 

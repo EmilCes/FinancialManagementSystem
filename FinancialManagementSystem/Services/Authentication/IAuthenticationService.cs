@@ -24,8 +24,10 @@ public class VerificationRequest
 
 public class VerificationResponse
 {
+    public string firstName { get; set; }
+    public string lastName { get; set; }
     public string accessToken { get; set; }
-    public bool mfaEnabled { get; set; }
+    public string role { get; set; }
 }
 
 public class AuthenticationRequest

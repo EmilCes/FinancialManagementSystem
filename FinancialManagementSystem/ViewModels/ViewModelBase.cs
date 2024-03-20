@@ -14,4 +14,6 @@ public class ViewModelBase : ObservableValidator
     {
         throw new System.NotImplementedException();
     }
+    
+    
 }

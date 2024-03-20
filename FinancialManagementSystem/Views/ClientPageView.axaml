@@ -2,8 +2,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:FinancialManagementSystem.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="FinancialManagementSystem.Views.ClientPageView"
+             x:DataType="viewModels:ClientPageViewModel"
              Background="Transparent">
     
     <Grid RowDefinitions="*,6*"
@@ -59,6 +61,7 @@
                                      FontFamily="{StaticResource MontserratFont}"
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
+                                     Text="{Binding Name}"
                             />
                             <TextBox Watermark="Apellido Materno" 
                                      Height="40" 
@@ -69,6 +72,7 @@
                                      FontFamily="{StaticResource MontserratFont}"
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
+                                     Text="{Binding Surname}"
                             />
                             <TextBox Watermark="Número Telefónico" 
                                      Height="40" 
@@ -79,17 +83,35 @@
                                      FontFamily="{StaticResource MontserratFont}"
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
+                                     Text="{Binding PhoneNumber}"
                             />
-                            <TextBox Watermark="RFC" 
-                                     Height="40" 
-                                     Margin="35, 10, 35, 0"
-                                     Background="#eee" 
-                                     Foreground="#686868" 
-                                     FontSize="16"
-                                     FontFamily="{StaticResource MontserratFont}"
-                                     BorderBrush="#613ED0"
-                                     BorderThickness="0,0,0,2"
-                            />
+                            <Grid Margin="35, 10, 35, 0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3*" />
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBox Grid.Column="0"
+                                         Watermark="RFC"
+                                         Background="#eee"
+                                         Foreground="#686868"
+                                         FontSize="16"
+                                         FontFamily="{StaticResource MontserratFont}"
+                                         BorderBrush="#613ED0"
+                                         BorderThickness="0,0,0,2"
+                                         Text="{Binding Rfc}" />
+                                <Button Grid.Column="1"
+                                        Content="Búscar" 
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Background="#512da8"
+                                        Foreground="White"
+                                        FontFamily="{StaticResource MontserratFont}"
+                                        CornerRadius="5"
+                                        Command="{Binding VerifyClientExistenceCommand}"
+                                />
+                            </Grid>
+
                         </StackPanel>
                         
                         <StackPanel Grid.Column="1"
@@ -103,6 +125,7 @@
                                      FontFamily="{StaticResource MontserratFont}"
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
+                                     Text="{Binding Lastname}"
                             />
                             <TextBox Watermark="Fecha de Nacimiento" 
                                      Height="40" 
@@ -113,6 +136,7 @@
                                      FontFamily="{StaticResource MontserratFont}"
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
+                                     Text="{Binding DateOfBirth}"
                             />
                             <TextBox Watermark="Correo Electrónico" 
                                      Height="40" 
@@ -123,8 +147,19 @@
                                      FontFamily="{StaticResource MontserratFont}"
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
+                                     Text="{Binding Email}"
                             />
-
+                            <TextBox Watermark="Salario Mensual" 
+                                     Height="40" 
+                                     Margin="35, 10, 35, 0"
+                                     Background="#eee" 
+                                     Foreground="#686868" 
+                                     FontSize="16"
+                                     FontFamily="{StaticResource MontserratFont}"
+                                     BorderBrush="#613ED0"
+                                     BorderThickness="0,0,0,2"
+                                     Text="{Binding MonthlySalary}"
+                            />
                         </StackPanel>
                     </Grid>
                     
@@ -155,6 +190,7 @@
                                      FontFamily="{StaticResource MontserratFont}"
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
+                                     Text="{Binding Street}"
                             />
                             <TextBox Watermark="Número Exterior" 
                                      Height="40" 
@@ -165,6 +201,7 @@
                                      FontFamily="{StaticResource MontserratFont}"
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
+                                     Text="{Binding ExteriorNumber}"
                             />
                             <TextBox Watermark="Código Postal" 
                                      Height="40" 
@@ -175,6 +212,7 @@
                                      FontFamily="{StaticResource MontserratFont}"
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
+                                     Text="{Binding PostalCode}"
                             />
                             <TextBox Watermark="Estado" 
                                      Height="40" 
@@ -185,6 +223,7 @@
                                      FontFamily="{StaticResource MontserratFont}"
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
+                                     Text="{Binding State}"
                             />
                         </StackPanel>
                         
@@ -199,6 +238,7 @@
                                      FontFamily="{StaticResource MontserratFont}"
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
+                                     Text="{Binding Neighborhood}"
                             />
                             <TextBox Watermark="Número Interior" 
                                      Height="40" 
@@ -209,6 +249,7 @@
                                      FontFamily="{StaticResource MontserratFont}"
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
+                                     Text="{Binding InteriorNumber}"
                             />
                             <TextBox Watermark="Municipio" 
                                      Height="40" 
@@ -219,6 +260,7 @@
                                      FontFamily="{StaticResource MontserratFont}"
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
+                                     Text="{Binding Municipality}"
                             />
 
                         </StackPanel>
@@ -250,6 +292,7 @@
                                      FontFamily="{StaticResource MontserratFont}"
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
+                                     Text="{Binding WorkPlaceName}"
                             />
                             <TextBox Watermark="Correo" 
                                      Height="40" 
@@ -260,6 +303,7 @@
                                      FontFamily="{StaticResource MontserratFont}"
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
+                                     Text="{Binding WorkPlaceEmail}"
                             />
                         </StackPanel>
                         
@@ -274,6 +318,7 @@
                                      FontFamily="{StaticResource MontserratFont}"
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
+                                     Text="{Binding WorkPlacePhoneNumber}"
                             />
                             <TextBox Watermark="RFC" 
                                      Height="40" 
@@ -284,6 +329,7 @@
                                      FontFamily="{StaticResource MontserratFont}"
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
+                                     Text="{Binding WorkPlaceRfc}"
                             />
                         </StackPanel>
                     </Grid>
@@ -314,6 +360,7 @@
                                      FontFamily="{StaticResource MontserratFont}"
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
+                                     Text="{Binding PaymentClabe}"
                             />
                             <TextBox Watermark="Banco" 
                                      Height="40" 
@@ -324,10 +371,12 @@
                                      FontFamily="{StaticResource MontserratFont}"
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
+                                     Text="{Binding PaymentBankName}"
                             />
                             <CheckBox Content="¿Usar misma cuenta?"
                                       FontFamily="{StaticResource MontserratFont}"
-                                      Margin="35, 10, 35, 0"/>
+                                      Margin="35, 10, 35, 0"
+                                      Command="{Binding SameBankAccountCommand}"/>
                         </StackPanel>
                         
                         <StackPanel Grid.Column="1"
@@ -341,6 +390,7 @@
                                      FontFamily="{StaticResource MontserratFont}"
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
+                                     Text="{Binding DepositClabe}"
                             />
                             <TextBox Watermark="Banco" 
                                      Height="40" 
@@ -351,6 +401,7 @@
                                      FontFamily="{StaticResource MontserratFont}"
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
+                                     Text="{Binding DepositBankName}"
                             />
                         </StackPanel>
                     </Grid>
@@ -367,6 +418,7 @@
                                 Height="40"
                                 Width="150"
                                 CornerRadius="5"
+                                Command="{Binding RegisterClientCommand}"
                         />
                         <Button Content="Cancelar" HorizontalAlignment="Center"
                                 Background="#FF3204"

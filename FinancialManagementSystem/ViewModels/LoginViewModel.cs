@@ -7,7 +7,6 @@ using CommunityToolkit.Mvvm.Input;
 using FinancialManagementSystem.Models;
 using FinancialManagementSystem.Models.Helpers;
 using FinancialManagementSystem.Services.Authentication;
-using ReactiveUI;
 using Refit;
 using AuthenticationResponse = FinancialManagementSystem.Services.Authentication.AuthenticationResponse;
 

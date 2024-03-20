@@ -45,7 +45,7 @@ public partial class MainMenuViewModel : ViewModelBase
         new ListItemTemplate(typeof(CreditTypePageViewModel), "Registrar politica", ""),
         new ListItemTemplate(typeof(RegisterPoliticPageViewModel), "Registrar politica", ""),
         new ListItemTemplate(typeof(PoliticsPageViewModel), "Politicas", "")
-
+        new ListItemTemplate(typeof(CreditTypePageViewModel), "Registrar Credito", "")
     };
 }
 

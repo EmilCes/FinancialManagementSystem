@@ -15,4 +15,6 @@ public class ViewModelBase : ObservableObject, IReactiveObject
     {
         throw new System.NotImplementedException();
     }
+    
+    
 }

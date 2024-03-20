@@ -1,0 +1,433 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:vm="using:FinancialManagementSystem.ViewModels"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:FinancialManagementSystem.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="FinancialManagementSystem.Views.CreditAplicationView"
+             x:DataType="vm:CreditAplicationViewModel">
+    
+    <Grid RowDefinitions="*,6*"
+          Background="Transparent">
+        
+        <Border Grid.Row="0"
+                Background="#613ED0"
+                Margin="18, 20, 18, 0"
+                CornerRadius="12.5">
+            <TextBlock Text="Crear solicitud de crédito" 
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Center"
+                       Margin="40, 15"
+                       Foreground="White" 
+                       FontSize="24"
+                       FontFamily="{StaticResource MontserratFont}"/>
+        </Border>
+        
+        <Border Grid.Row="1" 
+                Background="#F8F8F8"
+                BorderBrush="#B7B9BD"
+                BorderThickness="0.5,0,0.5,2"
+                Margin="18, 18, 18, 18"
+                CornerRadius="12.5"
+                BoxShadow="">
+            
+            <ScrollViewer Margin="1">
+                <StackPanel>
+                    <StackPanel>
+                        <TextBlock Text="Credito" 
+                                   HorizontalAlignment="Left"
+                                   Margin="35, 15"
+                                   Foreground="Black" 
+                                   FontSize="24"
+                                   FontFamily="{StaticResource MontserratFont}"/>
+                        <Separator Background="Black"
+                                   BorderThickness="0.5"
+                                   Margin="35,0,35,0"/>
+                    </StackPanel>
+                    
+                    <!--  CLIENTE  -->
+                    
+                    <Grid ColumnDefinitions="*,*"
+                          Margin="0, 10">
+                        <Grid Grid.Column="0"
+                                    ColumnDefinitions="*, Auto">
+                            <TextBox Watermark="RFC del cliente" 
+                                     Grid.Column="0"
+                                     Height="40" 
+                                     Margin="35, 10, 35, 0"
+                                     Background="#eee" 
+                                     Foreground="#686868" 
+                                     FontSize="16"
+                                     FontFamily="{StaticResource MontserratFont}"
+                                     BorderBrush="#613ED0"
+                                     BorderThickness="0,0,0,2"
+                            />
+                            
+                            <Button Content="Buscar" HorizontalAlignment="Center"
+                                    HorizontalContentAlignment="Center"
+                                    Grid.Column="1"
+                                    Background="#512da8"
+                                    Margin="0, 20, 0, 0"
+                                    Foreground="White"
+                                    FontFamily="{StaticResource MontserratFont}"
+                                    Command="{Binding SearchClientCommand}"/>
+                        </Grid>
+                        
+                        <StackPanel Grid.Column="1"
+                                    Spacing="10">
+                            <ComboBox  
+                                     Height="40" 
+                                     Width="300"
+                                     Margin="35, 10, 35, 0"
+                                     Background="#eee" 
+                                     Foreground="#686868" 
+                                     FontSize="16"
+                                     FontFamily="{StaticResource MontserratFont}"
+                                     BorderBrush="#613ED0"
+                                     BorderThickness="0,0,0,2"
+                                     PlaceholderText="Seleccione un crédito..."
+                            />
+                            
+                        </StackPanel>
+                    </Grid>
+                    
+                    <StackPanel>
+                        <TextBlock Text="Documentos" 
+                                   HorizontalAlignment="Left"
+                                   Margin="35, 15"
+                                   Foreground="Black" 
+                                   FontSize="24"
+                                   FontFamily="{StaticResource MontserratFont}"/>
+                        <Separator Background="Black"
+                                   BorderThickness="0.5"
+                                   Margin="35,0,35,0"/>
+                    </StackPanel>
+                    
+                    <!--  DIRECCIÓN  -->
+                    
+                    <Grid ColumnDefinitions="*,*,*"
+                          Margin="0, 10">
+                        
+                        <Border Grid.Column="0"
+                                Background="#FFFFFF"
+                                BorderBrush="#B7B9BD"
+                                BorderThickness="0.5,0,0.5,2"
+                                Margin="18, 18, 18, 18"
+                                CornerRadius="12.5"
+                                BoxShadow="">
+                            
+                            <StackPanel 
+                                        Spacing="10">
+                                <TextBlock Text="INE" 
+                                         TextWrapping="Wrap"
+                                         Width="120"
+                                         Margin="35, 20, 35, 10"
+                                         TextAlignment="Center"
+                                         Background="Transparent" 
+                                         Foreground="Black" 
+                                         FontSize="16"
+                                         FontFamily="{StaticResource MontserratFont}"
+                                />
+                                
+                                <Separator Background="Black"
+                                           BorderThickness="0.5"
+                                           Margin="35,0,35,0"/>
+                                
+                                <Image
+                                    Margin="0, 20, 0, 20"
+                                    HorizontalAlignment="Center"
+                                    Height="60"
+                                    Width="35"
+                                    Source="../Assets/icon_file.png"
+                                />
+                                
+                                <TextBlock
+                                        Text="Sin archivo"
+                                        HorizontalAlignment="Center"
+                                        TextWrapping="Wrap"
+                                        FontSize="14"
+                                        Foreground="Black"
+                                        TextAlignment="Center"
+                                    />
+                                
+                                <Button Content="Subir" 
+                                         Height="40" 
+                                         HorizontalAlignment="Center"
+                                         VerticalAlignment="Bottom"
+                                         Margin="35, 10, 35, 10"
+                                         Background="#eee" 
+                                         Foreground="#686868" 
+                                         FontSize="16"
+                                         FontFamily="{StaticResource MontserratFont}"
+                                         BorderBrush="#613ED0"
+                                         BorderThickness="0,0,0,2"
+                                />
+                            </StackPanel>
+                        </Border>
+                        
+                        
+                        
+                        <Border Grid.Column="1"
+                                Background="#FFFFFF"
+                                BorderBrush="#B7B9BD"
+                                BorderThickness="0.5,0,0.5,2"
+                                Margin="18, 18, 18, 18"
+                                CornerRadius="12.5"
+                                BoxShadow="">
+                            
+                            <StackPanel 
+                                        Spacing="10">
+                                <TextBlock Text="Comprobante de domicilio" 
+                                         TextWrapping="Wrap"
+                                         Width="120"
+                                         Margin="35, 10, 35, 0"
+                                         TextAlignment="Center"
+                                         Background="Transparent" 
+                                         Foreground="Black" 
+                                         FontSize="16"
+                                         FontFamily="{StaticResource MontserratFont}"
+                                />
+                                
+                                <Separator Background="Black"
+                                           BorderThickness="0.5"
+                                           Margin="35,0,35,0"/>
+                                
+                                <Image
+                                    Margin="0, 20, 0, 20"
+                                    HorizontalAlignment="Center"
+                                    Height="60"
+                                    Width="35"
+                                    Source="../Assets/icon_file.png"
+                                />
+                                
+                                <TextBlock
+                                        Text="Sin archivo"
+                                        HorizontalAlignment="Center"
+                                        TextWrapping="Wrap"
+                                        FontSize="14"
+                                        Foreground="Black"
+                                        TextAlignment="Center"
+                                    />
+                                
+                                <Button Content="Subir" 
+                                         Height="40" 
+                                         HorizontalAlignment="Center"
+                                         VerticalAlignment="Bottom"
+                                         Margin="35, 10, 35, 10"
+                                         Background="#eee" 
+                                         Foreground="#686868" 
+                                         FontSize="16"
+                                         FontFamily="{StaticResource MontserratFont}"
+                                         BorderBrush="#613ED0"
+                                         BorderThickness="0,0,0,2"
+                                />
+                            </StackPanel>
+                        </Border>
+                        
+                        <Border Grid.Column="2"
+                                Background="#FFFFFF"
+                                BorderBrush="#B7B9BD"
+                                BorderThickness="0.5,0,0.5,2"
+                                Margin="18, 18, 18, 18"
+                                CornerRadius="12.5"
+                                BoxShadow="">
+                            
+                            <StackPanel 
+                                        Spacing="10">
+                                <TextBlock Text="Comprobante de ingresos" 
+                                         TextWrapping="Wrap"
+                                         Width="120"
+                                         Margin="35, 10, 35, 0"
+                                         TextAlignment="Center"
+                                         Background="Transparent" 
+                                         Foreground="Black" 
+                                         FontSize="16"
+                                         FontFamily="{StaticResource MontserratFont}"
+                                />
+                                
+                                <Separator Background="Black"
+                                           BorderThickness="0.5"
+                                           Margin="35,0,35,0"/>
+                                
+                                <Image
+                                    Margin="0, 20, 0, 20"
+                                    HorizontalAlignment="Center"
+                                    Height="60"
+                                    Width="35"
+                                    Source="../Assets/icon_file.png"
+                                />
+                                
+                                <TextBlock
+                                        Text="Sin archivo"
+                                        HorizontalAlignment="Center"
+                                        TextWrapping="Wrap"
+                                        FontSize="14"
+                                        Foreground="Black"
+                                        TextAlignment="Center"
+                                    />
+                                
+                                <Button Content="Subir" 
+                                         Height="40" 
+                                         HorizontalAlignment="Center"
+                                         VerticalAlignment="Bottom"
+                                         Margin="35, 10, 35, 10"
+                                         Background="#eee" 
+                                         Foreground="#686868" 
+                                         FontSize="16"
+                                         FontFamily="{StaticResource MontserratFont}"
+                                         BorderBrush="#613ED0"
+                                         BorderThickness="0,0,0,2"
+                                />
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                    
+                    <StackPanel>
+                        <TextBlock Text="Referencias" 
+                                   HorizontalAlignment="Left"
+                                   Margin="35, 15"
+                                   Foreground="Black" 
+                                   FontSize="24"
+                                   FontFamily="{StaticResource MontserratFont}"/>
+                        <Separator Background="Black"
+                                   BorderThickness="0.5"
+                                   Margin="35,0,35,0"/>
+                    </StackPanel>
+                    
+                    <!-- CENTRO DE TRABAJO -->
+                    <Grid ColumnDefinitions="*,*"
+                          Margin="0, 10">
+                        <StackPanel Grid.Column="0"
+                                    Spacing="10">
+                            <TextBlock Text="Referencia no.1" 
+                                       HorizontalAlignment="Left"
+                                       Margin="35, 0"
+                                       Foreground="Black" 
+                                       FontSize="18"
+                                       FontFamily="{StaticResource MontserratFont}"/>
+                            <TextBox Watermark="Nombre" 
+                                     Height="40" 
+                                     Margin="35, 10, 35, 0"
+                                     Background="#eee" 
+                                     Foreground="#686868" 
+                                     FontSize="16"
+                                     FontFamily="{StaticResource MontserratFont}"
+                                     BorderBrush="#613ED0"
+                                     BorderThickness="0,0,0,2"
+                            />
+                            <TextBox Watermark="Apellido paterno" 
+                                     Height="40" 
+                                     Margin="35, 10, 35, 0"
+                                     Background="#eee" 
+                                     Foreground="#686868" 
+                                     FontSize="16"
+                                     FontFamily="{StaticResource MontserratFont}"
+                                     BorderBrush="#613ED0"
+                                     BorderThickness="0,0,0,2"
+                            />
+                            <TextBox Watermark="Apellido materno"
+                                     Height="40" 
+                                     Margin="35, 10, 35, 0"
+                                     Background="#eee" 
+                                     Foreground="#686868" 
+                                     FontSize="16"
+                                     FontFamily="{StaticResource MontserratFont}"
+                                     BorderBrush="#613ED0"
+                                     BorderThickness="0,0,0,2"
+                            />
+                            <TextBox Watermark="Número de telefono"
+                                     Height="40" 
+                                     Margin="35, 10, 35, 0"
+                                     Background="#eee" 
+                                     Foreground="#686868" 
+                                     FontSize="16"
+                                     FontFamily="{StaticResource MontserratFont}"
+                                     BorderBrush="#613ED0"
+                                     BorderThickness="0,0,0,2"
+                            />
+                        </StackPanel>
+                        
+                        <StackPanel Grid.Column="1"
+                                    Spacing="10">
+                            <TextBlock Text="Referencia no.2" 
+                                       HorizontalAlignment="Left"
+                                       Margin="35, 0"
+                                       Foreground="Black" 
+                                       FontSize="18"
+                                       FontFamily="{StaticResource MontserratFont}"/>
+                            <TextBox Watermark="Nombre" 
+                                     Height="40" 
+                                     Margin="35, 10, 35, 0"
+                                     Background="#eee" 
+                                     Foreground="#686868" 
+                                     FontSize="16"
+                                     FontFamily="{StaticResource MontserratFont}"
+                                     BorderBrush="#613ED0"
+                                     BorderThickness="0,0,0,2"
+                            />
+                            <TextBox Watermark="Apellido paterno" 
+                                     Height="40" 
+                                     Margin="35, 10, 35, 0"
+                                     Background="#eee" 
+                                     Foreground="#686868" 
+                                     FontSize="16"
+                                     FontFamily="{StaticResource MontserratFont}"
+                                     BorderBrush="#613ED0"
+                                     BorderThickness="0,0,0,2"
+                            />
+                            <TextBox Watermark="Apellido materno"
+                                     Height="40" 
+                                     Margin="35, 10, 35, 0"
+                                     Background="#eee" 
+                                     Foreground="#686868" 
+                                     FontSize="16"
+                                     FontFamily="{StaticResource MontserratFont}"
+                                     BorderBrush="#613ED0"
+                                     BorderThickness="0,0,0,2"
+                            />
+                            <TextBox Watermark="Número de telefono"
+                                     Height="40" 
+                                     Margin="35, 10, 35, 0"
+                                     Background="#eee" 
+                                     Foreground="#686868" 
+                                     FontSize="16"
+                                     FontFamily="{StaticResource MontserratFont}"
+                                     BorderBrush="#613ED0"
+                                     BorderThickness="0,0,0,2"
+                            />
+                        </StackPanel>
+                    </Grid>
+                    
+                    
+                    
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Right"
+                                Spacing="10"
+                                Margin="0,0,35,15">
+                        <Button Content="Registrar Crédito" HorizontalAlignment="Center"
+                                Background="#512da8"
+                                Margin="0, 20, 0, 0"
+                                Foreground="White"
+                                FontFamily="{StaticResource MontserratFont}"
+                                Height="40"
+                                Width="150"
+                                CornerRadius="5"
+                        />
+                        <Button Content="Cancelar" HorizontalAlignment="Center"
+                                Background="#FF3204"
+                                Margin="0, 20, 0, 0"
+                                Foreground="White"
+                                FontFamily="{StaticResource MontserratFont}"
+                                Height="40"
+                                Width="150"
+                                CornerRadius="5"
+                        />
+                    </StackPanel>
+                    
+                </StackPanel>
+            </ScrollViewer>
+            
+        </Border>
+    </Grid>
+</UserControl>

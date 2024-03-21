@@ -22,10 +22,14 @@ public partial class MainMenuViewModel : ViewModelBase
 
     [ObservableProperty] 
     private ListItemTemplate? _selectedListItem;
+    
+    public ObservableCollection<ListItemTemplate> Items { get; } = new();
 
     public MainMenuViewModel()
     {
         Employee employee = Employee.Instance;
+        //SetItemsBasedOnRole(employee.Role);
+        SetItemsBasedOnRole("ASESOR_CREDITO");
         string username = employee.FirstName + " " + employee.LastName;
         Username = username;
     }
@@ -37,16 +41,36 @@ public partial class MainMenuViewModel : ViewModelBase
         if (instance is null) return;
         CurrentPage = (ViewModelBase)instance;
     }
+    
 
-    public ObservableCollection<ListItemTemplate> Items { get; } = new()
+    public void SetItemsBasedOnRole(string userRole)
     {
-        new ListItemTemplate(typeof(HomePageViewModel), "Menu Principal", "HomeRegular"),
-        new ListItemTemplate(typeof(ClientPageViewModel), "Registrar Cliente", "PeopleCommunityRegular"),
-        new ListItemTemplate(typeof(CreditTypePageViewModel), "Registrar politica", ""),
-        new ListItemTemplate(typeof(RegisterPoliticPageViewModel), "Registrar politica", ""),
-        new ListItemTemplate(typeof(PoliticsPageViewModel), "Politicas", ""),
-        new ListItemTemplate(typeof(CreditTypePageViewModel), "Registrar Credito", "")
-    };
+        Items.Clear();
+
+        switch (userRole)
+        {
+            case "ADMIN":
+                Items.Add(new ListItemTemplate(typeof(HomePageViewModel), "Menu Principal", "HomeRegular"));
+                Items.Add(new ListItemTemplate(typeof(PoliticsPageViewModel), "Politicas", ""));
+                Items.Add(new ListItemTemplate(typeof(RegisterPoliticPageViewModel), "Registrar politica", ""));
+                Items.Add(new ListItemTemplate(typeof(CreditTypePageViewModel), "Registrar Crédito", ""));
+                break;
+            case "ANALISTA_COBRO":
+                Items.Add(new ListItemTemplate(typeof(HomePageViewModel), "Menu Principal", "HomeRegular"));
+                break;
+            case "ANALISTA_CREDITO":
+                Items.Add(new ListItemTemplate(typeof(HomePageViewModel), "Menu Principal", "HomeRegular"));
+                break;
+            case "ASESOR_CREDITO":
+                Items.Add(new ListItemTemplate(typeof(HomePageViewModel), "Menu Principal", "HomeRegular"));
+                Items.Add(new ListItemTemplate(typeof(ClientPageViewModel), "Registrar Cliente", "PeopleCommunityRegular"));
+                break;
+            default:
+                Items.Add(new ListItemTemplate(typeof(HomePageViewModel), "Menu Principal", "HomeRegular"));
+                Items.Add(new ListItemTemplate(typeof(ClientPageViewModel), "Registrar Cliente", "PeopleCommunityRegular")); //QUITAR
+                break;
+        }
+    }
 }
 
 public class ListItemTemplate

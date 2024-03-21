@@ -45,8 +45,7 @@ public partial class PoliticsPageViewModel : ViewModelBase
     {
         try
         {
-            object objectNull = new object();
-            List<Politic> result = await _politicsService.GetPoliticsAsync(objectNull);
+            List<Politic> result = await _politicsService.GetPoliticsAsync();
             Politics = result;
             
             foreach (var politic in result)

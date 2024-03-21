@@ -1,11 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FinancialManagementSystem.Models;
-using FinancialManagementSystem.Services.Authentication;
 using FinancialManagementSystem.Services.Client;
 using FinancialManagementSystem.Services.Client.Dto;
 using Refit;
@@ -15,7 +13,7 @@ namespace FinancialManagementSystem.ViewModels;
 public partial class ClientPageViewModel : ViewModelBase
 {
     private readonly IClientService _clientService;
-    private bool _isCheckboxActive = false;
+    private bool _isCheckboxActive;
     
     public ClientPageViewModel()
     {

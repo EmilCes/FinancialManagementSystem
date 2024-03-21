@@ -5,24 +5,16 @@ using Refit;
 
 namespace FinancialManagementSystem.Services.CreditAplication;
 
-public interface ICreditAplicationService
+public interface ICreditApplicationService
 {
-    [Get("/clientExistance")]
-    Task<VerifyClientExistenceResponse> VerifyExistanceAsync([Body] VerifyClientRequest request);
-    
-    [Get("/clientRegular")]
-    Task<VerifyRegularClientResponse> VerifyRegularAsync([Body] VerifyClientRequest request);
+    [Get("/regularClient")]
+    Task<VerifyRegularClientResponse> VerifyRegularAsync([Query] string rfc);
 
     [Get("/creditTypes")]
-    Task<List<CreditType>> GetCreditTypesAsync([Body] object dummy = null);
+    Task<List<CreditType>> GetCreditTypesAsync();
 
     [Post("/createAplication")]
-    Task<CreateAplicationResponse> CreateAplicationAsync([Body] CreditAplicationRequest request);
-}
-
-public class VerifyClientExistenceResponse
-{
-    public bool isClientRegistered { get; set; }
+    Task CreateAplicationAsync([Body] CreditAplicationRequest request);
 }
 
 public class VerifyClientRequest
@@ -33,7 +25,6 @@ public class VerifyClientRequest
 public class VerifyRegularClientResponse
 {
     public bool clientIsRegular { get; set; }
-    public string refreshToken { get; set; }
 }
 
 public class CreditType
@@ -61,9 +52,4 @@ public class CreditAplicationRequest
     public byte[] IdentificationPdf { get; set; }
     public byte[] MoneyComprobantPdf { get; set; }
     public byte[] LocationComprobantPdf { get; set; }
-}
-
-public class CreateAplicationResponse
-{
-    public string refreshToken { get; set; }
 }

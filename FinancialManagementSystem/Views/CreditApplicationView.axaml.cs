@@ -4,9 +4,9 @@ using Avalonia.Markup.Xaml;
 
 namespace FinancialManagementSystem.Views;
 
-public partial class CreditAplicationView : UserControl
+public partial class CreditApplicationView : UserControl
 {
-    public CreditAplicationView()
+    public CreditApplicationView()
     {
         InitializeComponent();
     }

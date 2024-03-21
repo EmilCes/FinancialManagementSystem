@@ -3,7 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Refit;
 
-namespace FinancialManagementSystem.Services.CreditAplication;
+namespace FinancialManagementSystem.Services.CreditApplication;
 
 public interface ICreditApplicationService
 {
@@ -11,10 +11,10 @@ public interface ICreditApplicationService
     Task<VerifyRegularClientResponse> VerifyRegularAsync([Query] string rfc);
 
     [Get("/creditTypes")]
-    Task<List<CreditType>> GetCreditTypesAsync();
+    Task<List<Models.CreditType>> GetCreditTypesAsync();
 
-    [Post("/createAplication")]
-    Task CreateAplicationAsync([Body] CreditAplicationRequest request);
+    [Post("/applicate")]
+    Task CreateAplicationAsync([Body] CreditApplicationRequest request);
 }
 
 public class VerifyClientRequest
@@ -27,29 +27,21 @@ public class VerifyRegularClientResponse
     public bool clientIsRegular { get; set; }
 }
 
-public class CreditType
-{
-    public string description { get; set; }
-    public int months { get; set; }
-    public string amount { get; set; }
-    public string interest { get; set; }
-}
-
 public class Reference
 {
-    public string name { get; set; }
-    public string firstLastname { get; set; }
-    public string secondLastname { get; set; }
-    public string telephone { get; set; }
+    public string Name { get; set; }
+    public string FirstLastname { get; set; }
+    public string SecondLastname { get; set; }
+    public string Telephone { get; set; }
 }
 
-public class CreditAplicationRequest
+public class CreditApplicationRequest
 {
-    public string clientRfc { get; set; }
-    public CreditType selectedCredit { get; set; }
-    public Reference firstReference { get; set; } 
-    public Reference secondReference { get; set; }
+    public string ClientRfc { get; set; }
+    public Models.CreditType SelectedCredit { get; set; }
+    public Reference FirstReference { get; set; } 
+    public Reference SecondReference { get; set; }
     public byte[] IdentificationPdf { get; set; }
-    public byte[] MoneyComprobantPdf { get; set; }
-    public byte[] LocationComprobantPdf { get; set; }
+    public byte[] ProofOfIncomePdf { get; set; }
+    public byte[] ProofOfAddressPdf { get; set; }
 }

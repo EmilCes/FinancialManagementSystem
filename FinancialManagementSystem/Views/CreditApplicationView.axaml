@@ -78,7 +78,7 @@
                         <StackPanel Grid.Column="1"
                                     Spacing="10">
                             <ComboBox  
-                                     Height="40" 
+                                     Height="40"
                                      Width="300"
                                      Margin="35, 10, 35, 0"
                                      Background="#eee" 
@@ -88,7 +88,8 @@
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
                                      PlaceholderText="Seleccione un crédito..."
-                            />
+                                     ItemsSource="{Binding CreditTypes}">
+                            </ComboBox>
                             
                         </StackPanel>
                     </Grid>
@@ -144,7 +145,7 @@
                                 />
                                 
                                 <TextBlock
-                                        Text="Sin archivo"
+                                        Text="{Binding LblIdentificationDocument}"
                                         HorizontalAlignment="Center"
                                         TextWrapping="Wrap"
                                         FontSize="14"
@@ -167,8 +168,6 @@
                                 />
                             </StackPanel>
                         </Border>
-                        
-                        
                         
                         <Border Grid.Column="1"
                                 Background="#FFFFFF"
@@ -204,7 +203,7 @@
                                 />
                                 
                                 <TextBlock
-                                        Text="Sin archivo"
+                                        Text="{Binding LblProofOfAddressDocument}"
                                         HorizontalAlignment="Center"
                                         TextWrapping="Wrap"
                                         FontSize="14"
@@ -262,7 +261,7 @@
                                 />
                                 
                                 <TextBlock
-                                        Text="Sin archivo"
+                                        Text="{Binding LblProofOfIncomeDocument}"
                                         HorizontalAlignment="Center"
                                         TextWrapping="Wrap"
                                         FontSize="14"
@@ -311,7 +310,9 @@
                                        Foreground="Black" 
                                        FontSize="18"
                                        FontFamily="{StaticResource MontserratFont}"/>
-                            <TextBox Watermark="Nombre" 
+                            
+                            <TextBox Watermark="Nombre"
+                                     Text="{Binding NameReferenceOne}"
                                      Height="40" 
                                      Margin="35, 10, 35, 0"
                                      Background="#eee" 
@@ -322,6 +323,7 @@
                                      BorderThickness="0,0,0,2"
                             />
                             <TextBox Watermark="Apellido paterno" 
+                                     Text="{Binding FirstLastnameReferenceOne}"
                                      Height="40" 
                                      Margin="35, 10, 35, 0"
                                      Background="#eee" 
@@ -332,6 +334,7 @@
                                      BorderThickness="0,0,0,2"
                             />
                             <TextBox Watermark="Apellido materno"
+                                     Text="{Binding SecondLastnameReferenceOne}"
                                      Height="40" 
                                      Margin="35, 10, 35, 0"
                                      Background="#eee" 
@@ -342,6 +345,7 @@
                                      BorderThickness="0,0,0,2"
                             />
                             <TextBox Watermark="Número de telefono"
+                                     Text="{Binding PhoneReferenceOne}"
                                      Height="40" 
                                      Margin="35, 10, 35, 0"
                                      Background="#eee" 
@@ -362,6 +366,7 @@
                                        FontSize="18"
                                        FontFamily="{StaticResource MontserratFont}"/>
                             <TextBox Watermark="Nombre" 
+                                     Text="{Binding NameReferenceTwo}"
                                      Height="40" 
                                      Margin="35, 10, 35, 0"
                                      Background="#eee" 
@@ -372,6 +377,7 @@
                                      BorderThickness="0,0,0,2"
                             />
                             <TextBox Watermark="Apellido paterno" 
+                                     Text="{Binding FirstLastnameReferenceTwo}"
                                      Height="40" 
                                      Margin="35, 10, 35, 0"
                                      Background="#eee" 
@@ -382,6 +388,7 @@
                                      BorderThickness="0,0,0,2"
                             />
                             <TextBox Watermark="Apellido materno"
+                                     Text="{Binding SecondLastnameReferenceTwo}"
                                      Height="40" 
                                      Margin="35, 10, 35, 0"
                                      Background="#eee" 
@@ -392,6 +399,7 @@
                                      BorderThickness="0,0,0,2"
                             />
                             <TextBox Watermark="Número de telefono"
+                                     Text="{Binding PhoneReferenceTwo}"
                                      Height="40" 
                                      Margin="35, 10, 35, 0"
                                      Background="#eee" 
@@ -403,8 +411,6 @@
                             />
                         </StackPanel>
                     </Grid>
-                    
-                    
                     
                     <StackPanel Orientation="Horizontal"
                                 HorizontalAlignment="Right"
@@ -419,6 +425,7 @@
                                 Height="40"
                                 Width="150"
                                 CornerRadius="5"
+                                Command="{Binding ClientApplicateForCreditCommand}"
                         />
                         <Button Content="Cancelar" HorizontalAlignment="Center"
                                 Background="#FF3204"
@@ -428,13 +435,11 @@
                                 Height="40"
                                 Width="150"
                                 CornerRadius="5"
-                                
                         />
+                        
                     </StackPanel>
-                    
                 </StackPanel>
             </ScrollViewer>
-            
         </Border>
     </Grid>
 </UserControl>

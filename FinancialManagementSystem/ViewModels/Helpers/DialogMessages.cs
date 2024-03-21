@@ -13,6 +13,11 @@ public static class DialogMessages
             await box.ShowWindowDialogAsync(desktop.MainWindow);
         }
     }
+
+    public static void ShowInvalidFieldsMessage()
+    {
+        ShowMessage("Campos Inválidos", "Por favor, verifica los campos.");
+    }
     
     public static void ShowApiExceptionMessage()
     {

@@ -22,34 +22,6 @@ public partial class CreditTypePageViewModel : ViewModelBase
     private readonly ICreditTypeService _creditTypeService;
     private readonly IPoliticsService _politicsService;
     
-    [ObservableProperty]
-    [NotifyDataErrorInfo]
-    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
-    private string _description;
-    
-    [ObservableProperty] 
-    [NotifyDataErrorInfo]
-    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
-    [RegularExpression(@"^\d+(\.\d+)?$", ErrorMessage = ErrorMessages.NUMERIC_FIELD_MESSAGE)]
-    private string _interestRate;
-    
-    [ObservableProperty]
-    [NotifyDataErrorInfo]
-    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
-    [Range(1, 2, ErrorMessage = ErrorMessages.SELECT_VALUE_MESSAGE)]
-    private int _state;
-    
-    [ObservableProperty]
-    [NotifyDataErrorInfo]
-    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
-    private string _term;
-    
-    [ObservableProperty]
-    [NotifyDataErrorInfo]
-    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
-    [RegularExpression(@"^\d+(\.\d+)?$", ErrorMessage = ErrorMessages.NUMERIC_FIELD_MESSAGE)]
-    private string _iva;
-    
     public ObservableCollection<Politic> Politics { get; }
     
     public CreditTypePageViewModel()
@@ -89,7 +61,7 @@ public partial class CreditTypePageViewModel : ViewModelBase
             
             await _creditTypeService.RegisterCreditTypeAsync(request);
 
-            DialogMessages.ShowMessage("Registro Éxitoso", "El Credito fue registrado correctamente.");
+            DialogMessages.ShowMessage("Registro Exitoso", "El Credito fue registrado correctamente.");
 
         }
         catch (ApiException)
@@ -113,11 +85,13 @@ public partial class CreditTypePageViewModel : ViewModelBase
                 Politics.Add(politic);
             }
         }
-        catch (ApiException ex)
+        catch (ApiException)
         {
-            Console.WriteLine(ex.StatusCode);
-            Console.WriteLine(ex.Message);
-            Console.WriteLine(ex.StackTrace);
+            DialogMessages.ShowApiExceptionMessage();
+        }
+        catch (HttpRequestException)
+        {
+            DialogMessages.ShowHttpRequestExceptionMessage();
         }
     }
 
@@ -125,4 +99,32 @@ public partial class CreditTypePageViewModel : ViewModelBase
     {
         return Politics.Where(politic => politic.cbPoliticState).ToList();
     }
+    
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
+    private string _description;
+    
+    [ObservableProperty] 
+    [NotifyDataErrorInfo]
+    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
+    [RegularExpression(@"^\d+(\.\d+)?$", ErrorMessage = ErrorMessages.NUMERIC_FIELD_MESSAGE)]
+    private string _interestRate;
+    
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
+    [Range(1, 2, ErrorMessage = ErrorMessages.SELECT_VALUE_MESSAGE)]
+    private int _state;
+    
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
+    private string _term;
+    
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
+    [RegularExpression(@"^\d+(\.\d+)?$", ErrorMessage = ErrorMessages.NUMERIC_FIELD_MESSAGE)]
+    private string _iva;
 }

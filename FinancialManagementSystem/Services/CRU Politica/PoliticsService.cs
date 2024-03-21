@@ -27,8 +27,8 @@ public class PoliticsService : IPoliticsService
         await _api.ModifyAsync(request);
     }
 
-    public async Task<List<Politic>> GetPoliticsAsync(Object none)
+    public async Task<List<Politic>> GetPoliticsAsync()
     {
-        return await _api.GetPoliticsAsync(none);
+        return await _api.GetPoliticsAsync();
     }
 }

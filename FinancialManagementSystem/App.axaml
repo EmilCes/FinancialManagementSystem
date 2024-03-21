@@ -11,6 +11,7 @@
   
     <Application.Styles>
         <StyleInclude Source="avares://Semi.Avalonia/Themes/Index.axaml" />
+        <StyleInclude Source="avares://Semi.Avalonia.DataGrid/Index.axaml" />
         <StyleInclude Source="avares://FinancialManagementSystem/Assets/Icons.axaml" />
         <Style Selector="DataValidationErrors">
             <Setter Property="Template">

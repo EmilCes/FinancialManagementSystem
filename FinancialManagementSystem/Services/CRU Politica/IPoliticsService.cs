@@ -16,7 +16,7 @@ public interface IPoliticsService
     Task ModifyAsync([Body] Politic request);
     
     [Get("/")]
-    Task<List<Politic>> GetPoliticsAsync([Body] object none);
+    Task<List<Politic>> GetPoliticsAsync();
 
 }
 

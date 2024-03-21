@@ -5,8 +5,8 @@ public class Politic
     public string name { get; set; }
     public string description { get; set; }
     public string state { get; set; }
-    
     public int politicId { get; set; }
+    public bool cbPoliticState { get; set; }
 
     public Politic(string name, string description, string state)
     {

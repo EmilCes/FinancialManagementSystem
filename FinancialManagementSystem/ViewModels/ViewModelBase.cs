@@ -2,9 +2,8 @@ using System.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace FinancialManagementSystem.ViewModels;
-using ReactiveUI;
 
-public class ViewModelBase : ObservableObject, IReactiveObject
+public class ViewModelBase : ObservableValidator
 {
     public void RaisePropertyChanging(PropertyChangingEventArgs args)
     {
@@ -15,4 +14,6 @@ public class ViewModelBase : ObservableObject, IReactiveObject
     {
         throw new System.NotImplementedException();
     }
+    
+    
 }

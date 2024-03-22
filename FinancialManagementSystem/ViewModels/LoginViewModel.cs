@@ -18,7 +18,13 @@ namespace FinancialManagementSystem.ViewModels;
 public partial class LoginViewModel : ViewModelBase
 {
     private readonly IAuthenticationService _authenticationService;
-    
+
+    [ObservableProperty] 
+    private bool _showVerifyEmailView;
+    [ObservableProperty] 
+    private bool _showVerifyCodeView;
+    [ObservableProperty] 
+    private bool _showChangePasswordView;
     [ObservableProperty] 
     private bool _showLoginView = true;
     [ObservableProperty] 
@@ -63,9 +69,14 @@ public partial class LoginViewModel : ViewModelBase
         }
         catch (ApiException e)
         {
-            Console.WriteLine(e.Message);
-            Console.WriteLine(e.StackTrace);
-            DialogMessages.ShowApiExceptionMessage();
+            if (e.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                DialogMessages.ShowMessage("Credenciales Inválidas", "Por favor, verifica tus credenciales.");
+            }
+            else
+            {
+                DialogMessages.ShowApiExceptionMessage();
+            }
         }
         catch (HttpRequestException)
         {
@@ -101,7 +112,7 @@ public partial class LoginViewModel : ViewModelBase
         }
         catch (ApiException e)
         {
-            if (e.StatusCode == System.Net.HttpStatusCode.Forbidden) // 403 Forbidden
+            if (e.StatusCode == System.Net.HttpStatusCode.Forbidden)
             {
                 DialogMessages.ShowMessage("Código incorrecto", "Verifica el código que ingresaste");
             }
@@ -116,6 +127,7 @@ public partial class LoginViewModel : ViewModelBase
         }
     }
 
+    [RelayCommand]
     public async Task Enable2Fa()
     {
         if (!Validations.ValidateFields(this, GetType(), new List<string> { "Email", "Password" }))
@@ -144,6 +156,131 @@ public partial class LoginViewModel : ViewModelBase
         {
             DialogMessages.ShowHttpRequestExceptionMessage();
         }
+    }
+    
+    [RelayCommand]
+    public async Task VerifyEmailCommand()
+    {
+        if (!Validations.ValidateFields(this, GetType(), new List<string> { "Email" }))
+        {
+            DialogMessages.ShowInvalidFieldsMessage();
+            return;
+        }
+        
+        try
+        {
+            bool response = await _authenticationService.VerifyEmailAsync(Email);
+
+            if (response)
+            {
+                ShowVerifyEmailView = false;
+                ShowVerifyCodeView = true;
+            }
+            else
+            {
+                DialogMessages.ShowMessage("Correo Inválido", "Verifica que el correo sea correcto.");
+            }
+        }
+        catch (ApiException)
+        {
+            DialogMessages.ShowApiExceptionMessage();
+        }
+        catch (HttpRequestException)
+        {
+            DialogMessages.ShowHttpRequestExceptionMessage();
+        }
+    }
+    
+    [RelayCommand]
+    public async Task VerifyCodeCommand()
+    {
+        if (!Validations.ValidateFields(this, GetType(), new List<string> { "ChangePasswordCode" }))
+        {
+            DialogMessages.ShowInvalidFieldsMessage();
+            return;
+        }
+
+        VerificationRequest request = new VerificationRequest
+        {
+            email = Email,
+            code = ChangePasswordCode
+        };
+        
+        try
+        {
+            bool response = await _authenticationService.VerifyPasswordCodeAsync(request);
+
+            if (response)
+            {
+                ShowVerifyCodeView = false;
+                ShowChangePasswordView = true;
+            }
+            else
+            {
+                DialogMessages.ShowMessage("Código Inválido", "Verifica que el correo sea correcto.");
+            }
+        }
+        catch (ApiException)
+        {
+            DialogMessages.ShowApiExceptionMessage();
+        }
+        catch (HttpRequestException)
+        {
+            DialogMessages.ShowHttpRequestExceptionMessage();
+        }
+    }
+    
+    [RelayCommand]
+    public async Task ChangePasswordCommand()
+    {
+        if (!Validations.ValidateFields(this, GetType(), new List<string> { "ChangedPassword", "ChangedPasswordConfirmation" }))
+        {
+            DialogMessages.ShowInvalidFieldsMessage();
+            return;
+        }
+
+        if (ChangedPassword != ChangedPasswordConfirmation)
+        {
+            DialogMessages.ShowMessage("Contraseñas Inválidas", "Las contraseñas no son iguales.");
+            return;
+        }
+
+        AuthenticationRequest request = new AuthenticationRequest
+        {
+            email = Email,
+            password = ChangedPassword
+        };
+        
+        try
+        {
+            await _authenticationService.ChangePasswordAsync(request);
+            
+            ShowChangePasswordView = false;
+            ShowLoginView = true;
+
+        }
+        catch (ApiException)
+        {
+            DialogMessages.ShowApiExceptionMessage();
+        }
+        catch (HttpRequestException)
+        {
+            DialogMessages.ShowHttpRequestExceptionMessage();
+        }
+    }
+    
+    [RelayCommand]
+    public void ForgottenPasswordCommand()
+    {
+        ShowLoginView = false;
+        ShowVerifyEmailView = true;
+    }
+    
+    [RelayCommand]
+    public void BackFromChangePasswordCommand()
+    {
+        ShowLoginView = true;
+        ShowVerifyEmailView = false;
     }
     
     private void ChangeWindowToMainMenu()
@@ -177,5 +314,20 @@ public partial class LoginViewModel : ViewModelBase
     [NotifyDataErrorInfo]
     [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
     private string _code2Fa;
+    
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
+    private string _changePasswordCode;
+    
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
+    private string _changedPassword;
+    
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
+    private string _changedPasswordConfirmation;
     
 }

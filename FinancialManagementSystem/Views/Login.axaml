@@ -46,10 +46,12 @@
                          FontFamily="{StaticResource MontserratFont}"
                          Text="{Binding Password, Mode=TwoWay}"/>
                 
-                <TextBlock Text="¿Olvidaste tu contraseña?" HorizontalAlignment="Center"
+                <Button Content="¿Olvidaste tu contraseña?" HorizontalAlignment="Center"
                            Margin="0, 20, 0, 15"
+                           Background="Transparent"
                            Foreground="#A1A1A1" 
-                           FontFamily="{StaticResource MontserratFont}"/>
+                           FontFamily="{StaticResource MontserratFont}"
+                           Command="{Binding ForgottenPasswordCommand}"/>
                 
                 <Button Content="Continuar" HorizontalAlignment="Center"
                         Background="#512da8"
@@ -80,6 +82,90 @@
                         Foreground="White"
                         FontFamily="{StaticResource MontserratFont}"
                         Command="{Binding VerifyCommand}"/>
+                
+            </StackPanel>
+            
+            <StackPanel Grid.Column="0" Grid.Row="0" 
+                        HorizontalAlignment="Stretch" VerticalAlignment="Center" Spacing="10"
+                        IsVisible="{Binding ShowVerifyEmailView}">
+                
+                <TextBlock Text="Ingresa Tu Correo" Margin="0, 0, 0, 25" FontSize="25"
+                           FontFamily="{StaticResource MontserratFont}"
+                           FontStretch="Expanded" FontWeight="Bold" TextAlignment="Center" Foreground="Black"
+                           VerticalAlignment="Top"/>
+                
+                <TextBox Watermark="Correo" Height="40" Margin="35, 10, 35, 0"
+                         Background="#eee" Foreground="#686868" FontSize="13"
+                         FontFamily="{StaticResource MontserratFont}"
+                         Text="{Binding Email, Mode=TwoWay}"/>
+                
+                <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Center"
+                            Spacing="10">
+                    <Button Content="Enviar Código" HorizontalAlignment="Center"
+                            Background="#512da8"
+                            Margin="0, 20, 0, 0"
+                            Foreground="White"
+                            FontFamily="{StaticResource MontserratFont}"
+                            Command="{Binding VerifyEmailCommand}"/>
+                    
+                    <Button Content="Regresar" HorizontalAlignment="Center"
+                            Background="#FF3204"
+                            Margin="0, 20, 0, 0"
+                            Foreground="White"
+                            FontFamily="{StaticResource MontserratFont}"
+                            Command="{Binding BackFromChangePasswordCommand}"/>
+                </StackPanel>
+            </StackPanel>
+            
+            <StackPanel Grid.Column="0" Grid.Row="0" 
+                        HorizontalAlignment="Stretch" VerticalAlignment="Center" Spacing="10"
+                        IsVisible="{Binding ShowVerifyCodeView}">
+                
+                <TextBlock Text="Ingresa El Codigo" Margin="0, 0, 0, 25" FontSize="25"
+                           FontFamily="{StaticResource MontserratFont}"
+                           FontStretch="Expanded" FontWeight="Bold" TextAlignment="Center" Foreground="Black"
+                           VerticalAlignment="Top"/>
+                
+                <TextBox Watermark="Código" Height="40" Margin="35, 10, 35, 0"
+                         Background="#eee" Foreground="#686868" FontSize="13"
+                         FontFamily="{StaticResource MontserratFont}"
+                         Text="{Binding ChangePasswordCode, Mode=TwoWay}"/>
+                
+                <Button Content="Validar Codigo" HorizontalAlignment="Center"
+                        Background="#512da8"
+                        Margin="0, 20, 0, 0"
+                        Foreground="White"
+                        FontFamily="{StaticResource MontserratFont}"
+                        Command="{Binding VerifyCodeCommand}"/>
+                
+            </StackPanel>
+            
+            <StackPanel Grid.Column="0" Grid.Row="0" 
+                        HorizontalAlignment="Stretch" VerticalAlignment="Center" Spacing="10"
+                        IsVisible="{Binding ShowChangePasswordView}">
+                
+                <TextBlock Text="Ingresa Tu Nueva Contraseña" Margin="0, 0, 0, 25" FontSize="25"
+                           FontFamily="{StaticResource MontserratFont}"
+                           FontStretch="Expanded" FontWeight="Bold" TextAlignment="Center" Foreground="Black"
+                           VerticalAlignment="Top" />
+                
+                <TextBox Watermark="Contraseña" PasswordChar="*" Height="40" Margin="35, 10, 35, 0"
+                         Background="#eee" Foreground="#686868" FontSize="13"
+                         FontFamily="{StaticResource MontserratFont}"
+                         Text="{Binding ChangedPassword, Mode=TwoWay}"/>
+                
+                <TextBox Watermark="Contraseña" PasswordChar="*" Height="40" Margin="35, 10, 35, 0"
+                         Background="#eee" Foreground="#686868" FontSize="13"
+                         FontFamily="{StaticResource MontserratFont}"
+                         Text="{Binding ChangedPasswordConfirmation, Mode=TwoWay}"/>
+                
+                <Button Content="Cambiar Contraseña" HorizontalAlignment="Center"
+                        Background="#512da8"
+                        Margin="0, 20, 0, 0"
+                        Foreground="White"
+                        FontFamily="{StaticResource MontserratFont}"
+                        Command="{Binding ChangePasswordCommand}"/>
                 
             </StackPanel>
             

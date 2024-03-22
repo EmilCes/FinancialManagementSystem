@@ -9,6 +9,7 @@ public class Politic
     public bool isSelected { get; set; }
     
     public int politicId { get; set; }
+    public bool cbPoliticState { get; set; }
 
     public Politic(string name, string description, string state, bool isSelected, int politicId)
     {

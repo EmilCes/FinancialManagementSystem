@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
@@ -12,6 +13,7 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FinancialManagementSystem.Models;
+using FinancialManagementSystem.Models.Helpers;
 using FinancialManagementSystem.Services.Authentication;
 using Refit;
 
@@ -60,11 +62,13 @@ public partial class PoliticsPageViewModel : ViewModelBase
                 PoliticsList.Add(politic);
             }
         }
-        catch (ApiException ex)
+        catch (ApiException)
         {
-            Console.WriteLine(ex.StatusCode);
-            Console.WriteLine(ex.Message);
-            Console.WriteLine(ex.StackTrace);
+            DialogMessages.ShowApiExceptionMessage();
+        }
+        catch (HttpRequestException)
+        {
+            DialogMessages.ShowHttpRequestExceptionMessage();
         }
     }
     
@@ -114,7 +118,6 @@ public partial class PoliticsPageViewModel : ViewModelBase
     [RelayCommand]
     public async Task ConfirmModifyCommand()
     {
-            
         Politic request = new Politic()
         {
             politicId = selectedPoliticId,
@@ -131,16 +134,34 @@ public partial class PoliticsPageViewModel : ViewModelBase
             request.state = "Inactivo";
         }
 
-        try
+        if (ValidateFields())
         {
-            await _politicsService.ModifyAsync(request);
+            try
+            {
+                await _politicsService.ModifyAsync(request);
+                DialogMessages.ShowMessage("Modificación Exitosa!", "La politica fue modificada correctamente.");
+                LoadCommand();
+                LoadHeader = true;
+                LoadContent = true;
+                ModifyHeader = false;
+                ModifyContent = false;
+            }
+            catch (ApiException)
+            {
+                DialogMessages.ShowApiExceptionMessage();
+            }
+            catch (HttpRequestException)
+            {
+                DialogMessages.ShowHttpRequestExceptionMessage();
+            }
         }
-        catch (ApiException ex)
-        {
-            Console.WriteLine(ex.StatusCode);
-            Console.WriteLine(ex.Message);
-            Console.WriteLine(ex.StackTrace);
-        }
+    }
+    
+    private bool ValidateFields()
+    {
+        var validationResults = new List<ValidationResult>();
+        var validationContext = new ValidationContext(this);
+        return Validator.TryValidateObject(this, validationContext, validationResults, true);
     }
     
     [ObservableProperty] 

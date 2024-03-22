@@ -1,8 +1,9 @@
 using System.Collections.Generic;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace FinancialManagementSystem.Models;
 
-public class CreditType
+public class CreditType: ObservableObject
 {
     public int CreditId { get; set; }
     public string Description { get; set; }
@@ -11,4 +12,9 @@ public class CreditType
     public string Term { get; set; }
     public float Iva { get; set; }
     public List<Politic> Politics { get; set; }
+
+    public override string ToString()
+    {
+        return Description + " " + Term;
+    }
 }

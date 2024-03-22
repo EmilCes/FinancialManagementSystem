@@ -42,6 +42,14 @@ public partial class RegisterPoliticPageViewModel : ViewModelBase
             state = State
         };
 
+        if (request.state == "1")
+        {
+            request.state = "Activo";
+        }else if (request.state == "2")
+        {
+            request.state = "Inactivo";
+        }
+
         try
         {
             await _politicsService.RegisterAsync(request);

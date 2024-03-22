@@ -6,7 +6,18 @@ public class Politic
     public string description { get; set; }
     public string state { get; set; }
     
+    public bool isSelected { get; set; }
+    
     public int politicId { get; set; }
+
+    public Politic(string name, string description, string state, bool isSelected, int politicId)
+    {
+        this.name = name;
+        this.description = description;
+        this.state = state;
+        this.isSelected = isSelected;
+        this.politicId = politicId;
+    }
 
     public Politic(string name, string description, string state)
     {
@@ -26,4 +37,5 @@ public class Politic
     public Politic()
     {
     }
+    
 }

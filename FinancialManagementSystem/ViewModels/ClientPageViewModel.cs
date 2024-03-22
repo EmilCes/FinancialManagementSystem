@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
+using System.Net.Http;
 using System.Threading.Tasks;
+using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FinancialManagementSystem.Models;
-using FinancialManagementSystem.Services.Authentication;
+using FinancialManagementSystem.Models.Helpers;
 using FinancialManagementSystem.Services.Client;
 using FinancialManagementSystem.Services.Client.Dto;
 using Refit;
@@ -15,28 +18,35 @@ namespace FinancialManagementSystem.ViewModels;
 public partial class ClientPageViewModel : ViewModelBase
 {
     private readonly IClientService _clientService;
-    private bool _isCheckboxActive = false;
+    private bool _isCheckboxActive;
     
     public ClientPageViewModel()
     {
         _clientService = new ClientService("http://localhost:8080/api/v1/client");
+        ClientRfcBrush = new(new Color(1, 97, 62, 208));
     }
     
     [RelayCommand]
     public async Task RegisterClientCommand()
     {
-        var address = new Address()
+        if (!ValidateFields())
+        {
+            DialogMessages.ShowInvalidFieldsMessage();
+            return;
+        }
+        
+        var address = new Address
         {
             Street = Street!,
             Neighborhood = Neighborhood,
-            ExteriorNumber = ExteriorNumber,
-            InteriorNumber = InteriorNumber,
+            ExteriorNumber = int.Parse(ExteriorNumber),
+            InteriorNumber = !string.IsNullOrEmpty(InteriorNumber) ? int.Parse(InteriorNumber) : 0,
             PostalCode = PostalCode,
             Municipality = Municipality,
             State = State
         };
 
-        var workplace = new Workplace()
+        var workplace = new Workplace
         {
             Name = WorkPlaceName,
             Email = WorkPlaceEmail,
@@ -44,49 +54,52 @@ public partial class ClientPageViewModel : ViewModelBase
             Rfc = WorkPlaceRfc
         };
 
-        var paymentBankAccount = new BankAccount()
+        var paymentBankAccount = new BankAccount
         {
             Clabe = PaymentClabe,
             BankName = PaymentBankName
         };
-        
-        var depositBankAccount = new BankAccount()
+
+        var depositBankAccount = new BankAccount
         {
             Clabe = DepositClabe,
             BankName = DepositBankName
         };
 
-        var client = new Client()
+        var client = new Client
         {
             Name = Name!,
             Lastname = Lastname,
             Surname = Surname,
             PhoneNumber = PhoneNumber,
+            DateOfBirth = ConvertToMySqlDateFormat(DateOfBirth),
             Email = Email,
             Rfc = Rfc,
-            MonthlySalary = MonthlySalary,
+            MonthlySalary = float.Parse(MonthlySalary),
             Address = address,
             Workplace = workplace,
             BankAccounts = [paymentBankAccount, depositBankAccount]
         };
+        Console.WriteLine("hola5");
 
         try
         {
             await _clientService.RegisterClientAsync(client);
-            //TODO: Confirmation Message
+            DialogMessages.ShowMessage("Registro Exitoso", "El Cliente fue registrado correctamente.");
         }
-        catch (ApiException ex)
+        catch (ApiException e)
         {
-            Console.WriteLine(ex.StatusCode);
-            Console.WriteLine(ex.Message);
-            Console.WriteLine(ex.StackTrace);
+            DialogMessages.ShowApiExceptionMessage();
+        }
+        catch (HttpRequestException e)
+        {
+            DialogMessages.ShowHttpRequestExceptionMessage();
         }
     }
     
     [RelayCommand]
     public async Task VerifyClientExistenceCommand()
     {
-        Console.WriteLine(Rfc);
         var request = new VerifyClientExistenceRequest()
         {
             clientRfc = Rfc
@@ -95,22 +108,25 @@ public partial class ClientPageViewModel : ViewModelBase
         try
         {
             var response = await _clientService.VerifyClientExistenceAsync(request);
-            
-            //TODO: SHOW MESSAGE
+
             if (response.clientRegistered)
             {
-                Console.WriteLine("Cliente ya registrado");
+                RegisterClientIsEnable = false;
+                ClientRfcBrush = new SolidColorBrush(Colors.Red);
             }
             else
             {
-                Console.WriteLine("Cliente aún no registrado");
+                RegisterClientIsEnable = true;
+                ClientRfcBrush = new SolidColorBrush(Colors.Aqua);
             }
         }
-        catch (ApiException ex)
+        catch (ApiException)
         {
-            Console.WriteLine(ex.StatusCode);
-            Console.WriteLine(ex.Message);
-            Console.WriteLine(ex.StackTrace);
+            DialogMessages.ShowApiExceptionMessage();
+        }
+        catch (HttpRequestException)
+        {
+            DialogMessages.ShowHttpRequestExceptionMessage();
         }
     }
 
@@ -130,59 +146,164 @@ public partial class ClientPageViewModel : ViewModelBase
             _isCheckboxActive = false;
         }
     }
+
+    private string ConvertToMySqlDateFormat(string dateString)
+    {
+        try
+        {
+            string[] parts = dateString.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            string datePart = parts[0];
+
+            DateTime date = DateTime.ParseExact(datePart, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+
+            string mysqlDateFormat = date.ToString("yyyy-MM-dd");
+
+            return mysqlDateFormat;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al convertir a formato de fecha de MySQL: {ex.Message}");
+            return string.Empty;
+        }
+    }
+    
+    private bool ValidateFields()
+    {
+        var validationResults = new List<ValidationResult>();
+        var validationContext = new ValidationContext(this);
+        return Validator.TryValidateObject(this, validationContext, validationResults, true);
+    }
+
+    [ObservableProperty] 
+    private SolidColorBrush _clientRfcBrush;
+
+    [ObservableProperty] 
+    private bool _registerClientIsEnable;
     
     [ObservableProperty] 
     [NotifyDataErrorInfo]
-    [Required]
-    private string? _name = string.Empty;
-    [ObservableProperty] 
+    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
+    private string? _name;
+    
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
     private string _lastname;
-    [ObservableProperty] 
+    
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
     private string _surname;
-    [ObservableProperty] 
+    
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
     private string _dateOfBirth;
-    [ObservableProperty] 
-    private string _phoneNumber;
-    [ObservableProperty] 
-    private string _email;
-    [ObservableProperty] 
-    private string _rfc;
-    [ObservableProperty] 
-    private float _monthlySalary;
     
     [ObservableProperty] 
     [NotifyDataErrorInfo]
-    [Required]
+    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
+    [Phone (ErrorMessage = ErrorMessages.PHONE_MESSAGE)]
+    private string _phoneNumber;
+    
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
+    [EmailAddress (ErrorMessage = ErrorMessages.EMAIL_MESSAGE)]
+    private string _email;
+    
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
+    [RegularExpression(@"^[A-Za-z]{4}\d{6}[A-Za-z\d]{3}$", ErrorMessage = ErrorMessages.RFC_MESSAGE)]
+    private string _rfc;
+    
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
+    [RegularExpression(@"^\d+(\.\d+)?$", ErrorMessage = ErrorMessages.NUMERIC_FIELD_MESSAGE)]
+    private string _monthlySalary;
+    
+    [ObservableProperty] 
+    [NotifyDataErrorInfo]
+    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
     private string? _street = string.Empty;
-    [ObservableProperty] 
+    
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
     private string _neighborhood;
-    [ObservableProperty] 
-    private int _exteriorNumber;
-    [ObservableProperty] 
-    private int _interiorNumber;
-    [ObservableProperty] 
+    
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
+    [RegularExpression(@"^\d+$", ErrorMessage = ErrorMessages.NUMERIC_FIELD_MESSAGE)]
+    private string _exteriorNumber;
+    
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [RegularExpression(@"^\d+$", ErrorMessage = ErrorMessages.NUMERIC_FIELD_MESSAGE)]
+    private string _interiorNumber = String.Empty;
+    
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
+    [RegularExpression(@"^\d+$", ErrorMessage = ErrorMessages.NUMERIC_FIELD_MESSAGE)]
     private string _postalCode;
-    [ObservableProperty] 
+    
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
     private string _municipality;
-    [ObservableProperty] 
+    
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
     private string _state;
     
-    [ObservableProperty] 
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
     private string _workPlaceName;
-    [ObservableProperty] 
+    
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
+    [Phone (ErrorMessage = ErrorMessages.PHONE_MESSAGE)]
     private string _workPlacePhoneNumber;
-    [ObservableProperty] 
+    
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
+    [EmailAddress (ErrorMessage = ErrorMessages.EMAIL_MESSAGE)]
     private string _workPlaceEmail;
-    [ObservableProperty] 
+    
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
+    [RegularExpression(@"^[A-Za-z]{4}\d{6}[A-Za-z\d]{3}$", ErrorMessage = ErrorMessages.RFC_MESSAGE)]
     private string _workPlaceRfc;
     
-    [ObservableProperty] 
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
+    [RegularExpression(@"^\d+$", ErrorMessage = ErrorMessages.NUMERIC_FIELD_MESSAGE)]
     private string _paymentClabe;
-    [ObservableProperty] 
+    
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
     private string _paymentBankName;
-    [ObservableProperty] 
+    
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
+    [RegularExpression(@"^\d+$", ErrorMessage = ErrorMessages.NUMERIC_FIELD_MESSAGE)]
     private string _depositClabe;
-    [ObservableProperty] 
+    
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
     private string _depositBankName;
 
 }

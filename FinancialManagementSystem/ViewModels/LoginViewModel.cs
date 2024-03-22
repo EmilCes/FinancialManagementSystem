@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Media.Imaging;
@@ -14,17 +16,8 @@ namespace FinancialManagementSystem.ViewModels;
 
 public partial class LoginViewModel : ViewModelBase
 {
-    //To make a login we need: Access Token, Name, Role, Refresh Token?
-
     private readonly IAuthenticationService _authenticationService;
-
-
-    [ObservableProperty]
-    private string _email;
-    [ObservableProperty]
-    private string _password;
-    [ObservableProperty]
-    private string _code2Fa;
+    
     [ObservableProperty] 
     private bool _showLoginView = true;
     [ObservableProperty] 
@@ -49,18 +42,21 @@ public partial class LoginViewModel : ViewModelBase
         try
         {
             AuthenticationResponse response = await _authenticationService.AuthenticateAsync(request);
-            //TODO: Save tokens
-            //TODO: Verify MFA is enabled
-            
 
-            ShowCodeView = true;
-            ShowLoginView = false;
+            if (response.mfaEnabled)
+            {
+                ShowCodeView = true;
+                ShowLoginView = false;
+            }
+            else
+            {
+                DialogMessages.ShowMessage("MFA no activado", 
+                    "La autenticación de dos factores no esta activada. Activala antes de continuar.");
+            }
         }
-        catch (ApiException ex)
+        catch (ApiException)
         {
-            Console.WriteLine(ex.StatusCode);
-            Console.WriteLine(ex.Message);
-            Console.WriteLine(ex.StackTrace);
+            DialogMessages.ShowApiExceptionMessage();
         }
     }
 
@@ -83,15 +79,15 @@ public partial class LoginViewModel : ViewModelBase
             Employee.Instance.AccessToken = response.accessToken;
             Employee.Instance.Role = response.role;
             
-            Console.WriteLine(Employee.Instance.ToString());
-            
             ChangeWindowToMainMenu();
         }
-        catch (ApiException ex)
+        catch (ApiException)
         {
-            Console.WriteLine(ex.StatusCode);
-            Console.WriteLine(ex.Message);
-            Console.WriteLine(ex.StackTrace);
+            DialogMessages.ShowApiExceptionMessage();
+        }
+        catch (HttpRequestException)
+        {
+            DialogMessages.ShowHttpRequestExceptionMessage();
         }
     }
 
@@ -108,19 +104,16 @@ public partial class LoginViewModel : ViewModelBase
         try
         {
             Enable2FaResponse response = await _authenticationService.Enable2FaAsync(request);
-
-            if (response.mfaEnabled)
-            {
-                Console.WriteLine("Ya activaste MFA");
-            }
             
             QrCodeImage =  ImageHelper.LoadQrCode(response.secretImageUri);
         }
-        catch (ApiException ex)
+        catch (ApiException)
         {
-            Console.WriteLine(ex.StatusCode);
-            Console.WriteLine(ex.Message);
-            Console.WriteLine(ex.StackTrace);
+            DialogMessages.ShowApiExceptionMessage();
+        }
+        catch (HttpRequestException)
+        {
+            DialogMessages.ShowHttpRequestExceptionMessage();
         }
     }
     
@@ -130,7 +123,7 @@ public partial class LoginViewModel : ViewModelBase
         {
             var currentWindow = desktop.MainWindow;
             
-            desktop.MainWindow = new Views.MainMenu()
+            desktop.MainWindow = new Views.MainMenu
             {
                 DataContext = new MainMenuViewModel(),
             };
@@ -139,5 +132,21 @@ public partial class LoginViewModel : ViewModelBase
             currentWindow?.Close();
         }
     }
+    
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
+    [EmailAddress (ErrorMessage = ErrorMessages.EMAIL_MESSAGE)]
+    private string _email;
+    
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
+    private string _password;
+    
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
+    private string _code2Fa;
     
 }

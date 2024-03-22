@@ -23,13 +23,12 @@ public partial class ClientPageViewModel : ViewModelBase
     public ClientPageViewModel()
     {
         _clientService = new ClientService("http://localhost:8080/api/v1/client");
-        ClientRfcBrush = new(new Color(1, 97, 62, 208));
     }
     
     [RelayCommand]
     public async Task RegisterClientCommand()
     {
-        if (!ValidateFields())
+        if (!Validations.ValidateFields(this))
         {
             DialogMessages.ShowInvalidFieldsMessage();
             return;
@@ -80,23 +79,24 @@ public partial class ClientPageViewModel : ViewModelBase
             Workplace = workplace,
             BankAccounts = [paymentBankAccount, depositBankAccount]
         };
-        Console.WriteLine("hola5");
 
         try
         {
             await _clientService.RegisterClientAsync(client);
             DialogMessages.ShowMessage("Registro Exitoso", "El Cliente fue registrado correctamente.");
         }
-        catch (ApiException e)
+        catch (ApiException)
         {
             DialogMessages.ShowApiExceptionMessage();
         }
-        catch (HttpRequestException e)
+        catch (HttpRequestException)
         {
             DialogMessages.ShowHttpRequestExceptionMessage();
         }
     }
-    
+
+    private static readonly char[] separator = new char[] { ' ' };
+
     [RelayCommand]
     public async Task VerifyClientExistenceCommand()
     {
@@ -151,7 +151,7 @@ public partial class ClientPageViewModel : ViewModelBase
     {
         try
         {
-            string[] parts = dateString.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] parts = dateString.Split(separator, StringSplitOptions.RemoveEmptyEntries);
             string datePart = parts[0];
 
             DateTime date = DateTime.ParseExact(datePart, "dd/MM/yyyy", CultureInfo.InvariantCulture);
@@ -162,16 +162,8 @@ public partial class ClientPageViewModel : ViewModelBase
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error al convertir a formato de fecha de MySQL: {ex.Message}");
             return string.Empty;
         }
-    }
-    
-    private bool ValidateFields()
-    {
-        var validationResults = new List<ValidationResult>();
-        var validationContext = new ValidationContext(this);
-        return Validator.TryValidateObject(this, validationContext, validationResults, true);
     }
 
     [ObservableProperty] 

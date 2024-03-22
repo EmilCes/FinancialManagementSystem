@@ -92,33 +92,6 @@
                                      BorderThickness="0,0,0,2"
                                      Text="{Binding Name}"
                             />
-                            <TextBox Watermark="Apellido Materno" 
-                                     Height="40" 
-                                     Margin="35, 10, 35, 0"
-                                     Background="#eee" 
-                                     Foreground="#686868" 
-                                     FontSize="16"
-                                     FontFamily="{StaticResource MontserratFont}"
-                                     BorderBrush="#613ED0"
-                                     BorderThickness="0,0,0,2"
-                                     Text="{Binding Surname}"
-                            />
-                            <TextBox Watermark="Número Telefónico" 
-                                     Height="40" 
-                                     Margin="35, 10, 35, 0"
-                                     Background="#eee" 
-                                     Foreground="#686868" 
-                                     FontSize="16"
-                                     FontFamily="{StaticResource MontserratFont}"
-                                     BorderBrush="#613ED0"
-                                     BorderThickness="0,0,0,2"
-                                     Text="{Binding PhoneNumber}"
-                            />
-
-                        </StackPanel>
-                        
-                        <StackPanel Grid.Column="1"
-                                    Spacing="10">
                             <TextBox Watermark="Apellido Paterno" 
                                      Height="40" 
                                      Margin="35, 10, 35, 0"
@@ -130,7 +103,35 @@
                                      BorderThickness="0,0,0,2"
                                      Text="{Binding Lastname}"
                             />
+                            <TextBox Watermark="Apellido Materno" 
+                                     Height="40" 
+                                     Margin="35, 10, 35, 0"
+                                     Background="#eee" 
+                                     Foreground="#686868" 
+                                     FontSize="16"
+                                     FontFamily="{StaticResource MontserratFont}"
+                                     BorderBrush="#613ED0"
+                                     BorderThickness="0,0,0,2"
+                                     Text="{Binding Surname}"
+                            />
                             
+
+                        </StackPanel>
+                        
+                        <StackPanel Grid.Column="1"
+                                    Spacing="10">
+                            
+                            <TextBox Watermark="Número Telefónico" 
+                                     Height="40" 
+                                     Margin="35, 10, 35, 0"
+                                     Background="#eee" 
+                                     Foreground="#686868" 
+                                     FontSize="16"
+                                     FontFamily="{StaticResource MontserratFont}"
+                                     BorderBrush="#613ED0"
+                                     BorderThickness="0,0,0,2"
+                                     Text="{Binding PhoneNumber}"
+                            />
                             <TextBox Watermark="Correo Electrónico" 
                                      Height="40" 
                                      Margin="35, 10, 35, 0"
@@ -198,7 +199,7 @@
                                      BorderThickness="0,0,0,2"
                                      Text="{Binding Street}"
                             />
-                            <TextBox Watermark="Número Exterior" 
+                            <TextBox Watermark="Colonia" 
                                      Height="40" 
                                      Margin="35, 10, 35, 0"
                                      Background="#eee" 
@@ -207,9 +208,9 @@
                                      FontFamily="{StaticResource MontserratFont}"
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
-                                     Text="{Binding ExteriorNumber}"
+                                     Text="{Binding Neighborhood}"
                             />
-                            <TextBox Watermark="Código Postal" 
+                            <TextBox Watermark="Municipio" 
                                      Height="40" 
                                      Margin="35, 10, 35, 0"
                                      Background="#eee" 
@@ -218,8 +219,9 @@
                                      FontFamily="{StaticResource MontserratFont}"
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
-                                     Text="{Binding PostalCode}"
+                                     Text="{Binding Municipality}"
                             />
+                            
                             <TextBox Watermark="Estado" 
                                      Height="40" 
                                      Margin="35, 10, 35, 0"
@@ -235,7 +237,7 @@
                         
                         <StackPanel Grid.Column="1"
                                     Spacing="10">
-                            <TextBox Watermark="Colonia" 
+                            <TextBox Watermark="Código Postal" 
                                      Height="40" 
                                      Margin="35, 10, 35, 0"
                                      Background="#eee" 
@@ -244,7 +246,18 @@
                                      FontFamily="{StaticResource MontserratFont}"
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
-                                     Text="{Binding Neighborhood}"
+                                     Text="{Binding PostalCode}"
+                            />
+                            <TextBox Watermark="Número Exterior" 
+                                     Height="40" 
+                                     Margin="35, 10, 35, 0"
+                                     Background="#eee" 
+                                     Foreground="#686868" 
+                                     FontSize="16"
+                                     FontFamily="{StaticResource MontserratFont}"
+                                     BorderBrush="#613ED0"
+                                     BorderThickness="0,0,0,2"
+                                     Text="{Binding ExteriorNumber}"
                             />
                             <TextBox Watermark="Número Interior" 
                                      Height="40" 
@@ -257,18 +270,6 @@
                                      BorderThickness="0,0,0,2"
                                      Text="{Binding InteriorNumber}"
                             />
-                            <TextBox Watermark="Municipio" 
-                                     Height="40" 
-                                     Margin="35, 10, 35, 0"
-                                     Background="#eee" 
-                                     Foreground="#686868" 
-                                     FontSize="16"
-                                     FontFamily="{StaticResource MontserratFont}"
-                                     BorderBrush="#613ED0"
-                                     BorderThickness="0,0,0,2"
-                                     Text="{Binding Municipality}"
-                            />
-
                         </StackPanel>
                     </Grid>
                     

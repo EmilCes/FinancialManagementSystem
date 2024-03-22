@@ -21,6 +21,7 @@ public partial class CreditTypePageViewModel : ViewModelBase
 {
     private readonly ICreditTypeService _creditTypeService;
     private readonly IPoliticsService _politicsService;
+    private bool _validPolitics;
     
     public ObservableCollection<Politic> Politics { get; }
     
@@ -40,6 +41,14 @@ public partial class CreditTypePageViewModel : ViewModelBase
     [RelayCommand]
     public async Task RegisterCreditTypeCommand()
     {
+        var politics = GetSelectedPolitics();
+        
+        if (!Validations.ValidateFields(this) || !_validPolitics)
+        {
+            DialogMessages.ShowInvalidFieldsMessage();
+            return;
+        }
+        
         try
         {
             string state = State switch
@@ -56,7 +65,7 @@ public partial class CreditTypePageViewModel : ViewModelBase
                 State = state,
                 Term = Term,
                 Iva = float.Parse(Iva),
-                Politics = GetSelectedPolitics()
+                Politics = politics
             };
             
             await _creditTypeService.RegisterCreditTypeAsync(request);
@@ -97,7 +106,11 @@ public partial class CreditTypePageViewModel : ViewModelBase
 
     private List<Politic> GetSelectedPolitics()
     {
-        return Politics.Where(politic => politic.cbPoliticState).ToList();
+        List<Politic> politics = Politics.Where(politic => politic.cbPoliticState).ToList();
+        
+        _validPolitics = (politics.Count != 0);
+
+        return politics;
     }
     
     [ObservableProperty]

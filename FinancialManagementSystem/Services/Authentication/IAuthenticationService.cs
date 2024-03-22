@@ -14,6 +14,15 @@ public interface IAuthenticationService
 
     [Post("/enable-2fa")]
     Task<Enable2FaResponse> Enable2FaAsync([Body] AuthenticationRequest request);
+    
+    [Post("/verify-email")]
+    Task<bool> VerifyEmailAsync([Query] string email);
+
+    [Post("/verify-password-code")]
+    Task<bool> VerifyPasswordCodeAsync([Body] VerificationRequest request);
+
+    [Post("/change-password")]
+    Task<bool> ChangePasswordAsync([Body] AuthenticationRequest request);
 }
 
 public class VerificationRequest

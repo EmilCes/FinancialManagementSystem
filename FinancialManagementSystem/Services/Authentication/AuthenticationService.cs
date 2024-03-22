@@ -26,4 +26,19 @@ public class AuthenticationService : IAuthenticationService
     {
         return await _api.Enable2FaAsync(request);
     }
+
+    public async Task<bool> VerifyEmailAsync(string email)
+    {
+        return await _api.VerifyEmailAsync(email);
+    }
+
+    public async Task<bool> VerifyPasswordCodeAsync(VerificationRequest request)
+    {
+        return await _api.VerifyPasswordCodeAsync(request);
+    }
+
+    public async Task<bool> ChangePasswordAsync(AuthenticationRequest request)
+    {
+        return await _api.ChangePasswordAsync(request);
+    }
 }

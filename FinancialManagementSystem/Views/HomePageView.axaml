@@ -3,9 +3,74 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="FinancialManagementSystem.Views.HomePageView"
-             Background="Violet">
-    <TextBlock Foreground="Black">
-        Cliente
-    </TextBlock>
+             x:Class="FinancialManagementSystem.Views.HomePageView">
+    <Grid RowDefinitions="*,6*"
+          Background="Transparent">
+           
+        <Border Grid.Row="0"
+            Background="#613ED0"
+            Margin="18, 20, 18, 0"
+            CornerRadius="12.5">
+            <TextBlock Text="Menu Principal" 
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Center"
+                       Margin="40, 15"
+                       Foreground="White" 
+                       FontSize="24"
+                       FontFamily="{StaticResource MontserratFont}"/>
+        </Border>
+    
+        <Border Grid.Row="1" 
+                Background="#F8F8F8"
+                BorderBrush="#B7B9BD"
+                BorderThickness="0.5,0,0.5,2"
+                Margin="18, 18, 18, 18"
+                CornerRadius="12.5"
+                BoxShadow="">
+            
+            <StackPanel Margin="10"
+                        Spacing="50">
+                <Border CornerRadius="10"
+                        Background="#613ED0"
+                        HorizontalAlignment="Center"
+                        Padding="50,0,50,0">
+                    <TextBlock Text="FMS"
+                               Padding="5"
+                               TextAlignment="Center"
+                               
+                               Background="#613ED0"
+                               Foreground="White"
+                               FontSize="48"
+                               FontFamily="{StaticResource MontserratFont}"
+                    />
+                </Border>
+                <StackPanel>
+                    <TextBlock Text="¡Bienvenido!"
+                               Padding="5"
+                               TextAlignment="Center"
+                               Foreground="Black"
+                               FontSize="26"
+                               FontFamily="{StaticResource MontserratFont}"
+                    />
+                    <TextBlock Text="Sistema Financiero"
+                               Padding="5"
+                               TextAlignment="Center"
+                               Foreground="Black"
+                               FontSize="18"
+                               FontFamily="{StaticResource MontserratFont}"
+                    />
+                </StackPanel>
+                <TextBlock Text="Para mas informacion puede contactarnos al correo chanclas1234gamil.com ó marcar al número telefónico +55 2288997766  Copyright © 2023 ParkingCity and/or its affiliates. All rights reserved."
+                           TextWrapping="Wrap"
+                           Margin="0,190,0,0"
+                           Padding="10,30,10,0"
+                           TextAlignment="Center"
+                           VerticalAlignment="Bottom"
+                           Foreground="Gray"
+                           FontSize="12"
+                           FontFamily="{StaticResource MontserratFont}"
+                />
+            </StackPanel>
+        </Border>
+    </Grid>
 </UserControl>

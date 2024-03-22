@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
-using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -14,6 +14,8 @@ using FinancialManagementSystem.Models;
 using FinancialManagementSystem.Models.Helpers;
 using FinancialManagementSystem.Services.CreditApplication;
 using FinancialManagementSystem.Services.CreditType;
+using Refit;
+using HttpRequestException = System.Net.Http.HttpRequestException;
 
 namespace FinancialManagementSystem.ViewModels;
 
@@ -26,25 +28,7 @@ public partial class CreditApplicationViewModel : ViewModelBase
     private byte[] _identificationDocument = null;
     private byte[] _proofOfIncome = null;
     private byte[] _proofOfAddress = null;
-
-    [ObservableProperty] private string _lblIdentificationDocument;
-    [ObservableProperty] private string _lblProofOfAddressDocument;
-    [ObservableProperty] private string _lblProofOfIncomeDocument;
-
-    [ObservableProperty] private SolidColorBrush _rfcBrush;
-
-    [ObservableProperty] [Required] private string _rfc;
     
-    [ObservableProperty] [Required] private string _nameReferenceOne;
-    [ObservableProperty] [Required] private string _firstLastnameReferenceOne;
-    [ObservableProperty] [Required] private string _secondLastnameReferenceOne;
-    [ObservableProperty] [Required] private string _phoneReferenceOne;
-
-    [ObservableProperty] [Required] private string _nameReferenceTwo;
-    [ObservableProperty] [Required] private string _firstLastnameReferenceTwo;
-    [ObservableProperty] [Required] private string _secondLastnameReferenceTwo;
-    [ObservableProperty] [Required] private string _phoneReferenceTwo;
-    [ObservableProperty] private ObservableCollection<CreditType> _creditTypes = new ObservableCollection<Models.CreditType>();
     public CreditApplicationViewModel()
     {
         _creditApplicationService = new CreditApplicationService("http://localhost:8080/api/v1/creditApplication");
@@ -59,6 +43,8 @@ public partial class CreditApplicationViewModel : ViewModelBase
         LblIdentificationDocument = noFile;
         LblProofOfAddressDocument = noFile;
         LblProofOfIncomeDocument = noFile;
+        GridsAreEnabled = false;
+        DisableColor = new SolidColorBrush(Colors.DarkGray);
     }
 
     private async void SetCreditTypes()
@@ -78,15 +64,28 @@ public partial class CreditApplicationViewModel : ViewModelBase
         }
     }
 
+    
+    private bool ValidateFields()
+    {
+        var validationResults = new List<ValidationResult>();
+        var validationContext = new ValidationContext(this);
+        return Validator.TryValidateObject(this, validationContext, validationResults, true);
+    }
+    
     [RelayCommand]
     public async Task ClientApplicateForCreditCommand()
     {
+
+        if (!ValidateFields())
+        {
+            DialogMessages.ShowInvalidFieldsMessage();
+            return;
+        }
+        
         CreditApplicationRequest creditApplicationRequest = new CreditApplicationRequest();
         Reference referenceOne = new Reference();
         Reference referenceTwo = new Reference();
-        Models.CreditType creditType = new Models.CreditType(); //A borrar
-
-        creditType.Description = "Crédito 1"; //A borrar
+        CreditType creditType = SelectedCredit;
         
         referenceOne.Name = NameReferenceOne;
         referenceOne.FirstLastname = FirstLastnameReferenceOne;
@@ -101,7 +100,7 @@ public partial class CreditApplicationViewModel : ViewModelBase
         creditApplicationRequest.ClientRfc = Rfc;
         creditApplicationRequest.FirstReference = referenceOne;
         creditApplicationRequest.SecondReference = referenceTwo;
-        creditApplicationRequest.SelectedCredit = creditType; //A borrar
+        creditApplicationRequest.SelectedCredit = creditType;
 
         if (_identificationDocument != null && _proofOfAddress != null && _proofOfIncome != null)
         {
@@ -112,16 +111,20 @@ public partial class CreditApplicationViewModel : ViewModelBase
             try
             {
                 await _creditApplicationService.CreateAplicationAsync(creditApplicationRequest);
+                DialogMessages.ShowMessage("Registro Exitoso", "El Cliente fue registrado correctamente.");
             }
-            catch (Exception e)
+            catch (ApiException e)
             {
-                //TODO Logger
-                Console.WriteLine(e.StackTrace);
+                DialogMessages.ShowApiExceptionMessage();
+            }
+            catch (HttpRequestException e)
+            {
+                DialogMessages.ShowHttpRequestExceptionMessage();
             }
         }
         else
         {
-            DialogMessages.ShowMessage("Faltan datos.", "Seleccione todos los archivos a subir.");
+            DialogMessages.ShowMessage("Faltan archivos.", "Seleccione todos los archivos a subir.");
         }
     }
     
@@ -136,17 +139,29 @@ public partial class CreditApplicationViewModel : ViewModelBase
             
             if (response.clientIsRegular)
             {
-                RfcBrush = new SolidColorBrush(Colors.Aqua);
+                RfcBrush = new SolidColorBrush(Colors.Green);
+                GridsAreEnabled = true;
+                DisableColor = new SolidColorBrush(Colors.Transparent);
             }
             else
             {
                 RfcBrush = new SolidColorBrush(Colors.MediumOrchid);
+                GridsAreEnabled = false;
+                DisableColor = new SolidColorBrush(Colors.DarkGray);
+                DialogMessages.ShowMessage("Cliente invalido", "El cliente ya tiene un crédito activo.");
             }
         }
-        catch (Exception e)
+        catch (ApiException e)
         {
-            Console.WriteLine(e.StackTrace);
-            RfcBrush = new SolidColorBrush(Colors.Red);
+            DialogMessages.ShowApiExceptionMessage();
+            GridsAreEnabled = false;
+            DisableColor = new SolidColorBrush(Colors.DarkGray);
+        }
+        catch (HttpRequestException e)
+        {
+            DialogMessages.ShowHttpRequestExceptionMessage();
+            GridsAreEnabled = false;
+            DisableColor = new SolidColorBrush(Colors.DarkGray);
         }
     }
 
@@ -167,13 +182,6 @@ public partial class CreditApplicationViewModel : ViewModelBase
                 _identificationDocument = ReadPDFFileToBytes(directory[0]);
                 LblIdentificationDocument = FILE_SELECTED;
                 
-                //TO DELETE
-                Console.WriteLine("");
-                for (int i = 0; i < _identificationDocument.Length; i++)
-                {
-                    Console.Write(_identificationDocument[i]);
-                }
-                //TO DELETE
             }
         }
     }
@@ -194,14 +202,6 @@ public partial class CreditApplicationViewModel : ViewModelBase
                 Console.WriteLine(directory[0]);
                 _proofOfIncome = ReadPDFFileToBytes(directory[0]);
                 LblProofOfIncomeDocument = FILE_SELECTED;
-                
-                //TO DELETE
-                Console.WriteLine("");
-                for (int i = 0; i < _proofOfIncome.Length; i++)
-                {
-                    Console.Write(_proofOfIncome[i]);
-                }
-                //TO DELETE
             }
         }
     }
@@ -222,14 +222,6 @@ public partial class CreditApplicationViewModel : ViewModelBase
                 Console.WriteLine(directory[0]);
                 _proofOfAddress = ReadPDFFileToBytes(directory[0]);
                 LblProofOfAddressDocument = FILE_SELECTED;
-                
-                //TO DELETE
-                Console.WriteLine("");
-                for (int i = 0; i < _proofOfAddress.Length; i++)
-                {
-                    Console.Write(_proofOfAddress[i]);
-                }
-                //TO DELETE
             }
         }
     }
@@ -256,4 +248,66 @@ public partial class CreditApplicationViewModel : ViewModelBase
             return null;
         }
     }
+    
+    [ObservableProperty] private string _lblIdentificationDocument;
+    [ObservableProperty] private string _lblProofOfAddressDocument;
+    [ObservableProperty] private string _lblProofOfIncomeDocument;
+    [ObservableProperty] private bool _gridsAreEnabled;
+
+    [ObservableProperty] private SolidColorBrush _rfcBrush;
+    [ObservableProperty] private SolidColorBrush _disableColor;
+
+    [ObservableProperty] 
+    [NotifyDataErrorInfo]
+    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
+    [RegularExpression(@"^[A-Za-z]{4}\d{6}[A-Za-z\d]{3}$", ErrorMessage = ErrorMessages.RFC_MESSAGE)]
+    private string _rfc;
+    
+    [ObservableProperty] 
+    [NotifyDataErrorInfo]
+    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)] 
+    private string _nameReferenceOne;
+    
+    [ObservableProperty] 
+    [NotifyDataErrorInfo]
+    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
+    private string _firstLastnameReferenceOne;
+    
+    [ObservableProperty] 
+    [NotifyDataErrorInfo]
+    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
+    private string _secondLastnameReferenceOne;
+    
+    [ObservableProperty] 
+    [NotifyDataErrorInfo]
+    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)] 
+    private string _phoneReferenceOne;
+
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)] 
+    private string _nameReferenceTwo;
+    
+    [ObservableProperty] 
+    [NotifyDataErrorInfo]
+    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)] 
+    private string _firstLastnameReferenceTwo;
+    
+    [ObservableProperty] 
+    [NotifyDataErrorInfo]
+    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)] 
+    private string _secondLastnameReferenceTwo;
+    
+    [ObservableProperty] 
+    [NotifyDataErrorInfo]
+    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)] 
+    private string _phoneReferenceTwo;
+    
+    [ObservableProperty] 
+    private ObservableCollection<CreditType> _creditTypes = new ObservableCollection<Models.CreditType>();
+
+    [ObservableProperty] 
+    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)] 
+    private CreditType _selectedCredit;
+    
 }

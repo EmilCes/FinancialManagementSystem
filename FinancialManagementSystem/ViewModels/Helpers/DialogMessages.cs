@@ -28,4 +28,9 @@ public static class DialogMessages
     {
         ShowMessage("Error de Conexión", "Hubo un error al conectar con el servidor. Intentálo mas tarde.");
     }
+    
+    public static void ShowInvalidRfc()
+    {
+        ShowMessage("No se encuentra el cliente.", "Cliente no encontrado. Por favor, registralo.");
+    }
 }

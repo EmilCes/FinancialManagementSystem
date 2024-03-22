@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -33,6 +34,12 @@ public partial class LoginViewModel : ViewModelBase
     [RelayCommand]
     public async Task LoginCommand()
     {
+        if (!Validations.ValidateFields(this, GetType(),new List<string> { "Email", "Password" }))
+        {
+            DialogMessages.ShowInvalidFieldsMessage();
+            return;
+        }
+        
         var request = new AuthenticationRequest()
         {
             email = Email,
@@ -50,21 +57,32 @@ public partial class LoginViewModel : ViewModelBase
             }
             else
             {
-                DialogMessages.ShowMessage("MFA no activado", 
+                DialogMessages.ShowMessage("MFA no activado",
                     "La autenticación de dos factores no esta activada. Activala antes de continuar.");
             }
         }
-        catch (ApiException)
+        catch (ApiException e)
         {
+            Console.WriteLine(e.Message);
+            Console.WriteLine(e.StackTrace);
             DialogMessages.ShowApiExceptionMessage();
+        }
+        catch (HttpRequestException)
+        {
+            DialogMessages.ShowHttpRequestExceptionMessage();
         }
     }
 
     [RelayCommand]
     public async Task VerifyCommand()
     {
-        //TODO: Redirect if MFA is not enabled
-        var request = new VerificationRequest()
+        if (!Validations.ValidateFields(this, GetType(),new List<string> { "Code2Fa" }))
+        {
+            DialogMessages.ShowInvalidFieldsMessage();
+            return;
+        }
+        
+        var request = new VerificationRequest
         {
             email = Email,
             code = Code2Fa
@@ -81,9 +99,16 @@ public partial class LoginViewModel : ViewModelBase
             
             ChangeWindowToMainMenu();
         }
-        catch (ApiException)
+        catch (ApiException e)
         {
-            DialogMessages.ShowApiExceptionMessage();
+            if (e.StatusCode == System.Net.HttpStatusCode.Forbidden) // 403 Forbidden
+            {
+                DialogMessages.ShowMessage("Código incorrecto", "Verifica el código que ingresaste");
+            }
+            else
+            {
+                DialogMessages.ShowApiExceptionMessage();
+            }
         }
         catch (HttpRequestException)
         {
@@ -93,9 +118,13 @@ public partial class LoginViewModel : ViewModelBase
 
     public async Task Enable2Fa()
     {
-        //TODO: Validate MFA is not enabled
+        if (!Validations.ValidateFields(this, GetType(), new List<string> { "Email", "Password" }))
+        {
+            DialogMessages.ShowInvalidFieldsMessage();
+            return;
+        }
         
-        var request = new AuthenticationRequest()
+        var request = new AuthenticationRequest
         {
             email = Email,
             password = Password

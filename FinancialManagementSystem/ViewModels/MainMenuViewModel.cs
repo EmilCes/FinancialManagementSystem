@@ -2,6 +2,7 @@ using System;
 using System.Collections.ObjectModel;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -28,8 +29,7 @@ public partial class MainMenuViewModel : ViewModelBase
     public MainMenuViewModel()
     {
         Employee employee = Employee.Instance;
-        //SetItemsBasedOnRole(employee.Role);
-        SetItemsBasedOnRole("ASESOR_CREDITO");
+        SetItemsBasedOnRole(employee.Role);
         string username = employee.FirstName + " " + employee.LastName;
         Username = username;
     }
@@ -67,8 +67,29 @@ public partial class MainMenuViewModel : ViewModelBase
                 break;
             default:
                 Items.Add(new ListItemTemplate(typeof(HomePageViewModel), "Menu Principal", "HomeRegular"));
-                Items.Add(new ListItemTemplate(typeof(ClientPageViewModel), "Registrar Cliente", "PeopleCommunityRegular")); //QUITAR
                 break;
+        }
+    }
+
+    [RelayCommand]
+    public void LogoutCommand()
+    {
+        ChangeWindowToLogin();
+    }
+
+    private void ChangeWindowToLogin()
+    {
+        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            var currentWindow = desktop.MainWindow;
+            
+            desktop.MainWindow = new Views.Login
+            {
+                DataContext = new LoginViewModel(),
+            };
+            
+            desktop.MainWindow.Show();
+            currentWindow?.Close();
         }
     }
 }

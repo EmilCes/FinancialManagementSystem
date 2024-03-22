@@ -26,6 +26,6 @@ public static class DialogMessages
     
     public static void ShowHttpRequestExceptionMessage()
     {
-        ShowMessage("Error de Conexión", "Hubo un error al conectar con el servidor. Intentálo mas tarde.");
+        ShowMessage("Error de Conexión", "No se pudo contactar con el servidor. Revise su conexión a internet.");
     }
 }

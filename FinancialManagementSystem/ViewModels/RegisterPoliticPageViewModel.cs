@@ -84,4 +84,11 @@ public partial class RegisterPoliticPageViewModel : ViewModelBase
         var validationContext = new ValidationContext(this);
         return Validator.TryValidateObject(this, validationContext, validationResults, true);
     }
+    
+    [RelayCommand]
+    public void CancelCommand()
+    {
+        Name = "";
+        Description = "";
+    }
 }

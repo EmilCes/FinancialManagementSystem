@@ -51,12 +51,14 @@ public partial class PoliticsPageViewModel : ViewModelBase
 
     private async Task LoadCommand()
     {
+        foreach (Politic politic in PoliticsList)
+        {
+            PoliticsList.Remove(politic);
+        }
         try
         {
             List<Politic> result = await _politicsService.GetPoliticsAsync();
             Politics = result;
-            
-            
             foreach (var politic in result)
             {
                 PoliticsList.Add(politic);

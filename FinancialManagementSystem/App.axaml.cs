@@ -3,8 +3,12 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
+using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.Messaging;
+using FinancialManagementSystem.Messages;
 using FinancialManagementSystem.ViewModels;
 using FinancialManagementSystem.Views;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FinancialManagementSystem;
 
@@ -27,9 +31,9 @@ public partial class App : Application
         
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            desktop.MainWindow = new Login
+            desktop.MainWindow = new MainMenu()
             {
-                DataContext = new LoginViewModel(),
+                DataContext = new MainMenuViewModel(Message.Instance),
             };
         }
 

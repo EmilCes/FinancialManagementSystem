@@ -67,7 +67,9 @@
                                          FontFamily="{StaticResource MontserratFont}"
                                          BorderBrush="{Binding ClientRfcBrush}"
                                          BorderThickness="0,0,0,2"
-                                         Text="{Binding Rfc}" />
+                                         Text="{Binding Rfc}"
+                                         IsVisible="{Binding !ModificationModeEnable}"
+                                         IsReadOnly="{Binding IsFormReadOnly}"/>
                                 <Button Grid.Column="1"
                                         Height="40"
                                         Margin="2,0,0,0"
@@ -79,6 +81,21 @@
                                         FontFamily="{StaticResource MontserratFont}"
                                         CornerRadius="5"
                                         Command="{Binding VerifyClientExistenceCommand}"
+                                        IsVisible="{Binding !ModificationModeEnable}"
+                                />
+                                <TextBox Grid.Column="0"
+                                         Grid.ColumnSpan="2"
+                                         Watermark="RFC" 
+                                         Height="40" 
+                                         Background="#eee" 
+                                         Foreground="#686868" 
+                                         FontSize="16"
+                                         FontFamily="{StaticResource MontserratFont}"
+                                         BorderBrush="#613ED0"
+                                         BorderThickness="0,0,0,2"
+                                         Text="{Binding Rfc}"
+                                         IsVisible="{Binding ModificationModeEnable}"
+                                         IsReadOnly="{Binding ModificationModeEnable}"
                                 />
                             </Grid>
                             <TextBox Watermark="Nombre(s)" 
@@ -91,6 +108,7 @@
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
                                      Text="{Binding Name}"
+                                     IsReadOnly="{Binding IsFormReadOnly}"
                             />
                             <TextBox Watermark="Apellido Paterno" 
                                      Height="40" 
@@ -102,6 +120,7 @@
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
                                      Text="{Binding Lastname}"
+                                     IsReadOnly="{Binding IsFormReadOnly}"
                             />
                             <TextBox Watermark="Apellido Materno" 
                                      Height="40" 
@@ -113,6 +132,7 @@
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
                                      Text="{Binding Surname}"
+                                     IsReadOnly="{Binding IsFormReadOnly}"
                             />
                             
 
@@ -131,6 +151,7 @@
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
                                      Text="{Binding PhoneNumber}"
+                                     IsReadOnly="{Binding IsFormReadOnly}"
                             />
                             <TextBox Watermark="Correo Electrónico" 
                                      Height="40" 
@@ -142,6 +163,7 @@
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
                                      Text="{Binding Email}"
+                                     IsReadOnly="{Binding IsFormReadOnly}"
                             />
                             <TextBox Watermark="Salario Mensual" 
                                      Height="40" 
@@ -153,6 +175,7 @@
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
                                      Text="{Binding MonthlySalary}"
+                                     IsReadOnly="{Binding IsFormReadOnly}"
                             />
                             
                             <DatePicker Margin="35, 10, 35, 0"
@@ -165,6 +188,7 @@
                                         BorderBrush="#613ED0"
                                         BorderThickness="0,0,0,2"
                                         SelectedDate="{Binding DateOfBirth}"
+                                        IsEnabled="{Binding !IsFormReadOnly}"
                             />
                             
                         </StackPanel>
@@ -176,7 +200,8 @@
                                    Margin="35, 15"
                                    Foreground="Black" 
                                    FontSize="24"
-                                   FontFamily="{StaticResource MontserratFont}"/>
+                                   FontFamily="{StaticResource MontserratFont}"
+                                   />
                         <Separator Background="Black"
                                    BorderThickness="0.5"
                                    Margin="35,0,35,0"/>
@@ -198,6 +223,7 @@
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
                                      Text="{Binding Street}"
+                                     IsReadOnly="{Binding IsFormReadOnly}"
                             />
                             <TextBox Watermark="Colonia" 
                                      Height="40" 
@@ -209,6 +235,7 @@
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
                                      Text="{Binding Neighborhood}"
+                                     IsReadOnly="{Binding IsFormReadOnly}"
                             />
                             <TextBox Watermark="Municipio" 
                                      Height="40" 
@@ -220,6 +247,7 @@
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
                                      Text="{Binding Municipality}"
+                                     IsReadOnly="{Binding IsFormReadOnly}"
                             />
                             
                             <TextBox Watermark="Estado" 
@@ -232,6 +260,7 @@
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
                                      Text="{Binding State}"
+                                     IsReadOnly="{Binding IsFormReadOnly}"
                             />
                         </StackPanel>
                         
@@ -247,6 +276,7 @@
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
                                      Text="{Binding PostalCode}"
+                                     IsReadOnly="{Binding IsFormReadOnly}"
                             />
                             <TextBox Watermark="Número Exterior" 
                                      Height="40" 
@@ -258,6 +288,7 @@
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
                                      Text="{Binding ExteriorNumber}"
+                                     IsReadOnly="{Binding IsFormReadOnly}"
                             />
                             <TextBox Watermark="Número Interior" 
                                      Height="40" 
@@ -269,6 +300,7 @@
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
                                      Text="{Binding InteriorNumber}"
+                                     IsReadOnly="{Binding IsFormReadOnly}"
                             />
                         </StackPanel>
                     </Grid>
@@ -300,6 +332,7 @@
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
                                      Text="{Binding WorkPlaceName}"
+                                     IsReadOnly="{Binding IsFormReadOnly}"
                             />
                             <TextBox Watermark="Correo" 
                                      Height="40" 
@@ -311,6 +344,7 @@
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
                                      Text="{Binding WorkPlaceEmail}"
+                                     IsReadOnly="{Binding IsFormReadOnly}"
                             />
                         </StackPanel>
                         
@@ -326,6 +360,7 @@
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
                                      Text="{Binding WorkPlacePhoneNumber}"
+                                     IsReadOnly="{Binding IsFormReadOnly}"
                             />
                             <TextBox Watermark="RFC" 
                                      Height="40" 
@@ -337,6 +372,7 @@
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
                                      Text="{Binding WorkPlaceRfc}"
+                                     IsReadOnly="{Binding IsFormReadOnly}"
                             />
                         </StackPanel>
                     </Grid>
@@ -368,6 +404,7 @@
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
                                      Text="{Binding PaymentClabe}"
+                                     IsReadOnly="{Binding IsFormReadOnly}"
                             />
                             <TextBox Watermark="Banco" 
                                      Height="40" 
@@ -379,11 +416,15 @@
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
                                      Text="{Binding PaymentBankName}"
+                                     IsReadOnly="{Binding IsFormReadOnly}"
                             />
                             <CheckBox Content="¿Usar misma cuenta?"
                                       FontFamily="{StaticResource MontserratFont}"
                                       Margin="35, 10, 35, 0"
-                                      Command="{Binding SameBankAccountCommand}"/>
+                                      Command="{Binding SameBankAccountCommand}"
+                                      IsVisible="{Binding !IsFormReadOnly}"
+                                      IsEnabled="{Binding !IsFormReadOnly}"
+                                      />
                         </StackPanel>
                         
                         <StackPanel Grid.Column="1"
@@ -398,6 +439,7 @@
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
                                      Text="{Binding DepositClabe}"
+                                     IsReadOnly="{Binding IsFormReadOnly}"
                             />
                             <TextBox Watermark="Banco" 
                                      Height="40" 
@@ -409,6 +451,7 @@
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
                                      Text="{Binding DepositBankName}"
+                                     IsReadOnly="{Binding IsFormReadOnly}"
                             />
                         </StackPanel>
                     </Grid>
@@ -416,7 +459,8 @@
                     <StackPanel Orientation="Horizontal"
                                 HorizontalAlignment="Right"
                                 Spacing="10"
-                                Margin="0,0,35,15">
+                                Margin="0,0,35,15"
+                                IsVisible="{Binding !ModificationModeEnable}">
                         <Button 
                                 Content="Registrar Crédito" HorizontalAlignment="Center"
                                 Background="#512da8"
@@ -436,6 +480,71 @@
                                 Height="40"
                                 Width="150"
                                 CornerRadius="5"
+                        />
+                    </StackPanel>
+                    
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Right"
+                                Spacing="10"
+                                Margin="0,20,35,15"
+                                IsVisible="{Binding ModificationModeEnable}">
+                        <Button 
+                            Content="Registrar Solicitud" HorizontalAlignment="Center"
+                            Background="#512da8"
+                            Margin="0, 20, 0, 0"
+                            Foreground="White"
+                            FontFamily="{StaticResource MontserratFont}"
+                            Height="40"
+                            Width="170"
+                            CornerRadius="5"
+                            IsEnabled="{Binding IsFormReadOnly}"
+                        />
+                        <Button 
+                            Content="Modificar Cliente" HorizontalAlignment="Center"
+                            Background="#512da8"
+                            Margin="0, 20, 0, 0"
+                            Foreground="White"
+                            FontFamily="{StaticResource MontserratFont}"
+                            Height="40"
+                            Width="150"
+                            CornerRadius="5"
+                            Command="{Binding SetFormAsModifiableCommand}"
+                            IsVisible="{Binding IsFormReadOnly}"
+                        />
+                        <Button 
+                            Content="Actualizar" HorizontalAlignment="Center"
+                            Background="#512da8"
+                            Margin="0, 20, 0, 0"
+                            Foreground="White"
+                            FontFamily="{StaticResource MontserratFont}"
+                            Height="40"
+                            Width="150"
+                            CornerRadius="5"
+                            Command="{Binding UpdateClientCommand}"
+                            IsVisible="{Binding !IsFormReadOnly}"
+                        />
+                        <Button Content="Cancelar" HorizontalAlignment="Center"
+                                Background="#FF3204"
+                                Margin="0, 20, 0, 0"
+                                Foreground="White"
+                                FontFamily="{StaticResource MontserratFont}"
+                                Height="40"
+                                Width="150"
+                                CornerRadius="5"
+                                Command="{Binding SetFormAsReadOnlyCommand}"
+                                IsVisible="{Binding !IsFormReadOnly}"
+                        />
+                        <Button Content="Cancelar" HorizontalAlignment="Center"
+                                Background="#FF3204"
+                                Margin="0, 20, 0, 0"
+                                Foreground="White"
+                                FontFamily="{StaticResource MontserratFont}"
+                                Height="40"
+                                Width="150"
+                                CornerRadius="5"
+                                Command="{Binding CancelCommand}"
+                                IsVisible="{Binding IsFormReadOnly}"
+
                         />
                     </StackPanel>
                     

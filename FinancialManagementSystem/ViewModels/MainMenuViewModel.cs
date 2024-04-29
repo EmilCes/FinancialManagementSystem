@@ -76,6 +76,7 @@ public partial class MainMenuViewModel : ViewModelBase
                 Items.Add(new ListItemTemplate(typeof(HomePageViewModel), "Menu Principal", "HomeRegular"));
                 Items.Add(new ListItemTemplate(typeof(ClientPageViewModel), "Registrar Cliente", "PeopleCommunityRegular"));
                 Items.Add(new ListItemTemplate(typeof(ClientsPageViewModel), "Clientes", "Search"));
+                Items.Add(new ListItemTemplate(typeof(CreditApplicationViewModel), "Solicitud de crédito", ""));
                 break;
             default:
                 Items.Add(new ListItemTemplate(typeof(HomePageViewModel), "Menu Principal", "HomeRegular"));

@@ -7,7 +7,8 @@
              x:DataType="viewModels:ModifyPoliticPageViewModel"
              x:Class="FinancialManagementSystem.Views.ModifyPoliticPageView">
     <Grid RowDefinitions="*,6*"
-          Background="Transparent">
+          Background="Transparent"
+          IsVisible="False">
            
         <Border Grid.Row="0"
             Background="#613ED0"

@@ -6,6 +6,8 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using FinancialManagementSystem.Messages;
 using FinancialManagementSystem.Models;
 
 namespace FinancialManagementSystem.ViewModels;
@@ -14,24 +16,33 @@ public partial class MainMenuViewModel : ViewModelBase
 {
     [ObservableProperty] 
     private string _username;
-    
     [ObservableProperty]
     private bool _isPaneOpen = true;
-
     [ObservableProperty] 
     private ViewModelBase _currentPage = new HomePageViewModel();
-
     [ObservableProperty] 
     private ListItemTemplate? _selectedListItem;
     
     public ObservableCollection<ListItemTemplate> Items { get; } = new();
 
-    public MainMenuViewModel()
+    public MainMenuViewModel(IMessenger messenger)
     {
-        Employee employee = Employee.Instance;
-        SetItemsBasedOnRole(employee.Role);
-        string username = employee.FirstName + " " + employee.LastName;
-        Username = username;
+        messenger.Register<MainMenuViewModel, ViewClientMessage>(this, (_, message) =>
+        {
+            CurrentPage = new ClientPageViewModel(message.Value);
+        });
+        
+        messenger.Register<MainMenuViewModel, ViewClientsMessage>(this, (_, message) =>
+        {
+            CurrentPage = new ClientsPageViewModel();
+        });
+        
+        //Employee employee = Employee.Instance;
+        //SetItemsBasedOnRole(employee.Role);
+        //string username = employee.FirstName + " " + employee.LastName;
+        //Username = username;
+        SetItemsBasedOnRole("ASESOR_CREDITO");
+
     }
 
     partial void OnSelectedListItemChanged(ListItemTemplate? value)
@@ -64,6 +75,7 @@ public partial class MainMenuViewModel : ViewModelBase
             case "ASESOR_CREDITO":
                 Items.Add(new ListItemTemplate(typeof(HomePageViewModel), "Menu Principal", "HomeRegular"));
                 Items.Add(new ListItemTemplate(typeof(ClientPageViewModel), "Registrar Cliente", "PeopleCommunityRegular"));
+                Items.Add(new ListItemTemplate(typeof(ClientsPageViewModel), "Clientes", "Search"));
                 break;
             default:
                 Items.Add(new ListItemTemplate(typeof(HomePageViewModel), "Menu Principal", "HomeRegular"));

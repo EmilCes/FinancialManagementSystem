@@ -85,7 +85,8 @@
                               Background="#EFF2F7">
                                 
                                 <TransitioningContentControl Grid.Row="0" Grid.RowSpan="2"
-                                                             Content="{Binding CurrentPage}"/>
+                                                             Content="{Binding CurrentPage}"
+                                                             Name="ContentControl"/>
                                 
                         </Grid>
                 </SplitView.Content>

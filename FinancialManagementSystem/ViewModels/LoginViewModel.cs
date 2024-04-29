@@ -7,6 +7,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using FinancialManagementSystem.Messages;
 using FinancialManagementSystem.Models;
 using FinancialManagementSystem.Models.Helpers;
 using FinancialManagementSystem.Services.Authentication;
@@ -291,7 +292,7 @@ public partial class LoginViewModel : ViewModelBase
             
             desktop.MainWindow = new Views.MainMenu
             {
-                DataContext = new MainMenuViewModel(),
+                DataContext = new MainMenuViewModel(Message.Instance),
             };
             
             desktop.MainWindow.Show();

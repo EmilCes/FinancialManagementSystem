@@ -28,9 +28,9 @@ public partial class ClientsPageViewModel : ViewModelBase
     
     private readonly IClientService _clientService;
     private readonly IMessenger _messenger = Message.Instance;
+    private List<Client> ClientsListCopy { get; set; } = new();
     
     public ObservableCollection<Client> ClientsList { get; set; } = new();
-    private List<Client> ClientsListCopy { get; set; } = new();
     
 
     
@@ -54,11 +54,13 @@ public partial class ClientsPageViewModel : ViewModelBase
             
             FillObservableCollection(ClientsList, result);
         }
-        catch (ApiException ex)
+        catch (ApiException)
         {
-            Console.WriteLine(ex.StatusCode);
-            Console.WriteLine(ex.Message);
-            Console.WriteLine(ex.StackTrace);
+            DialogMessages.ShowApiExceptionMessage();
+        }
+        catch (HttpRequestException)
+        {
+            DialogMessages.ShowHttpRequestExceptionMessage();
         }
     }
 

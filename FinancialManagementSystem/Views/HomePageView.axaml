@@ -28,8 +28,10 @@
                 CornerRadius="12.5"
                 BoxShadow="">
             
-            <StackPanel Margin="10"
-                        Spacing="50">
+            <Grid RowDefinitions="*,*">
+                <StackPanel Grid.Row="0" 
+                            Margin="10"
+                            Spacing="50">
                 <Border CornerRadius="10"
                         Background="#613ED0"
                         HorizontalAlignment="Center"
@@ -60,17 +62,19 @@
                                FontFamily="{StaticResource MontserratFont}"
                     />
                 </StackPanel>
-                <TextBlock Text="Para mas informacion puede contactarnos al correo chanclas1234gamil.com ó marcar al número telefónico +55 2288997766  Copyright © 2023 ParkingCity and/or its affiliates. All rights reserved."
+                
+            </StackPanel>
+                <TextBlock Grid.Row="1" 
+                           Text="Para mas informacion puede contactarnos al correo chanclas1234@gmail.com ó marcar al número telefónico +55 2288997766  Copyright © 2023 ParkingCity and/or its affiliates. All rights reserved."
                            TextWrapping="Wrap"
-                           Margin="0,190,0,0"
-                           Padding="10,30,10,0"
+                           Margin="10,0,10,5"
                            TextAlignment="Center"
                            VerticalAlignment="Bottom"
                            Foreground="Gray"
                            FontSize="12"
                            FontFamily="{StaticResource MontserratFont}"
                 />
-            </StackPanel>
+            </Grid>
         </Border>
     </Grid>
 </UserControl>

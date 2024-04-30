@@ -10,9 +10,6 @@ public interface ICreditApplicationService
     [Get("/regularClient")]
     Task<VerifyRegularClientResponse> VerifyRegularAsync([Query] string rfc);
 
-    [Get("/creditTypes")]
-    Task<List<Models.CreditType>> GetCreditTypesAsync();
-
     [Post("/applicate")]
     Task CreateAplicationAsync([Body] CreditApplicationRequest request);
 }

@@ -17,6 +17,9 @@ public class Client
     public Address Address { get; set; }
     public Workplace Workplace { get; set; }
     public List<BankAccount> BankAccounts { get; set; }
+    
+    public string FullName => $"{Name} {Lastname} {Surname}";
+
 
     public override string ToString()
     {

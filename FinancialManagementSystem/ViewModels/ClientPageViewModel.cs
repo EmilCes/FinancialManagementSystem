@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Net.Http;
@@ -7,6 +6,8 @@ using System.Threading.Tasks;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using FinancialManagementSystem.Messages;
 using FinancialManagementSystem.Models;
 using FinancialManagementSystem.Models.Helpers;
 using FinancialManagementSystem.Services.Client;
@@ -19,10 +20,19 @@ public partial class ClientPageViewModel : ViewModelBase
 {
     private readonly IClientService _clientService;
     private bool _isCheckboxActive;
+    private Client _currentClient;
     
     public ClientPageViewModel()
     {
         _clientService = new ClientService("http://localhost:8080/api/v1/client");
+    }
+    
+    public ClientPageViewModel(Client client)
+    {
+        _clientService = new ClientService("http://localhost:8080/api/v1/client");
+        _currentClient = client;
+        LoadClientData();
+        SetFormAsReadOnlyCommand();
     }
     
     [RelayCommand]
@@ -94,9 +104,83 @@ public partial class ClientPageViewModel : ViewModelBase
             DialogMessages.ShowHttpRequestExceptionMessage();
         }
     }
+    
+    [RelayCommand]
+    public async Task UpdateClientCommand()
+    {
+        if (!Validations.ValidateFields(this))
+        {
+            DialogMessages.ShowInvalidFieldsMessage();
+            return;
+        }
+        
+        var address = new Address
+        {
+            AddressId = _currentClient.Address.AddressId,
+            Street = Street!,
+            Neighborhood = Neighborhood,
+            ExteriorNumber = int.Parse(ExteriorNumber),
+            InteriorNumber = !string.IsNullOrEmpty(InteriorNumber) ? int.Parse(InteriorNumber) : 0,
+            PostalCode = PostalCode,
+            Municipality = Municipality,
+            State = State
+        };
 
-    private static readonly char[] separator = new char[] { ' ' };
+        var workplace = new Workplace
+        {
+            WorkplaceId =_currentClient.Workplace.WorkplaceId,
+            Name = WorkPlaceName,
+            Email = WorkPlaceEmail,
+            PhoneNumber = WorkPlacePhoneNumber,
+            Rfc = WorkPlaceRfc
+        };
 
+        var paymentBankAccount = new BankAccount
+        {
+            BankAccountId = _currentClient.BankAccounts[0].BankAccountId,
+            Clabe = PaymentClabe,
+            BankName = PaymentBankName
+        };
+
+        var depositBankAccount = new BankAccount
+        {
+            BankAccountId = _currentClient.BankAccounts[1].BankAccountId,
+            Clabe = DepositClabe,
+            BankName = DepositBankName
+        };
+
+        var client = new Client
+        {
+            ClientId = _currentClient.ClientId,
+            Name = Name!,
+            Lastname = Lastname,
+            Surname = Surname,
+            PhoneNumber = PhoneNumber,
+            DateOfBirth = ConvertToMySqlDateFormat(DateOfBirth),
+            Email = Email,
+            Rfc = Rfc,
+            MonthlySalary = float.Parse(MonthlySalary),
+            Address = address,
+            Workplace = workplace,
+            BankAccounts = [paymentBankAccount, depositBankAccount]
+        };
+
+        try
+        {
+            await _clientService.UpdateClientAsync(_currentClient.ClientId, client);
+            DialogMessages.ShowMessage("Modificación Exitosa", "Cliente Mofificado con éxito");
+            SetFormAsReadOnlyCommand();
+        }
+        catch (ApiException)
+        {
+            DialogMessages.ShowApiExceptionMessage();
+        }
+        catch (HttpRequestException)
+        {
+            DialogMessages.ShowHttpRequestExceptionMessage();
+        }
+    }
+    
     [RelayCommand]
     public async Task VerifyClientExistenceCommand()
     {
@@ -147,10 +231,73 @@ public partial class ClientPageViewModel : ViewModelBase
         }
     }
 
+    [RelayCommand]
+    public void SetFormAsModifiableCommand()
+    {
+        IsFormReadOnly = false;
+    }
+
+    [RelayCommand]
+    public void SetFormAsReadOnlyCommand()
+    {
+        IsFormReadOnly = true;
+        ModificationModeEnable = true;
+    }
+    
+    [RelayCommand]
+    public void CancelCommand()
+    {
+        IMessenger messenger = Message.Instance;
+        messenger.Send(new ViewClientsMessage());
+    }
+    
+    private void LoadClientData()
+    {
+        var client = _currentClient;
+        
+        // Client Information
+        Rfc = client.Rfc;
+        Name = client.Name;
+        Lastname = client.Lastname;
+        Surname = client.Surname;
+        PhoneNumber = client.PhoneNumber;
+        Email = client.Email;
+        MonthlySalary = client.MonthlySalary.ToString(CultureInfo.InvariantCulture);
+        DateOfBirth = client.DateOfBirth;
+        
+        // Address Information
+        Address addres = client.Address;
+        Street = addres.Street;
+        Neighborhood = addres.Neighborhood;
+        Municipality = addres.Municipality;
+        State = addres.State;
+        PostalCode = addres.PostalCode;
+        InteriorNumber = addres.InteriorNumber.ToString();
+        ExteriorNumber = addres.ExteriorNumber.ToString();
+        
+        // Work Place
+        Workplace workplace = client.Workplace;
+        WorkPlaceName = workplace.Name;
+        WorkPlaceEmail = workplace.Email;
+        WorkPlaceRfc = workplace.Rfc;
+        WorkPlacePhoneNumber = workplace.PhoneNumber;
+        
+        // Bank Account 1
+        BankAccount bankAccount1 = client.BankAccounts[0];
+        PaymentBankName = bankAccount1.BankName;
+        PaymentClabe = bankAccount1.Clabe;
+        
+        // Bank Account 2
+        BankAccount bankAccount2 = client.BankAccounts[1];
+        DepositBankName = bankAccount2.BankName;
+        DepositClabe = bankAccount2.Clabe;
+    }
+    
     private string ConvertToMySqlDateFormat(string dateString)
     {
         try
         {
+            char[] separator = { ' ' };
             string[] parts = dateString.Split(separator, StringSplitOptions.RemoveEmptyEntries);
             string datePart = parts[0];
 
@@ -171,6 +318,12 @@ public partial class ClientPageViewModel : ViewModelBase
 
     [ObservableProperty] 
     private bool _registerClientIsEnable;
+
+    [ObservableProperty] 
+    private bool _isFormReadOnly;
+    
+    [ObservableProperty] 
+    private bool _modificationModeEnable;
     
     [ObservableProperty] 
     [NotifyDataErrorInfo]

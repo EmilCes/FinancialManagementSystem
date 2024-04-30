@@ -19,6 +19,11 @@ public class ClientService : IClientService
     {
         return await _api.GetClientsAsync();
     }
+    
+    public async Task<Models.Client> GetClientByIdAsync(int id)
+    {
+        return await _api.GetClientByIdAsync(id);
+    }
 
     public async Task RegisterClientAsync(Models.Client request)
     {
@@ -28,5 +33,10 @@ public class ClientService : IClientService
     public async Task<VerifyClientExistenceResponse> VerifyClientExistenceAsync(VerifyClientExistenceRequest request)
     {
         return await _api.VerifyClientExistenceAsync(request);
+    }
+
+    public async Task UpdateClientAsync(int id, Models.Client clientUpdated)
+    {
+        await _api.UpdateClientAsync(id, clientUpdated);
     }
 }

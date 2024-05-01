@@ -11,6 +11,9 @@ public interface ICreditTypeService
 
     [Post("/register")]
     Task RegisterCreditTypeAsync([Body] Models.CreditType request);
+    
+    [Post("/modify")]
+    Task ModifyCreditTypeAsync([Body] Models.CreditType request);
 
     [Get("/getActive")]
     Task<List<Models.CreditType>> GetActiveCreditTypesAsync();

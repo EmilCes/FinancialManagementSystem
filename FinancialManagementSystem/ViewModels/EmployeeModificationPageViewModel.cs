@@ -29,7 +29,6 @@ public partial class EmployeeModificationPageViewModel: ViewModelBase
 
     public EmployeeModificationPageViewModel(string rfc)
     {
-        Console.WriteLine(rfc);
         _workerService = new WorkerService("http://localhost:8080/api/v1/worker");
         Roles = new ObservableCollection<Role>();
         

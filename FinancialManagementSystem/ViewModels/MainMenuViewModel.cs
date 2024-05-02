@@ -61,7 +61,7 @@ public partial class MainMenuViewModel : ViewModelBase
         //SetItemsBasedOnRole(employee.Role);
         //string username = employee.FirstName + " " + employee.LastName;
         //Username = username;
-        SetItemsBasedOnRole("ANALISTA_CREDITO");
+        SetItemsBasedOnRole("ADMIN");
     }
 
     partial void OnSelectedListItemChanged(ListItemTemplate? value)

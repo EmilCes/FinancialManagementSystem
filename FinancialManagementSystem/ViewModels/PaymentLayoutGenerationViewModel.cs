@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -12,6 +13,8 @@ using CommunityToolkit.Mvvm.Input;
 using FinancialManagementSystem.Models.Helpers;
 using FinancialManagementSystem.Services.Credit;
 using FinancialManagementSystem.Services.Credit.Dto;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 using Refit;
 
 namespace FinancialManagementSystem.ViewModels;
@@ -102,7 +105,6 @@ public partial class PaymentLayoutGenerationViewModel : ViewModelBase
         {
             var topLevel = TopLevel.GetTopLevel(desktop.MainWindow);
 
-            // Start async operation to open the dialog.
             var file = await topLevel.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
             {
                 Title = "Guardar Layout de Cobro"
@@ -110,8 +112,10 @@ public partial class PaymentLayoutGenerationViewModel : ViewModelBase
 
             if (file != null)
             {
-                Console.WriteLine(file.Path);
+                GeneratePaymentLayout(file.Path.ToString());
+                Console.WriteLine("PDF guardado exitosamente en: " + file.Path);
             }
+
         }
     }
     
@@ -124,5 +128,93 @@ public partial class PaymentLayoutGenerationViewModel : ViewModelBase
             observableCollection.Add(item);
         }
     }
+    
+    private static void GeneratePaymentLayout(string destinationPath)
+    {
+        // Datos de ejemplo
+        int duracionPrestamoMeses = 6;
+        DateTime fechaInicio = new DateTime(2024, 1, 1);
+        string titulo = "Layout de Cobros";
+        string nombreFinanciera = "Financiera Independiente";
+        string nombreCliente = "Juan Pérez";
+        string tipoCredito = "Automoviles";
+        string montoPrestado = "80,000";
+        string plazo = "12";
+        string noCredito = "XYZ12121";
+        
+        destinationPath = Uri.UnescapeDataString(new Uri(destinationPath).LocalPath) + ".pdf";
+
+        // Crear o abrir el documento PDF existente en modo de añadir
+        using (var fs = new FileStream(destinationPath, FileMode.Create))
+        {
+            // Crear un documento PDF
+            Document doc = new Document(PageSize.A4);
+            PdfWriter writer = PdfWriter.GetInstance(doc, fs);
+
+            // Abrir el documento
+            doc.Open();
+
+            // Agregar contenido al documento
+            PdfContentByte canvas = writer.DirectContent;
+
+            // Agregar título centrado
+            Paragraph title = new Paragraph(titulo, FontFactory.GetFont(FontFactory.HELVETICA, 16, Font.BOLD));
+            title.Alignment = Element.ALIGN_CENTER;
+            title.SpacingAfter = 20f;
+            doc.Add(title);
+
+            // Agregar información
+            Paragraph info = new Paragraph();
+            info.Add(new Phrase("Nombre de la financiera: " + nombreFinanciera));
+            info.Add(Chunk.NEWLINE);
+            info.Add(new Phrase("Nombre del cliente: " + nombreCliente));
+            info.Add(Chunk.NEWLINE);
+            info.Add(new Phrase("Tipo de crédito: " + tipoCredito));
+            info.Add(Chunk.NEWLINE);
+            info.Add(new Phrase("Monto prestado: " + montoPrestado));
+            info.Add(Chunk.NEWLINE);
+            info.Add(new Phrase("Plazo: " + plazo + " meses"));
+            info.Add(Chunk.NEWLINE);
+            info.Add(new Phrase("Número de crédito: " + noCredito));
+            info.Add(Chunk.NEWLINE);
+            info.Add(new Phrase("Fecha de elaboración: " + DateTime.Now.Date));
+            doc.Add(info);
+
+            // Agregar tabla para los pagos mensuales
+            PdfPTable table = new PdfPTable(4);
+            table.WidthPercentage = 100;
+            table.HorizontalAlignment = Element.ALIGN_CENTER;
+            table.SpacingBefore = 20f;
+
+            // Agregar encabezados de la tabla
+            string[] headers = { "Número", "Mes", "Saldo", "Monto a Cobrar" };
+            foreach (var header in headers)
+            {
+                PdfPCell headerCell = new PdfPCell(new Phrase(header, FontFactory.GetFont(FontFactory.HELVETICA, 12, BaseColor.WHITE)));
+                headerCell.BackgroundColor = new BaseColor(51, 51, 51);
+                headerCell.HorizontalAlignment = Element.ALIGN_CENTER;
+                table.AddCell(headerCell);
+            }
+
+            // Calcular y agregar datos de pagos mensuales a la tabla
+            for (int i = 0; i < duracionPrestamoMeses; i++)
+            {
+                string mes = fechaInicio.AddMonths(i).ToString("MMMM yyyy");
+                decimal monto = 1000; // Ejemplo de monto fijo
+
+                table.AddCell((i + 1).ToString());
+                table.AddCell(mes);
+                table.AddCell(""); // Este campo se puede llenar con los saldos
+                table.AddCell(monto.ToString());
+            }
+
+            // Agregar tabla al documento
+            doc.Add(table);
+
+            // Cerrar el documento
+            doc.Close();
+        }
+    }
+
     
 }

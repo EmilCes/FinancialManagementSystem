@@ -20,6 +20,11 @@ public class CreditService : ICreditService
         return await _api.GetCreditsAsync();
     }
 
+    public async Task<List<CreditByIdResponse>> GetCreditAsync(int id)
+    {
+        return await _api.GetCreditAsync(id);
+    }
+
     public async Task ValidateCreditApplicationAsync(ICreditService.ValidateCreditApplicationRequest request)
     {
         await _api.ValidateCreditApplicationAsync(request);

@@ -19,4 +19,9 @@ public class CreditService : ICreditService
     {
         return await _api.GetCreditsAsync();
     }
+
+    public async Task ValidateCreditApplicationAsync(ICreditService.ValidateCreditApplicationRequest request)
+    {
+        await _api.ValidateCreditApplicationAsync(request);
+    }
 }

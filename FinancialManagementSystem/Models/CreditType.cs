@@ -5,7 +5,7 @@ namespace FinancialManagementSystem.Models;
 
 public class CreditType: ObservableObject
 {
-    public int CreditId { get; set; }
+    public int CreditTypeId { get; set; }
     public string Description { get; set; }
     public float InterestRate { get; set; }
     public string State { get; set; }

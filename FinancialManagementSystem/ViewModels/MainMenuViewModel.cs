@@ -37,6 +37,9 @@ public partial class MainMenuViewModel : ViewModelBase
             CurrentPage = new ClientsPageViewModel();
         });
         
+        messenger.Register<MainMenuViewModel, ViewCreditAplicationMessage>(this, (_, message) =>
+        {
+            CurrentPage = new CreditApplicationViewModel(message.Value);
         messenger.Register<MainMenuViewModel, ViewWorkerMessage>(this, (_, message) =>
         {
             CurrentPage = new EmployeeModificationPageViewModel(message.Value.Rfc);
@@ -84,6 +87,9 @@ public partial class MainMenuViewModel : ViewModelBase
                 break;
             case "ANALISTA_CREDITO":
                 Items.Add(new ListItemTemplate(typeof(HomePageViewModel), "Menu Principal", "HomeRegular"));
+                Items.Add(new ListItemTemplate(typeof(ValidateCreditApplicationPageViewModel), "Validación de solicitudes", ""));
+                Items.Add(new ListItemTemplate(typeof(CreditsPageViewModel), "Validación", ""));
+
                 break;
             case "ASESOR_CREDITO":
                 Items.Add(new ListItemTemplate(typeof(HomePageViewModel), "Menu Principal", "HomeRegular"));

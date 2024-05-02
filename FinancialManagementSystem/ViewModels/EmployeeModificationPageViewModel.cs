@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using FinancialManagementSystem.Messages;
+using FinancialManagementSystem.Models;
 using FinancialManagementSystem.Models.Helpers;
 using FinancialManagementSystem.Services.Worker;
 using FinancialManagementSystem.Services.Worker.Dto;
@@ -15,7 +18,7 @@ using Refit;
 
 namespace FinancialManagementSystem.ViewModels;
 
-public partial class EmployeeRegistrationViewModel: ViewModelBase
+public partial class EmployeeModificationPageViewModel: ViewModelBase
 {
     public ObservableCollection<Role> Roles { get; set; }
     private readonly IWorkerService _workerService;
@@ -23,14 +26,16 @@ public partial class EmployeeRegistrationViewModel: ViewModelBase
     private bool _validRoles;
 
 
-    public EmployeeRegistrationViewModel()
+    public EmployeeModificationPageViewModel(string rfc)
     {
+        Console.WriteLine(rfc);
         _workerService = new WorkerService("http://localhost:8080/api/v1/worker");
         Roles = new ObservableCollection<Role>();
         
         Dispatcher.UIThread.InvokeAsync(() =>
         {
             FillRoles();
+            FillWorker(rfc);
         });
         
     }
@@ -52,20 +57,70 @@ public partial class EmployeeRegistrationViewModel: ViewModelBase
         Roles.Add(manager);
     }
 
-    [RelayCommand]
-    public void CleanFieldsCommand()
+    private async void FillWorker(string rfc)
     {
-        Email = "";
-        UserNumber = "";
-        Name = "";
-        Lastname = "";
-        SecondLastname = "";
-        Rfc = "";
-        
+        try
+        {
+            User user = await _workerService.GetUserAsync(rfc);
+            Name = user.Firstname;
+            int spaceIndex = user.Lastname.IndexOf(' ');
+
+            if (spaceIndex != -1)
+            {
+                string firstName = user.Lastname.Substring(0, spaceIndex);
+                string secondName = user.Lastname.Substring(spaceIndex + 1);
+                Lastname = firstName;
+                SecondLastname = secondName;
+            }
+            else
+            {
+                Lastname = user.Lastname;
+            }
+            
+            Rfc = user.Rfc;
+            UserNumber = user.UserNumber;
+            Email = user.Email;
+            RfcEnabled = false;
+            WorkerNumberEnabled = false;
+        }catch (ApiException)
+        {
+            DialogMessages.ShowApiExceptionMessage();
+        }
+        catch (HttpRequestException)
+        {
+            DialogMessages.ShowHttpRequestExceptionMessage();
+        }
+    }
+
+    [RelayCommand]
+    public void GoBack()
+    {
+        IMessenger messenger = Message.Instance;
+        messenger.Send(new SearchWorkerMessage());
     }
     
     [RelayCommand]
-    public async Task RegisterUserCommand()
+    public void DeleteWorker()
+    {
+        try
+        {
+            _workerService.DeleteUserAsync(Rfc);
+        }catch (ApiException)
+        {
+            DialogMessages.ShowApiExceptionMessage();
+        }
+        catch (HttpRequestException)
+        {
+            DialogMessages.ShowHttpRequestExceptionMessage();
+        }
+        
+        DialogMessages.ShowMessage("Borrado", "El trabajador ha sido eliminado con éxito.");
+        IMessenger messenger = Message.Instance;
+        messenger.Send(new SearchWorkerMessage());
+    }
+    
+    [RelayCommand]
+    public async Task ModifyUserCommand()
     {
         var role = GetSelectedRole();
         
@@ -83,37 +138,24 @@ public partial class EmployeeRegistrationViewModel: ViewModelBase
 
         try
         {
-            bool rfcExist = await _workerService.RfcExistAsync(Rfc);
-            bool userNumberExist = await _workerService.UserNumberExistAsync(UserNumber);
             bool availableToCreate = true;
             
-            if (rfcExist)
-            {
-                DialogMessages.ShowMessage("RFC", "El RFC que ingreso ya existe.");
-                availableToCreate = false;
-            }
-
-            if (userNumberExist)
-            {
-                DialogMessages.ShowMessage("Número de usuario", "El número de usuario que ingreso ya existe.");
-                availableToCreate = false;
-            }
 
             if (availableToCreate)
             {
-                var request = new RegisterRequest()
+                var request = new ModifyRequest()
                 {
                     Email = Email,
-                    FirstName = Name,
-                    LastName = Lastname + " " + SecondLastname,
+                    Firstname = Name,
+                    Lastname = Lastname + " " + SecondLastname,
                     Rfc = Rfc,
                     Role = role[0].Name,
                     UserNumber = UserNumber
                 };
 
-                await _workerService.RegisterWorkerAsync(request);
+                await _workerService.ModifyAsync(request);
                 
-                DialogMessages.ShowMessage("Registro", "El registro fue exitoso!");
+                DialogMessages.ShowMessage("Modificación", "La modificación del usuario fue exitosa!");
             }
         }
         catch (ApiException)
@@ -167,5 +209,11 @@ public partial class EmployeeRegistrationViewModel: ViewModelBase
     [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
     [RegularExpression(@"^[A-Za-z]{4}\d{6}[A-Za-z\d]{3}$", ErrorMessage = ErrorMessages.RFC_MESSAGE)]
     private string _rfc;
-    
+
+    [ObservableProperty] 
+    private bool _rfcEnabled;
+
+    [ObservableProperty]
+    private bool _workerNumberEnabled;
+
 }

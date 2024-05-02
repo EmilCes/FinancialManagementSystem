@@ -4,9 +4,9 @@ using Avalonia.Markup.Xaml;
 
 namespace FinancialManagementSystem.Views;
 
-public partial class EmployeeRegistrationView : UserControl
+public partial class EmployeeRegistrationPageView : UserControl
 {
-    public EmployeeRegistrationView()
+    public EmployeeRegistrationPageView()
     {
         InitializeComponent();
     }

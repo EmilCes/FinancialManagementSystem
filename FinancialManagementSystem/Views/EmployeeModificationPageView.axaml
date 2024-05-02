@@ -4,8 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:FinancialManagementSystem.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="FinancialManagementSystem.Views.EmployeeRegistrationView"
-             x:DataType="vm:EmployeeRegistrationViewModel">
+             x:Class="FinancialManagementSystem.Views.EmployeeModificationPageView"
+             x:DataType="vm:EmployeeModificationPageViewModel">
     
     <Grid RowDefinitions="*,6*"
           Background="Transparent">
@@ -108,6 +108,7 @@
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
                                      Text="{Binding Rfc, Mode=TwoWay}"
+                                     IsEnabled="{Binding RfcEnabled}"
                             />
                             <TextBox Watermark="Email" 
                                      Height="40" 
@@ -192,6 +193,8 @@
                                      FontFamily="{StaticResource MontserratFont}"
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
+                                     IsEnabled="{Binding WorkerNumberEnabled}"
+
                                      />
                         </StackPanel>
                         
@@ -202,24 +205,34 @@
                                 Spacing="10"
                                 Margin="0,0,35,15">
                             
-                        <Button Content="Registrar" HorizontalAlignment="Center"
+                        <Button Content="Modificar" HorizontalAlignment="Center"
                                 Background="#512da8"
                                 Margin="0, 20, 0, 0"
                                 Foreground="White"
                                 FontFamily="{StaticResource MontserratFont}"
                                 Height="40"
                                 Width="150"
-                                Command="{Binding RegisterUserCommand}"
+                                Command="{Binding ModifyUserCommand}"
                                 CornerRadius="5"
                         />
-                        <Button Content="Limpiar campos" HorizontalAlignment="Center"
+                        <Button Content="Eliminar" HorizontalAlignment="Center"
                                 Background="#FF3204"
                                 Margin="0, 20, 0, 0"
                                 Foreground="White"
                                 FontFamily="{StaticResource MontserratFont}"
                                 Height="40"
                                 Width="150"
-                                Command="{Binding CleanFieldsCommand}"
+                                Command="{Binding DeleteWorker}"
+                                CornerRadius="5"
+                        />
+                        <Button Content="Cancelar" HorizontalAlignment="Center"
+                                Background="#FF3204"
+                                Margin="0, 20, 0, 0"
+                                Foreground="White"
+                                FontFamily="{StaticResource MontserratFont}"
+                                Height="40"
+                                Width="150"
+                                Command="{Binding GoBack}"
                                 CornerRadius="5"
                         />
                     </StackPanel>  
@@ -229,5 +242,3 @@
         </Border>
     </Grid>
 </UserControl>
-
-

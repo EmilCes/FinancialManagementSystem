@@ -4,9 +4,9 @@ using Avalonia.Markup.Xaml;
 
 namespace FinancialManagementSystem.Views;
 
-public partial class SearchWorkerView : UserControl
+public partial class EmployeeModificationPageView : UserControl
 {
-    public SearchWorkerView()
+    public EmployeeModificationPageView()
     {
         InitializeComponent();
     }

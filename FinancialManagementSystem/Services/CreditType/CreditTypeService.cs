@@ -23,6 +23,11 @@ public class CreditTypeService : ICreditTypeService
         await _api.RegisterCreditTypeAsync(request);
     }
 
+    public async Task ModifyCreditTypeAsync(Models.CreditType request)
+    {
+        await _api.ModifyCreditTypeAsync(request);
+    }
+
     public async Task<List<Models.CreditType>> GetActiveCreditTypesAsync()
     {
         return await _api.GetActiveCreditTypesAsync();

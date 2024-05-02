@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using FinancialManagementSystem.Models;
 using FinancialManagementSystem.Services.CreditApplication;
 using Refit;
 
@@ -28,5 +29,10 @@ public class CreditApplicationService: ICreditApplicationService
     public async Task CreateAplicationAsync(CreditApplicationRequest request)
     {
         _api.CreateAplicationAsync(request);
+    }
+
+    public async Task<List<CreditApplicationRequest>> GetCreditAplicationsTypesAsync()
+    {
+        return await _api.GetCreditAplicationsTypesAsync();
     }
 }

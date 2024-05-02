@@ -15,6 +15,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using FinancialManagementSystem.Messages;
 using FinancialManagementSystem.Models;
 using FinancialManagementSystem.Models.Helpers;
+using FinancialManagementSystem.Services.Client;
 using FinancialManagementSystem.Services.CreditApplication;
 using FinancialManagementSystem.Services.CreditType;
 using Refit;
@@ -26,12 +27,18 @@ public partial class CreditApplicationViewModel : ViewModelBase
 {
     private readonly ICreditApplicationService _creditApplicationService;
     private readonly ICreditTypeService _creditTypeService;
+    private readonly IClientService _clientService;
+
     private const string FILE_SELECTED = "Seleccionado";
 
     private byte[] _identificationDocument = null;
     private byte[] _proofOfIncome = null;
     private byte[] _proofOfAddress = null;
 
+    private Client clientToValidte;
+    
+    public ObservableCollection<Politic> Politics { get; }
+    
     private CreditApplication creditAplicationValidation;
     
     private readonly IMessenger _messenger = Message.Instance;
@@ -48,29 +55,32 @@ public partial class CreditApplicationViewModel : ViewModelBase
     {
         _creditApplicationService = new CreditApplicationService("http://localhost:8080/api/v1/creditApplication");
         _creditTypeService = new CreditTypeService("http://localhost:8080/api/v1/credit-type");
+        
         _gridsAreEnabledValidation = false;
         _infoClienteVisibility = true;
         _btnRegisterVisibility = false;
+
+        Politics = new ObservableCollection<Politic>();
+
+        foreach (Politic politic in creditApplication.SelectedCredit.Politics)
+        {
+            Politics.Add(politic);
+        }
         
         SetCreditTypes();
-        _selectedCredit = creditApplication.SelectedCredit;
-        
-        NameReferenceOne = creditApplication.References[0].Name;
-        FirstLastnameReferenceOne = creditApplication.References[0].FirstLastname;
-        SecondLastnameReferenceOne = creditApplication.References[0].SecondLastname;
-        PhoneReferenceOne = creditApplication.References[0].PhoneNumber;
+        SelectedCredit = creditApplication.SelectedCredit;
 
-        NameReferenceTwo = creditApplication.References[1].Name;
-        FirstLastnameReferenceTwo = creditApplication.References[1].FirstLastname;
-        SecondLastnameReferenceTwo = creditApplication.References[1].SecondLastname ;
-        PhoneReferenceTwo = creditApplication.References[1].PhoneNumber;
+        Rfc = creditApplication.CreditApplicant.Rfc;
+
+        clientToValidte = creditApplication.CreditApplicant;
+
     }
     
 
     [RelayCommand]
     public async void SeeInfoClientCommand()
     {
-        _messenger.Send(new ViewClientMessage(null));
+        _messenger.Send(new ViewClientMessage(clientToValidte));
     }
 
     private void SetLabels()

@@ -430,6 +430,40 @@
                         </Grid>
                     </StackPanel>
                     
+                    <Border Grid.Column="1" Grid.Row="1" 
+                            Background="#F8F8F8"
+                            BorderBrush="#B7B9BD"
+                            BorderThickness="0.5,0,0.5,2"
+                            Margin="15,5,35,0"
+                            CornerRadius="12.5"
+                            IsVisible="{Binding} "
+                    >
+                    
+                        <DataGrid Grid.Column="1" Grid.Row="1" 
+                                  ItemsSource="{Binding Politics}"        
+                                  Margin="10"
+                                  GridLinesVisibility="None"
+                                  HeadersVisibility="All"
+                                  MinColumnWidth="150"
+                                  CanUserResizeColumns="False"
+                                  HorizontalAlignment="Center"
+                                  BorderThickness="0"
+                        >
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Binding="{Binding name}"
+                                                    Header="Politica" 
+                                                    Foreground="Black"
+                                                    IsReadOnly="True"/>
+                                <DataGridCheckBoxColumn  Binding="{Binding cbPoliticValid}"
+                                                         Header="Cumple"/>
+                                <DataGridCheckBoxColumn Binding="{Binding cbPoliticInvalid}"
+                                                        Header="No cumple"/>
+                                <DataGridTextColumn Binding="{Binding comment}"
+                                                        Header="Comentario"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Border>
+                    
                     <StackPanel Orientation="Horizontal"
                                 HorizontalAlignment="Right"
                                 Spacing="10"

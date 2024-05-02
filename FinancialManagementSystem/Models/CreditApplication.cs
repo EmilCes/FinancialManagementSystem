@@ -2,6 +2,7 @@ namespace FinancialManagementSystem.Models;
 
 public class CreditApplication
 {
+    public Client CreditApplicant { get; set; }
     public int  CreditApplicationId { get; set; }
     public string ClientRfc { get; set; }
     public Models.CreditType SelectedCredit { get; set; }

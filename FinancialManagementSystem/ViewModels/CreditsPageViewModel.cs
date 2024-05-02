@@ -194,7 +194,7 @@ public partial class CreditsPageViewModel : ViewModelBase
     [RelayCommand]
     public void CancelCommand()
     {
-        Politics.Clear();
+        
         LoadHeader = true;
         LoadContent = true;
         ModifyHeader = false;

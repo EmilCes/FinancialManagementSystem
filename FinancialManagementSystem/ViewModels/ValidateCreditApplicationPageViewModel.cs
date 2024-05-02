@@ -83,8 +83,6 @@ public partial class ValidateCreditApplicationPageViewModel: ViewModelBase
                 selectedAplication = aplications;
             }
         }
-
-        Console.WriteLine(selectedAplication.References[1].ToString());
         _messenger.Send(new ViewCreditAplicationMessage(selectedAplication));
     }
 }

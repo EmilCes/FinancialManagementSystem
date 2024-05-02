@@ -10,6 +10,11 @@ public class Politic
     
     public int politicId { get; set; }
     public bool cbPoliticState { get; set; }
+    
+    public bool cbPoliticValid { get; set; }
+    public bool cbPoliticInvalid { get; set; }
+    
+    public string comment { get; set; }
 
     public Politic(string name, string description, string state, bool isSelected, int politicId)
     {

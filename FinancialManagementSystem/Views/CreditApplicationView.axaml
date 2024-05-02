@@ -503,6 +503,17 @@
                                 CornerRadius="5"
                                 Command="{Binding SeeInfoClientCommand}"
                                 />
+                        <Button Content="Enviar Validación" HorizontalAlignment="Center"
+                                IsVisible="{Binding InfoClienteVisibility}"
+                                Background="DodgerBlue"
+                                Margin="0, 20, 0, 0"
+                                Foreground="White"
+                                FontFamily="{StaticResource MontserratFont}"
+                                Height="40"
+                                Width="150"
+                                CornerRadius="5"
+                                Command="{Binding SendValidationCommand}"
+                        />
                     </StackPanel>  
                 </StackPanel>
             </ScrollViewer>

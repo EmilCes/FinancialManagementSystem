@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Avalonia.Controls;
@@ -12,10 +13,12 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using DynamicData;
 using FinancialManagementSystem.Messages;
 using FinancialManagementSystem.Models;
 using FinancialManagementSystem.Models.Helpers;
 using FinancialManagementSystem.Services.Client;
+using FinancialManagementSystem.Services.Credit;
 using FinancialManagementSystem.Services.CreditApplication;
 using FinancialManagementSystem.Services.CreditType;
 using Refit;
@@ -27,7 +30,8 @@ public partial class CreditApplicationViewModel : ViewModelBase
 {
     private readonly ICreditApplicationService _creditApplicationService;
     private readonly ICreditTypeService _creditTypeService;
-    private readonly IClientService _clientService;
+    private readonly ICreditService _creditService;
+
 
     private const string FILE_SELECTED = "Seleccionado";
 
@@ -36,7 +40,7 @@ public partial class CreditApplicationViewModel : ViewModelBase
     private byte[] _proofOfAddress = null;
 
     private Client clientToValidte;
-    
+    private int creditAplicationIdToValidate;
     public ObservableCollection<Politic> Politics { get; }
     
     private CreditApplication creditAplicationValidation;
@@ -55,6 +59,8 @@ public partial class CreditApplicationViewModel : ViewModelBase
     {
         _creditApplicationService = new CreditApplicationService("http://localhost:8080/api/v1/creditApplication");
         _creditTypeService = new CreditTypeService("http://localhost:8080/api/v1/credit-type");
+        _creditService = new CreditService("http://localhost:8080/api/v1/credit");
+
         
         _gridsAreEnabledValidation = false;
         _infoClienteVisibility = true;
@@ -66,6 +72,8 @@ public partial class CreditApplicationViewModel : ViewModelBase
         {
             Politics.Add(politic);
         }
+
+        creditAplicationIdToValidate = creditApplication.CreditApplicationId;
         
         SetCreditTypes();
         SelectedCredit = creditApplication.SelectedCredit;
@@ -73,6 +81,16 @@ public partial class CreditApplicationViewModel : ViewModelBase
         Rfc = creditApplication.CreditApplicant.Rfc;
 
         clientToValidte = creditApplication.CreditApplicant;
+        
+        NameReferenceOne = creditApplication.References[0].Name;
+        FirstLastnameReferenceOne = creditApplication.References[0].FirstLastname;
+        SecondLastnameReferenceOne = creditApplication.References[0].SecondLastname;
+        PhoneReferenceOne = creditApplication.References[0].PhoneNumber;
+
+        NameReferenceTwo = creditApplication.References[1].Name;
+        FirstLastnameReferenceTwo = creditApplication.References[1].FirstLastname;
+        SecondLastnameReferenceTwo  = creditApplication.References[1].SecondLastname;
+        PhoneReferenceTwo = creditApplication.References[1].PhoneNumber;
 
     }
     
@@ -81,6 +99,54 @@ public partial class CreditApplicationViewModel : ViewModelBase
     public async void SeeInfoClientCommand()
     {
         _messenger.Send(new ViewClientMessage(clientToValidte));
+    }
+    
+    [RelayCommand]
+    public async void SendValidationCommand()
+    {
+        List<Politic> politics = Politics.Where(politic => politic.cbPoliticInvalid).ToList();
+        List<String> comments = new List<string>();
+        List<Politic> politicsToSend = new List<Politic>();
+        foreach (Politic politic in politics)
+        {
+            var politicCopy = new Politic();
+            politicCopy.politicId = politic.politicId;
+            comments.Add(politic.comment);
+            politicsToSend.Add(politicCopy);
+        }
+
+        //Employee employee = Employee.Instance;
+
+        try
+        {
+            ICreditService.ValidateCreditApplicationRequest request = new ICreditService.ValidateCreditApplicationRequest()
+            {
+                RejectedPolicies = politicsToSend,
+                Comments = "comments.ToString()",
+                UserId = 1,
+                CreditApplicationId = creditAplicationIdToValidate
+            };
+            
+            await _creditService.ValidateCreditApplicationAsync(request);
+            
+            DialogMessages.ShowMessage("Modificación Exitosa", "El Credito fue actualizado correctamente.");
+
+        }
+        catch (ApiException e)
+        {
+            DialogMessages.ShowApiExceptionMessage();
+            Console.WriteLine(e.Message);
+
+            Console.WriteLine(e.StackTrace);
+        }
+        catch (HttpRequestException e)
+        {
+            DialogMessages.ShowHttpRequestExceptionMessage();
+            Console.WriteLine(e.Message);
+
+            Console.WriteLine(e.StackTrace);
+
+        }
     }
 
     private void SetLabels()

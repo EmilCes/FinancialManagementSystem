@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using FinancialManagementSystem.Messages;
 using FinancialManagementSystem.Models.Helpers;
 using FinancialManagementSystem.Services.Worker;
 using FinancialManagementSystem.Services.Worker.Dto;
@@ -19,6 +21,7 @@ public partial class EmployeeRegistrationPageViewModel: ViewModelBase
 {
     public ObservableCollection<Role> Roles { get; set; }
     private readonly IWorkerService _workerService;
+    private readonly IMessenger _messenger = Message.Instance;
     
     private bool _validRoles;
 
@@ -91,6 +94,9 @@ public partial class EmployeeRegistrationPageViewModel: ViewModelBase
             {
                 DialogMessages.ShowMessage("RFC", "El RFC que ingreso ya existe.");
                 availableToCreate = false;
+                var response = await _workerService.GetUserAsync(Rfc);
+                response.Rfc = Rfc;
+                _messenger.Send(new ViewWorkerMessage(response));
             }
 
             if (userNumberExist)

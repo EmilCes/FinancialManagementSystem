@@ -22,6 +22,7 @@ public partial class EmployeeModificationPageViewModel: ViewModelBase
 {
     public ObservableCollection<Role> Roles { get; set; }
     private readonly IWorkerService _workerService;
+    private readonly IMessenger _messenger = Message.Instance;
     
     private bool _validRoles;
 
@@ -115,8 +116,7 @@ public partial class EmployeeModificationPageViewModel: ViewModelBase
         }
         
         DialogMessages.ShowMessage("Borrado", "El trabajador ha sido eliminado con éxito.");
-        IMessenger messenger = Message.Instance;
-        messenger.Send(new SearchWorkerMessage());
+        _messenger.Send(new SearchWorkerMessage());
     }
     
     [RelayCommand]
@@ -156,6 +156,7 @@ public partial class EmployeeModificationPageViewModel: ViewModelBase
                 await _workerService.ModifyAsync(request);
                 
                 DialogMessages.ShowMessage("Modificación", "La modificación del usuario fue exitosa!");
+                _messenger.Send(new SearchWorkerMessage());
             }
         }
         catch (ApiException)

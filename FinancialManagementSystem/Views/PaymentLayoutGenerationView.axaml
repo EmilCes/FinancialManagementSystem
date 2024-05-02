@@ -1,0 +1,152 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:FinancialManagementSystem.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="FinancialManagementSystem.Views.PaymentLayoutGenerationView"
+             x:DataType="viewModels:PaymentLayoutGenerationViewModel"
+             >
+
+    <Grid RowDefinitions="*,6*"
+          Background="Transparent">
+           
+        <Border Grid.Row="0"
+            Background="#613ED0"
+            Margin="18, 20, 18, 0"
+            CornerRadius="12.5">
+            <TextBlock Text="Layouts de Cobro" 
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Center"
+                       Margin="40, 15"
+                       Foreground="White" 
+                       FontSize="24"
+                       FontFamily="{StaticResource MontserratFont}"/>
+        </Border>
+    
+        <Border Grid.Row="1" 
+                Background="#F8F8F8"
+                BorderBrush="#B7B9BD"
+                BorderThickness="0.5,0,0.5,2"
+                Margin="18, 18, 18, 18"
+                CornerRadius="12.5"
+                BoxShadow="">
+            
+            <Grid RowDefinitions="*,5*">
+                
+                <Grid ColumnDefinitions="4*,0.5*, 3*, 1.2*"
+                      RowDefinitions="*,*"
+                      Height="60"
+                      Grid.Row="0"
+                      VerticalAlignment="Top">
+                    
+                    <ComboBox Grid.Column="0" Grid.Row="0"  
+                              Height="35"
+                              Width="300"
+                              Margin="20, 10, 0, 0"
+                              Background="#eee" 
+                              Foreground="#686868" 
+                              FontSize="16"
+                              FontFamily="{StaticResource MontserratFont}"
+                              BorderBrush="#613ED0"
+                              BorderThickness="0,0,0,2"
+                              PlaceholderText="Tipo de Layout"
+                              ItemsSource="{Binding LayoutTypes}"
+                              SelectedItem="{Binding SelectedItem}">
+                    </ComboBox>
+                    
+                    <TextBox Grid.Column="2"
+                             Grid.Row="0"
+                             Watermark="RFC" 
+                             Height="35" 
+                             Margin="0, 13, 10, 0"
+                             Background="#eee" 
+                             Foreground="#686868" 
+                             FontSize="16"
+                             FontFamily="{StaticResource MontserratFont}"
+                             BorderBrush="#613ED0"
+                             BorderThickness="0,0,0,2"
+                             Text="{Binding Rfc}"
+                    />
+                    <Button Grid.Column="3"
+                            Grid.Row="0" Content="Buscar" HorizontalAlignment="Center"
+                            Background="#613ED0"
+                            Margin="0, 10, 20, 0"
+                            Foreground="White"
+                            FontFamily="{StaticResource MontserratFont}"
+                            Height="35"
+                            Width="100"
+                            Command="{Binding DownloadPaymentLayout}"
+                    />
+                    
+                    <Separator Grid.Column="0" 
+                          Grid.Row="1"
+                          Grid.ColumnSpan="4"
+                          Background="Black"
+                          Margin="15"
+                          VerticalAlignment="Top"
+                          />
+                </Grid>
+                
+                <ScrollViewer Margin="10,0,10,10"
+                              CornerRadius="30"
+                              Grid.Row="1"
+                              VerticalAlignment="Top">
+                <ItemsControl ItemsSource="{Binding CreditsList}"
+                              VerticalAlignment="Top"
+                              x:Name="IC">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Background="White"
+                                    BorderBrush="#B7B9BD"
+                                    BorderThickness="0.5"
+                                    CornerRadius="10"
+                                    Padding="10"
+                                    Margin="5">
+                                <Grid Margin="5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="5*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Text="{Binding CreditType }" 
+                                               FontSize="16"
+                                               Height="20"
+                                               Foreground="Black"
+                                               FontWeight="Bold"
+                                               Margin="0,5,0,5"
+                                               Grid.Column="0"
+                                               Grid.Row="0"/>
+                                    <TextBlock Text="{Binding CreditId}" 
+                                               x:Name="CreditId"
+                                               FontSize="16" 
+                                               Height="20"
+                                               Foreground="Black"
+                                               FontWeight="Bold"
+                                               Margin="0,5,0,5"
+                                               Grid.Column="0"
+                                               Grid.Row="1"/>
+                                    <Button Content="Descargar" 
+                                            Background="#613ED0"
+                                            CornerRadius="10"
+                                            Foreground="White"
+                                            Padding="20,0,20,0"
+                                            Margin="0,10,0,10"
+                                            Grid.Column="1"
+                                            Grid.Row="0"
+                                            Grid.RowSpan="2"
+                                            Command="{Binding #IC.((viewModels:PaymentLayoutGenerationViewModel)DataContext).DownloadPaymentLayout}"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+            </Grid>
+        </Border>
+    </Grid>
+    
+</UserControl>

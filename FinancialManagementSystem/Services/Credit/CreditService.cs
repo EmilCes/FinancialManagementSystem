@@ -1,0 +1,22 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using FinancialManagementSystem.Services.Credit.Dto;
+using Refit;
+
+namespace FinancialManagementSystem.Services.Credit;
+
+public class CreditService : ICreditService
+{
+    private readonly ICreditService _api;
+    
+    public CreditService(string apiUrl)
+    {
+        _api = RestService.For<ICreditService>(apiUrl);
+    }
+
+    
+    public async Task<List<GetCreditResponse>> GetCreditsAsync()
+    {
+        return await _api.GetCreditsAsync();
+    }
+}

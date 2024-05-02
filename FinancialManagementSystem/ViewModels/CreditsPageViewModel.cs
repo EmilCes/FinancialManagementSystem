@@ -30,6 +30,7 @@ public partial class CreditsPageViewModel : ViewModelBase
     private int selectedCreditId;
     
     
+    
     private bool _validPolitics;
     private CreditType selectedCreditType;
     public ObservableCollection<Politic> Politics { get; }

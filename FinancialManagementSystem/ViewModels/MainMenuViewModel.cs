@@ -40,14 +40,21 @@ public partial class MainMenuViewModel : ViewModelBase
         messenger.Register<MainMenuViewModel, ViewCreditAplicationMessage>(this, (_, message) =>
         {
             CurrentPage = new CreditApplicationViewModel(message.Value);
+        messenger.Register<MainMenuViewModel, ViewWorkerMessage>(this, (_, message) =>
+        {
+            CurrentPage = new EmployeeModificationPageViewModel(message.Value.Rfc);
+        });
+        
+        messenger.Register<MainMenuViewModel, SearchWorkerMessage>(this, (_, message) =>
+        {
+            CurrentPage = new SearchWorkerPageViewModel();
         });
         
         //Employee employee = Employee.Instance;
         //SetItemsBasedOnRole(employee.Role);
         //string username = employee.FirstName + " " + employee.LastName;
         //Username = username;
-        SetItemsBasedOnRole("ANALISTA_CREDITO");
-
+        SetItemsBasedOnRole("ANALISTA_COBRO");
     }
 
     partial void OnSelectedListItemChanged(ListItemTemplate? value)
@@ -70,6 +77,9 @@ public partial class MainMenuViewModel : ViewModelBase
                 Items.Add(new ListItemTemplate(typeof(PoliticsPageViewModel), "Politicas", ""));
                 Items.Add(new ListItemTemplate(typeof(RegisterPoliticPageViewModel), "Registrar politica", ""));
                 Items.Add(new ListItemTemplate(typeof(CreditTypePageViewModel), "Registrar Crédito", ""));
+                Items.Add(new ListItemTemplate(typeof(EmployeeRegistrationPageViewModel), "Registrar Trabajador", ""));
+                Items.Add(new ListItemTemplate(typeof(SearchWorkerPageViewModel), "Buscar Trabajador", ""));
+                Items.Add(new ListItemTemplate(typeof(ClientsPageViewModel), "CLiente Buscar", ""));
                 break;
             case "ANALISTA_COBRO":
                 Items.Add(new ListItemTemplate(typeof(HomePageViewModel), "Menu Principal", "HomeRegular"));

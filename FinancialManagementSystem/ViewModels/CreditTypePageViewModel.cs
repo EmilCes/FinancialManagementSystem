@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
@@ -21,9 +20,8 @@ public partial class CreditTypePageViewModel : ViewModelBase
 {
     private readonly ICreditTypeService _creditTypeService;
     private readonly IPoliticsService _politicsService;
-    private bool _validPolitics;
-    
     public ObservableCollection<Politic> Politics { get; }
+    private bool _validPolitics;
     
     public CreditTypePageViewModel()
     {

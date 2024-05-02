@@ -31,7 +31,7 @@ public class CreditApplicationService: ICreditApplicationService
         _api.CreateAplicationAsync(request);
     }
 
-    public async Task<List<CreditApplicationRequest>> GetCreditAplicationsTypesAsync()
+    public async Task<List<Models.CreditApplication>> GetCreditAplicationsTypesAsync()
     {
         return await _api.GetCreditAplicationsTypesAsync();
     }

@@ -25,6 +25,11 @@ public class ClientService : IClientService
         return await _api.GetClientByIdAsync(id);
     }
 
+    public async Task<Models.Client> GetClientByRFCAsync(string rfc)
+    {
+        return await _api.GetClientByRFCAsync(rfc);
+    }
+
     public async Task RegisterClientAsync(Models.Client request)
     {
         await _api.RegisterClientAsync(request);

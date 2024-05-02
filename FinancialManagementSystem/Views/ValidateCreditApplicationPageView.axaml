@@ -2,7 +2,89 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:FinancialManagementSystem.ViewModels"
+             x:DataType="viewModels:ValidateCreditApplicationPageViewModel"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="FinancialManagementSystem.Views.ValidateCreditApplicationPageView">
-    Welcome to Avalonia!
+    
+        <Grid RowDefinitions="*,6*"
+              Background="Transparent">
+               
+            <Border Grid.Row="0"
+                    IsVisible="{Binding LoadHeader}"
+                Background="#613ED0"
+                Margin="18, 20, 18, 0"
+                CornerRadius="12.5">
+                <TextBlock Text="Solicitudes de Credito" 
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Center"
+                           Margin="40, 15"
+                           Foreground="White" 
+                           FontSize="24"
+                           FontFamily="{StaticResource MontserratFont}"/>
+            </Border>
+        
+            <Border Grid.Row="1" 
+                    IsVisible="{Binding LoadContent}"
+                    Background="#F8F8F8"
+                    BorderBrush="#B7B9BD"
+                    BorderThickness="0.5,0,0.5,2"
+                    Margin="18, 18, 18, 18"
+                    CornerRadius="12.5"
+                    BoxShadow="">
+                <ScrollViewer Margin="10"
+                              CornerRadius="30"
+                              Background="Transparent">
+                    <ItemsControl ItemsSource="{Binding CreditApplicationList}"
+                                  x:Name="IC">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="White"
+                                        BorderBrush="#B7B9BD"
+                                        BorderThickness="0.5"
+                                        CornerRadius="10">
+                                    <Grid Margin="5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{Binding ClientRfc, Mode=OneWay}" 
+                                                   FontSize="16"
+                                                   Height="20"
+                                                   Foreground="Black"
+                                                   FontWeight="Bold"
+                                                   Grid.Column="0"/>
+                                        <TextBlock Text="{Binding SelectedCredit.Description, Mode=OneWay}" 
+                                                   FontSize="16" 
+                                                   Height="20"
+                                                   Foreground="Black"
+                                                   FontWeight="Bold"
+                                                   Grid.Column="1"
+                                                   Margin="10,0"
+                                                   />
+                                        <TextBox Grid.Column="2"
+                                                 x:Name="id"
+                                                 Text="{Binding ApplicationId}"
+                                                 IsVisible="False">
+                                        </TextBox>
+                                        <Button Grid.Column="2" Content="Validar"
+                                                Background="#613ED0"
+                                                CornerRadius="10"
+                                                Foreground="White"
+                                                Margin="10,0"
+                                                DataContext="vm:PoliticsPageViewModel"
+                                                Command="{Binding #IC.((viewModels:ValidateCreditApplicationPageViewModel)DataContext).ValidateCommand }"
+                                                CommandParameter="{Binding #id.Text}"
+                                        >
+                                        </Button>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Border>
+    </Grid>
+
 </UserControl>

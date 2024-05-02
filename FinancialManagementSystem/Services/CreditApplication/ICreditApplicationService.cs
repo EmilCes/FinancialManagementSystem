@@ -17,7 +17,7 @@ public interface ICreditApplicationService
     Task CreateAplicationAsync([Body] CreditApplicationRequest request);
     
     [Get("/")]
-    Task<List<CreditApplicationRequest>> GetCreditAplicationsTypesAsync();
+    Task<List<Models.CreditApplication>> GetCreditAplicationsTypesAsync();
 }
 
 public class VerifyClientRequest

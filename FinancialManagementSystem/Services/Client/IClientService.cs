@@ -13,6 +13,9 @@ public interface IClientService
     
     [Get("/{id}")]
     Task<Models.Client> GetClientByIdAsync(int id);
+    
+    [Get("/{rfc}")]
+    Task<Models.Client> GetClientByRFCAsync(string rfc);
 
     [Post("/register")]
     Task RegisterClientAsync([Body] Models.Client request);

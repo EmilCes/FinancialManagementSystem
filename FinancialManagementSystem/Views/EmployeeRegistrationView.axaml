@@ -1,0 +1,233 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:FinancialManagementSystem.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="FinancialManagementSystem.Views.EmployeeRegistrationView"
+             x:DataType="vm:EmployeeRegistrationViewModel">
+    
+    <Grid RowDefinitions="*,6*"
+          Background="Transparent">
+           
+        <Border Grid.Row="0"
+            Background="#613ED0"
+            Margin="18, 20, 18, 0"
+            CornerRadius="12.5">
+            <TextBlock Text="Registrar trabajador" 
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Center"
+                       Margin="40, 15"
+                       Foreground="White" 
+                       FontSize="24"
+                       FontFamily="{StaticResource MontserratFont}"/>
+        </Border>
+    
+        <Border Grid.Row="1" 
+                Background="#F8F8F8"
+                BorderBrush="#B7B9BD"
+                BorderThickness="0.5,0,0.5,2"
+                Margin="18, 18, 18, 18"
+                CornerRadius="12.5"
+                BoxShadow="">
+            
+            <ScrollViewer Margin="1">
+                <StackPanel>
+                    <StackPanel>
+                        <TextBlock Text="Datos personales" 
+                                   HorizontalAlignment="Left"
+                                   Margin="35, 15"
+                                   Foreground="Black" 
+                                   FontSize="24"
+                                   FontFamily="{StaticResource MontserratFont}"/>
+                        <Separator Background="Black"
+                                   BorderThickness="0.5"
+                                   Margin="35,0,35,0"/>
+                    </StackPanel>
+                    
+                    <!--  DATOS PERSONALES  -->
+                    
+                    <Grid ColumnDefinitions="*,*"
+                          Margin="0, 10">
+                        <StackPanel Grid.Column="0"
+                                    Spacing="10">
+                            <Grid Margin="35, 10, 35, 0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3*" />
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                
+                                <TextBox Grid.Column="0"
+                                         Grid.ColumnSpan="2"
+                                         Watermark="Nombre(s)" 
+                                         Height="40" 
+                                         Background="#eee" 
+                                         Foreground="#686868" 
+                                         FontSize="16"
+                                         FontFamily="{StaticResource MontserratFont}"
+                                         BorderBrush="#613ED0"
+                                         BorderThickness="0,0,0,2"
+                                         Text="{Binding Name, Mode=TwoWay}"
+
+                                         />
+                            </Grid>
+                            <TextBox Watermark="Apellido paterno" 
+                                     Height="40" 
+                                     Margin="35, 10, 35, 0"
+                                     Background="#eee" 
+                                     Foreground="#686868" 
+                                     FontSize="16"
+                                     FontFamily="{StaticResource MontserratFont}"
+                                     BorderBrush="#613ED0"
+                                     BorderThickness="0,0,0,2"
+                                     Text="{Binding Lastname, Mode=TwoWay}"
+                                     />
+                            <TextBox Watermark="Apellido materno" 
+                                     Height="40" 
+                                     Margin="35, 10, 35, 0"
+                                     Background="#eee" 
+                                     Foreground="#686868" 
+                                     FontSize="16"
+                                     FontFamily="{StaticResource MontserratFont}"
+                                     BorderBrush="#613ED0"
+                                     BorderThickness="0,0,0,2"
+                                     Text="{Binding SecondLastname, Mode=TwoWay}"
+                            />
+                        </StackPanel>
+                        
+                        <StackPanel Grid.Column="1"
+                                    Spacing="10">
+                            
+                            <TextBox Watermark="RFC" 
+                                     Height="40" 
+                                     Margin="35, 10, 35, 0"
+                                     Background="#eee" 
+                                     Foreground="#686868" 
+                                     FontSize="16"
+                                     FontFamily="{StaticResource MontserratFont}"
+                                     BorderBrush="#613ED0"
+                                     BorderThickness="0,0,0,2"
+                                     Text="{Binding Rfc, Mode=TwoWay}"
+                            />
+                            <TextBox Watermark="Email" 
+                                     Height="40" 
+                                     Margin="35, 10, 35, 0"
+                                     Background="#eee" 
+                                     Foreground="#686868" 
+                                     FontSize="16"
+                                     FontFamily="{StaticResource MontserratFont}"
+                                     BorderBrush="#613ED0"
+                                     BorderThickness="0,0,0,2"
+                                     Text="{Binding Email, Mode=TwoWay}"
+                            />
+                            
+                        </StackPanel>
+                    </Grid>
+                    
+                    <Grid ColumnDefinitions="*, *" Margin="0, 10">
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Rol(es)" 
+                                       HorizontalAlignment="Left"
+                                       Margin="35, 15"
+                                       Foreground="Black" 
+                                       FontSize="24"
+                                       FontFamily="{StaticResource MontserratFont}"
+                                       />
+                            <Separator Background="Black"
+                                       BorderThickness="0.5"
+                                       Margin="35,0,35,0"/>
+                            
+                            <Border Grid.Column="1" Grid.Row="1" 
+                                    Background="#F8F8F8"
+                                    BorderBrush="#B7B9BD"
+                                    BorderThickness="0.5,0,0.5,2"
+                                    Margin="15,5,35,0"
+                                    CornerRadius="12.5">
+                    
+                                <DataGrid Grid.Column="1" Grid.Row="1" 
+                                          ItemsSource="{Binding Roles}"        
+                                          Margin="10"
+                                          Height="250"
+                                          GridLinesVisibility="None"
+                                          HeadersVisibility="All"
+                                          MinColumnWidth="150"
+                                          CanUserResizeColumns="False"
+                                          HorizontalAlignment="Center"
+                                          BorderThickness="0">
+                                    
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Binding="{Binding Description}"
+                                                            Header="Rol" 
+                                                            Foreground="Black"
+                                                            IsReadOnly="True"/>
+                                        <DataGridCheckBoxColumn  Binding="{Binding CbRoleState}"
+                                                                 Header="Seleccionar"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                    
+                            </Border>
+                            
+                            
+                        </StackPanel>
+                        
+                        
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="Datos de la empresa" 
+                                       HorizontalAlignment="Left"
+                                       Margin="35, 15"
+                                       Foreground="Black" 
+                                       FontSize="24"
+                                       FontFamily="{StaticResource MontserratFont}"
+                            />
+                            <Separator Background="Black"
+                                       BorderThickness="0.5"
+                                       Margin="35,0,35,0"/>
+                            <TextBox Watermark="Numero de personal (XXXX)"
+                                     Text="{Binding UserNumber}"
+                                     Height="40" 
+                                     Margin="35, 10, 35, 0"
+                                     Background="#eee" 
+                                     Foreground="#686868" 
+                                     FontSize="16"
+                                     FontFamily="{StaticResource MontserratFont}"
+                                     BorderBrush="#613ED0"
+                                     BorderThickness="0,0,0,2"
+                                     />
+                        </StackPanel>
+                        
+                    </Grid>
+                    
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Right"
+                                Spacing="10"
+                                Margin="0,0,35,15">
+                            
+                        <Button Content="Registrar" HorizontalAlignment="Center"
+                                Background="#512da8"
+                                Margin="0, 20, 0, 0"
+                                Foreground="White"
+                                FontFamily="{StaticResource MontserratFont}"
+                                Height="40"
+                                Width="150"
+                                Command="{Binding RegisterUserCommand}"
+                                CornerRadius="5"
+                        />
+                        <Button Content="Limpiar campos" HorizontalAlignment="Center"
+                                Background="#FF3204"
+                                Margin="0, 20, 0, 0"
+                                Foreground="White"
+                                FontFamily="{StaticResource MontserratFont}"
+                                Height="40"
+                                Width="150"
+                                Command="{Binding CleanFieldsCommand}"
+                                CornerRadius="5"
+                        />
+                    </StackPanel>  
+                </StackPanel>
+            </ScrollViewer>
+            
+        </Border>
+    </Grid>
+</UserControl>
+
+

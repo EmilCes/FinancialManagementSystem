@@ -436,7 +436,7 @@
                             BorderThickness="0.5,0,0.5,2"
                             Margin="15,5,35,0"
                             CornerRadius="12.5"
-                            IsVisible="{Binding} "
+                            IsVisible="{Binding IsBorderVisible} "
                     >
                     
                         <DataGrid Grid.Column="1" Grid.Row="1" 
@@ -470,7 +470,7 @@
                                 Margin="0,0,35,15">
                             
                         <Button Content="Registrar Crédito" HorizontalAlignment="Center"
-                                IsVisible="{Binding InfoClienteVisibility}"
+                                IsVisible="{Binding BtnRegisterVisibility}"
                                 Background="#512da8"
                                 Margin="0, 20, 0, 0"
                                 Foreground="White"
@@ -482,6 +482,7 @@
                                 Command="{Binding ClientApplicateForCreditCommand}"
                         />
                         <Button Content="Cancelar" HorizontalAlignment="Center"
+                                IsVisible="{Binding BtnRegisterVisibility}"
                                 Background="#FF3204"
                                 Margin="0, 20, 0, 0"
                                 Foreground="White"

@@ -32,6 +32,11 @@ public partial class MainMenuViewModel : ViewModelBase
             CurrentPage = new ClientPageViewModel(message.Value);
         });
         
+        messenger.Register<MainMenuViewModel, ViewClientMessageFromValidation>(this, (_, message) =>
+        {
+            CurrentPage = new ClientPageViewModel(message.Value);
+        });
+        
         messenger.Register<MainMenuViewModel, ViewClientsMessage>(this, (_, message) =>
         {
             CurrentPage = new ClientsPageViewModel();

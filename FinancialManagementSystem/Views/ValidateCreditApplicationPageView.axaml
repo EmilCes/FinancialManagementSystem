@@ -49,7 +49,7 @@
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="{Binding ClientRfc, Mode=OneWay}" 
+                                        <TextBlock Text="{Binding CreditApplicationId, Mode=OneWay}" 
                                                    FontSize="16"
                                                    Height="20"
                                                    Foreground="Black"

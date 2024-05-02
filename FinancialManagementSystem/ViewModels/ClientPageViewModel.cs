@@ -53,7 +53,7 @@ public partial class ClientPageViewModel : ViewModelBase
     {
         BtnReturnToValid = false;
         IsFormReadOnly = false;
-        ModificationModeEnable = false;
+        ModificationModeEnable = true;
 
     }
     

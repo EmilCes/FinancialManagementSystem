@@ -61,7 +61,7 @@ public partial class CreditApplicationViewModel : ViewModelBase
         _creditTypeService = new CreditTypeService("http://localhost:8080/api/v1/credit-type");
         _creditService = new CreditService("http://localhost:8080/api/v1/credit");
 
-        
+        creditAplicationValidation = creditApplication;
         _gridsAreEnabledValidation = false;
         _infoClienteVisibility = true;
         _btnRegisterVisibility = false;
@@ -111,57 +111,80 @@ public partial class CreditApplicationViewModel : ViewModelBase
     public async Task SendValidationCommand()
     {
         List<Politic> politics = Politics.Where(politic => politic.cbPoliticInvalid).ToList();
+        List<Politic> politicsToValidate = Politics.ToList();
+        bool validPolitics = true;
         
-        
-        List<String> comments = new List<string>();
-        
-        foreach (Politic politic in politics)
+        foreach (Politic politic in politicsToValidate)
         {
-            comments.Add(politic.comment);
-            Console.WriteLine("Politica: " + politic.politicId);
-        }
-        
-        //Employee employee = Employee.Instance;
-        Politic politic1 = new Politic();
-        politic1.politicId = 1;
-        
-        Politic politic2 = new Politic();
-        politic1.politicId = 2;
-        
-        List<Politic> politicsTo = new List<Politic>();
-        politicsTo.Add(politic1);
-        politicsTo.Add(politic2);
-
-
-        try
-        {
-            ICreditService.ValidateCreditApplicationRequest request = new ICreditService.ValidateCreditApplicationRequest()
+            if (!politic.cbPoliticInvalid)
             {
-                RejectedPolicies = politics,
-                Comments = "comments.ToString()",
-                UserId = 1,
-                CreditApplicationId = creditAplicationIdToValidate
-            };
-            
-            await _creditService.ValidateCreditApplicationAsync(request);
-            
-            DialogMessages.ShowMessage("Modificación Exitosa", "El Credito fue actualizado correctamente.");
-
+                if (!politic.cbPoliticValid)
+                {
+                    validPolitics = false;
+                }
+            }
         }
-        catch (ApiException e)
-        {
-            DialogMessages.ShowApiExceptionMessage();
-            Console.WriteLine(e.Message);
 
-            Console.WriteLine(e.StackTrace);
+        if (validPolitics)
+        {
+            List<String> comments = new List<string>();
+        
+            foreach (Politic politic in politics)
+            {
+                comments.Add(politic.comment);
+                Console.WriteLine("Politica: " + politic.politicId);
+            }
+        
+            //Employee employee = Employee.Instance;
+            Politic politic1 = new Politic();
+            politic1.politicId = 1;
+        
+            Politic politic2 = new Politic();
+            politic1.politicId = 2;
+        
+            List<Politic> politicsTo = new List<Politic>();
+            politicsTo.Add(politic1);
+            politicsTo.Add(politic2);
+            string comment = String.Empty;
+
+            foreach (string singleComment in comments)
+            {
+                comment = comment + singleComment;
+            }
+            try
+            {
+                ICreditService.ValidateCreditApplicationRequest request = new ICreditService.ValidateCreditApplicationRequest()
+                {
+                    RejectedPolicies = politics,
+                    Comments = comment,
+                    UserId = 1,
+                    CreditApplicationId = creditAplicationIdToValidate
+                };
+            
+                await _creditService.ValidateCreditApplicationAsync(request);
+            
+                DialogMessages.ShowMessage("Modificación Exitosa", "El Credito fue actualizado correctamente.");
+
+            }
+            catch (ApiException e)
+            {
+                DialogMessages.ShowApiExceptionMessage();
+                Console.WriteLine(e.Message);
+
+                Console.WriteLine(e.StackTrace);
+            }
+            catch (HttpRequestException e)
+            {
+                DialogMessages.ShowHttpRequestExceptionMessage();
+                Console.WriteLine(e.Message);
+
+                Console.WriteLine(e.StackTrace);
+
+            }
         }
-        catch (HttpRequestException e)
+        else
         {
-            DialogMessages.ShowHttpRequestExceptionMessage();
-            Console.WriteLine(e.Message);
-
-            Console.WriteLine(e.StackTrace);
-
+            DialogMessages.ShowMessage("Faltan políticas por validar", "Faltan políticas por validar");
         }
     }
 

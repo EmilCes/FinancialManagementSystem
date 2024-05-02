@@ -21,11 +21,6 @@ public class CreditApplicationService: ICreditApplicationService
         return await _api.VerifyRegularAsync(rfc);
     }
 
-    public async Task<List<Models.CreditType>> GetCreditTypesAsync()
-    {
-        return await _api.GetCreditTypesAsync();
-    }
-
     public async Task CreateAplicationAsync(CreditApplicationRequest request)
     {
         _api.CreateAplicationAsync(request);

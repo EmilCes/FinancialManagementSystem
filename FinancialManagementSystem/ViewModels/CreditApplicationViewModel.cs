@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -25,9 +24,9 @@ public partial class CreditApplicationViewModel : ViewModelBase
     private readonly ICreditTypeService _creditTypeService;
     private const string FILE_SELECTED = "Seleccionado";
 
-    private byte[] _identificationDocument = null;
-    private byte[] _proofOfIncome = null;
-    private byte[] _proofOfAddress = null;
+    private byte[] _identificationDocument;
+    private byte[] _proofOfIncome;
+    private byte[] _proofOfAddress;
     
     public CreditApplicationViewModel()
     {
@@ -58,9 +57,17 @@ public partial class CreditApplicationViewModel : ViewModelBase
                 CreditTypes.Add(creditType);
             }
         }
-        catch (Exception e)
+        catch (ApiException)
         {
-            Console.WriteLine(e.Message + e.StackTrace);
+            DialogMessages.ShowApiExceptionMessage();
+            GridsAreEnabled = false;
+            DisableColor = new SolidColorBrush(Colors.DarkGray);
+        }
+        catch (HttpRequestException)
+        {
+            DialogMessages.ShowHttpRequestExceptionMessage();
+            GridsAreEnabled = false;
+            DisableColor = new SolidColorBrush(Colors.DarkGray);
         }
     }
 
@@ -113,11 +120,11 @@ public partial class CreditApplicationViewModel : ViewModelBase
                 await _creditApplicationService.CreateAplicationAsync(creditApplicationRequest);
                 DialogMessages.ShowMessage("Registro Exitoso", "El Cliente fue registrado correctamente.");
             }
-            catch (ApiException e)
+            catch (ApiException)
             {
                 DialogMessages.ShowApiExceptionMessage();
             }
-            catch (HttpRequestException e)
+            catch (HttpRequestException)
             {
                 DialogMessages.ShowHttpRequestExceptionMessage();
             }
@@ -151,13 +158,13 @@ public partial class CreditApplicationViewModel : ViewModelBase
                 DialogMessages.ShowMessage("Cliente invalido", "El cliente ya tiene un crédito activo.");
             }
         }
-        catch (ApiException e)
+        catch (ApiException)
         {
             DialogMessages.ShowApiExceptionMessage();
             GridsAreEnabled = false;
             DisableColor = new SolidColorBrush(Colors.DarkGray);
         }
-        catch (HttpRequestException e)
+        catch (HttpRequestException)
         {
             DialogMessages.ShowHttpRequestExceptionMessage();
             GridsAreEnabled = false;
@@ -166,7 +173,7 @@ public partial class CreditApplicationViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    public async void AddIdentificationDocumentCommand()
+    public async Task AddIdentificationDocumentCommand()
     {
         OpenFileDialog openFileDialog = new OpenFileDialog();
 
@@ -174,12 +181,12 @@ public partial class CreditApplicationViewModel : ViewModelBase
         
         if (Avalonia.Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            string[] directory = await openFileDialog.ShowAsync(desktop.MainWindow);
+            string[]? directory = await openFileDialog.ShowAsync(desktop.MainWindow!);
 
-            if (directory.Length > 0)
+            if (directory!.Length > 0)
             {
                 Console.WriteLine(directory[0]);
-                _identificationDocument = ReadPDFFileToBytes(directory[0]);
+                _identificationDocument = ReadPdfFileToBytes(directory[0]);
                 LblIdentificationDocument = FILE_SELECTED;
                 
             }
@@ -187,7 +194,7 @@ public partial class CreditApplicationViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    public async void AddProofOfIncomeCommand()
+    public async Task AddProofOfIncomeCommand()
     {
         OpenFileDialog openFileDialog = new OpenFileDialog();
 
@@ -197,17 +204,17 @@ public partial class CreditApplicationViewModel : ViewModelBase
         {
             string[] directory = await openFileDialog.ShowAsync(desktop.MainWindow);
 
-            if (directory.Length > 0)
+            if (directory!.Length > 0)
             {
                 Console.WriteLine(directory[0]);
-                _proofOfIncome = ReadPDFFileToBytes(directory[0]);
+                _proofOfIncome = ReadPdfFileToBytes(directory[0]);
                 LblProofOfIncomeDocument = FILE_SELECTED;
             }
         }
     }
 
     [RelayCommand]
-    public async void AddProofOfAddressCommand()
+    public async Task AddProofOfAddressCommand()
     {
         OpenFileDialog openFileDialog = new OpenFileDialog();
 
@@ -215,12 +222,12 @@ public partial class CreditApplicationViewModel : ViewModelBase
         
         if (Avalonia.Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            string[] directory = await openFileDialog.ShowAsync(desktop.MainWindow);
+            string[] directory = (await openFileDialog.ShowAsync(desktop.MainWindow!))!;
 
-            if (directory.Length > 0)
+            if (directory!.Length > 0)
             {
                 Console.WriteLine(directory[0]);
-                _proofOfAddress = ReadPDFFileToBytes(directory[0]);
+                _proofOfAddress = ReadPdfFileToBytes(directory[0]);
                 LblProofOfAddressDocument = FILE_SELECTED;
             }
         }
@@ -233,7 +240,7 @@ public partial class CreditApplicationViewModel : ViewModelBase
         openFileDialog.Title = "Seleccionar archivo PDF";
     }
     
-    public byte[] ReadPDFFileToBytes(string filePath)
+    private byte[] ReadPdfFileToBytes(string filePath)
     {
         byte[] pdfBytes;
         try
@@ -243,19 +250,24 @@ public partial class CreditApplicationViewModel : ViewModelBase
         }
         catch (IOException ex)
         {
-            //TODO usar logger y quitar el WriteLine.
             Console.WriteLine("Error al leer el archivo PDF: " + ex.Message);
             return null;
         }
     }
     
-    [ObservableProperty] private string _lblIdentificationDocument;
-    [ObservableProperty] private string _lblProofOfAddressDocument;
-    [ObservableProperty] private string _lblProofOfIncomeDocument;
-    [ObservableProperty] private bool _gridsAreEnabled;
+    [ObservableProperty] 
+    private string _lblIdentificationDocument;
+    [ObservableProperty]
+    private string _lblProofOfAddressDocument;
+    [ObservableProperty] 
+    private string _lblProofOfIncomeDocument;
+    [ObservableProperty] 
+    private bool _gridsAreEnabled;
 
-    [ObservableProperty] private SolidColorBrush _rfcBrush;
-    [ObservableProperty] private SolidColorBrush _disableColor;
+    [ObservableProperty] 
+    private SolidColorBrush _rfcBrush;
+    [ObservableProperty] 
+    private SolidColorBrush _disableColor;
 
     [ObservableProperty] 
     [NotifyDataErrorInfo]

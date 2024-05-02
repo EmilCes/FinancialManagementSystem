@@ -95,11 +95,16 @@ public partial class CreditApplicationViewModel : ViewModelBase
 
     }
     
-
     [RelayCommand]
     public async void SeeInfoClientCommand()
     {
-        _messenger.Send(new ViewClientMessageFromValidation(clientToValidte, creditAplicationValidation));
+        ClientAndCredit clientAndCredit = new ClientAndCredit
+        {
+            CreditApplication = creditAplicationValidation,
+            Client = clientToValidte
+        };
+
+        _messenger.Send(new ViewClientMessageFromValidation(clientAndCredit));
     }
     
     [RelayCommand]

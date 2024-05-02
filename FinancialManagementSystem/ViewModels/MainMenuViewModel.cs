@@ -34,7 +34,7 @@ public partial class MainMenuViewModel : ViewModelBase
         
         messenger.Register<MainMenuViewModel, ViewClientMessageFromValidation>(this, (_, message) =>
         {
-            CurrentPage = new ClientPageViewModel(message.Value);
+            CurrentPage = new ClientPageViewModel(message.Value.Client, message.Value.CreditApplication);
         });
         
         messenger.Register<MainMenuViewModel, ViewClientsMessage>(this, (_, message) =>
@@ -86,7 +86,6 @@ public partial class MainMenuViewModel : ViewModelBase
                 Items.Add(new ListItemTemplate(typeof(CreditTypePageViewModel), "Registrar Crédito", ""));
                 Items.Add(new ListItemTemplate(typeof(EmployeeRegistrationPageViewModel), "Registrar Trabajador", ""));
                 Items.Add(new ListItemTemplate(typeof(SearchWorkerPageViewModel), "Buscar Trabajador", ""));
-                Items.Add(new ListItemTemplate(typeof(ClientsPageViewModel), "CLiente Buscar", ""));
                 break;
             case "ANALISTA_COBRO":
                 Items.Add(new ListItemTemplate(typeof(HomePageViewModel), "Menu Principal", "HomeRegular"));

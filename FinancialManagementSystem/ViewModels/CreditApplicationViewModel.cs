@@ -44,9 +44,6 @@ public partial class CreditApplicationViewModel : ViewModelBase
     public ObservableCollection<Politic> Politics { get; }
     
     private CreditApplication creditAplicationValidation;
-    private byte[] _identificationDocument;
-    private byte[] _proofOfIncome;
-    private byte[] _proofOfAddress;
     
     private readonly IMessenger _messenger = Message.Instance;
 
@@ -384,15 +381,6 @@ public partial class CreditApplicationViewModel : ViewModelBase
     [ObservableProperty] private bool _gridsAreEnabledValidation = true;
     [ObservableProperty] private bool _infoClienteVisibility = false;
     [ObservableProperty] private bool _btnRegisterVisibility = true;
-
-    [ObservableProperty] 
-    private string _lblIdentificationDocument;
-    [ObservableProperty]
-    private string _lblProofOfAddressDocument;
-    [ObservableProperty] 
-    private string _lblProofOfIncomeDocument;
-    [ObservableProperty] 
-    private bool _gridsAreEnabled;
 
     [ObservableProperty] 
     private SolidColorBrush _rfcBrush;

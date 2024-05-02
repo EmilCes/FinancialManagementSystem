@@ -42,8 +42,19 @@ public partial class ClientPageViewModel : ViewModelBase
         _isFormReadOnly = false;
         _clientService = new ClientService("http://localhost:8080/api/v1/client");
         _currentClient = client;
+        _creditApplication = creditApplication;
+        HideAllButtons();
+        BtnReturnToValid = true;
         LoadClientData();
         SetFormAsReadOnlyCommand();
+    }
+
+    private void HideAllButtons()
+    {
+        BtnReturnToValid = false;
+        IsFormReadOnly = false;
+        ModificationModeEnable = false;
+
     }
     
     [RelayCommand]
@@ -247,7 +258,14 @@ public partial class ClientPageViewModel : ViewModelBase
     {
         IsFormReadOnly = false;
     }
-
+    
+    [RelayCommand]
+    public void ReturnToValidationCommand()
+    {
+        IMessenger messenger = Message.Instance;
+        messenger.Send(new ViewCreditAplicationMessage(_creditApplication));
+    }
+    
     [RelayCommand]
     public void SetFormAsReadOnlyCommand()
     {

@@ -555,6 +555,7 @@
                                 Height="40"
                                 Width="150"
                                 CornerRadius="5"
+                                Command = "{Binding ReturnToValidationCommand}"
                                 IsVisible="{Binding BtnReturnToValid}"
                         />
                     </StackPanel>

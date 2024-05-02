@@ -34,7 +34,7 @@ public partial class MainMenuViewModel : ViewModelBase
         
         messenger.Register<MainMenuViewModel, ViewClientMessageFromValidation>(this, (_, message) =>
         {
-            CurrentPage = new ClientPageViewModel(message.Value);
+            CurrentPage = new ClientPageViewModel(message.Value.Client, message.Value.CreditApplication);
         });
         
         messenger.Register<MainMenuViewModel, ViewClientsMessage>(this, (_, message) =>
@@ -61,7 +61,7 @@ public partial class MainMenuViewModel : ViewModelBase
         //SetItemsBasedOnRole(employee.Role);
         //string username = employee.FirstName + " " + employee.LastName;
         //Username = username;
-        SetItemsBasedOnRole("ADMIN");
+        SetItemsBasedOnRole("ANALISTA_CREDITO");
     }
 
     partial void OnSelectedListItemChanged(ListItemTemplate? value)

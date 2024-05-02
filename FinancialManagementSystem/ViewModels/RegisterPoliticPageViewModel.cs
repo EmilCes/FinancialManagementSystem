@@ -54,10 +54,10 @@ public partial class RegisterPoliticPageViewModel : ViewModelBase
 
         if (request.state == "1")
         {
-            request.state = "Activo";
-        }else if (request.state == "2")
-        {
             request.state = "Inactivo";
+        }else if (request.state == "0")
+        {
+            request.state = "Activo";
         }
 
         if (ValidateFields())

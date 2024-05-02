@@ -65,6 +65,7 @@ public partial class CreditApplicationViewModel : ViewModelBase
         _gridsAreEnabledValidation = false;
         _infoClienteVisibility = true;
         _btnRegisterVisibility = false;
+        _isBorderVisible = true;
 
         Politics = new ObservableCollection<Politic>();
 
@@ -81,7 +82,7 @@ public partial class CreditApplicationViewModel : ViewModelBase
         Rfc = creditApplication.CreditApplicant.Rfc;
 
         clientToValidte = creditApplication.CreditApplicant;
-        
+        _btnRegisterVisibility = false;
         NameReferenceOne = creditApplication.References[0].Name;
         FirstLastnameReferenceOne = creditApplication.References[0].FirstLastname;
         SecondLastnameReferenceOne = creditApplication.References[0].SecondLastname;
@@ -98,13 +99,15 @@ public partial class CreditApplicationViewModel : ViewModelBase
     [RelayCommand]
     public async void SeeInfoClientCommand()
     {
-        _messenger.Send(new ViewClientMessage(clientToValidte));
+        _messenger.Send(new ViewClientMessageFromValidation(clientToValidte, creditAplicationValidation));
     }
     
     [RelayCommand]
     public async void SendValidationCommand()
     {
         List<Politic> politics = Politics.Where(politic => politic.cbPoliticInvalid).ToList();
+        
+        
         List<String> comments = new List<string>();
         List<Politic> politicsToSend = new List<Politic>();
         foreach (Politic politic in politics)
@@ -113,8 +116,9 @@ public partial class CreditApplicationViewModel : ViewModelBase
             politicCopy.politicId = politic.politicId;
             comments.Add(politic.comment);
             politicsToSend.Add(politicCopy);
+            Console.WriteLine(politicCopy.politicId);
         }
-
+        
         //Employee employee = Employee.Instance;
 
         try
@@ -381,6 +385,8 @@ public partial class CreditApplicationViewModel : ViewModelBase
     [ObservableProperty] private bool _gridsAreEnabledValidation = true;
     [ObservableProperty] private bool _infoClienteVisibility = false;
     [ObservableProperty] private bool _btnRegisterVisibility = true;
+    [ObservableProperty] private bool _isBorderVisible = false;
+
 
     [ObservableProperty] 
     private SolidColorBrush _rfcBrush;

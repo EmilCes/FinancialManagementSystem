@@ -21,6 +21,7 @@ public partial class ClientPageViewModel : ViewModelBase
     private readonly IClientService _clientService;
     private bool _isCheckboxActive;
     private Client _currentClient;
+    private CreditApplication _creditApplication;
     
     public ClientPageViewModel()
     {
@@ -29,6 +30,16 @@ public partial class ClientPageViewModel : ViewModelBase
     
     public ClientPageViewModel(Client client)
     {
+        _clientService = new ClientService("http://localhost:8080/api/v1/client");
+        _currentClient = client;
+        LoadClientData();
+        SetFormAsReadOnlyCommand();
+    }
+    
+    public ClientPageViewModel(Client client, CreditApplication creditApplication)
+    {
+        _btnReturnToValid = true;
+        _isFormReadOnly = false;
         _clientService = new ClientService("http://localhost:8080/api/v1/client");
         _currentClient = client;
         LoadClientData();
@@ -315,6 +326,9 @@ public partial class ClientPageViewModel : ViewModelBase
 
     [ObservableProperty] 
     private SolidColorBrush _clientRfcBrush;
+    
+    [ObservableProperty] 
+    private bool _btnReturnToValid;
 
     [ObservableProperty] 
     private bool _registerClientIsEnable;

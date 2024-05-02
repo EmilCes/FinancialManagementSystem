@@ -13,6 +13,9 @@ public interface ICreditService
     [Get("/")]
     Task<List<GetCreditResponse>> GetCreditsAsync();
     
+    [Get("/{id}")]
+    Task<List<CreditByIdResponse>> GetCreditAsync(int id);
+    
     [Post("/")]
     Task ValidateCreditApplicationAsync([Body] ValidateCreditApplicationRequest request);
 

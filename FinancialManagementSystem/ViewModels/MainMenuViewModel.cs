@@ -51,8 +51,7 @@ public partial class MainMenuViewModel : ViewModelBase
         //SetItemsBasedOnRole(employee.Role);
         //string username = employee.FirstName + " " + employee.LastName;
         //Username = username;
-        SetItemsBasedOnRole("ADMIN");
-
+        SetItemsBasedOnRole("ANALISTA_COBRO");
     }
 
     partial void OnSelectedListItemChanged(ListItemTemplate? value)
@@ -64,7 +63,7 @@ public partial class MainMenuViewModel : ViewModelBase
     }
     
 
-    public void SetItemsBasedOnRole(string userRole)
+    private void SetItemsBasedOnRole(string userRole)
     {
         Items.Clear();
 
@@ -81,6 +80,7 @@ public partial class MainMenuViewModel : ViewModelBase
                 break;
             case "ANALISTA_COBRO":
                 Items.Add(new ListItemTemplate(typeof(HomePageViewModel), "Menu Principal", "HomeRegular"));
+                Items.Add(new ListItemTemplate(typeof(PaymentLayoutGenerationViewModel), "Layouts de Cobro", ""));
                 break;
             case "ANALISTA_CREDITO":
                 Items.Add(new ListItemTemplate(typeof(HomePageViewModel), "Menu Principal", "HomeRegular"));

@@ -12,6 +12,9 @@ public interface ICreditApplicationService
 
     [Post("/applicate")]
     Task CreateAplicationAsync([Body] CreditApplicationRequest request);
+    
+    [Get("/")]
+    Task<List<CreditApplicationRequest>> GetCreditAplicationsTypesAsync();
 }
 
 public class VerifyClientRequest

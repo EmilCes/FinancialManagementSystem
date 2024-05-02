@@ -1,0 +1,249 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:FinancialManagementSystem.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="viewModels:CreditsPageViewModel"
+             x:Class="FinancialManagementSystem.Views.CreditsPageView">
+    
+       <Grid RowDefinitions="*,6*"
+            Background="Transparent">
+           <Border Grid.Row="0"
+                           IsVisible="{Binding LoadHeader}"
+                           Background="#613ED0"
+                           Margin="18, 20, 18, 0"
+                           CornerRadius="12.5">
+                <TextBlock Text="Tipos de créditos" 
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Center"
+                           Margin="40, 15"
+                           Foreground="White" 
+                           FontSize="24"
+                           FontFamily="{StaticResource MontserratFont}"/>
+           </Border>
+    
+            <Border Grid.Row="1" 
+                    IsVisible="{Binding LoadContent}"
+                    Background="#F8F8F8"
+                    BorderBrush="#B7B9BD"
+                    BorderThickness="0.5,0,0.5,2"
+                    Margin="18, 18, 18, 18"
+                    CornerRadius="12.5"
+                    BoxShadow="">
+                <ScrollViewer Margin="10"
+                              CornerRadius="30"
+                              Background="Transparent">
+                    <ItemsControl ItemsSource="{Binding CreditsList}"
+                                  x:Name="IC">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="White"
+                                        BorderBrush="#B7B9BD"
+                                        BorderThickness="0.5"
+                                        CornerRadius="10">
+                                    <Grid Margin="5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{Binding Description, Mode=OneWay}" 
+                                                   FontSize="16"
+                                                   Height="20"
+                                                   Foreground="Black"
+                                                   FontWeight="Bold"
+                                                   Grid.Column="0"/>
+                                        <TextBlock Text="{Binding State, Mode=OneWay}" 
+                                                   FontSize="16" 
+                                                   Height="20"
+                                                   Foreground="Black"
+                                                   FontWeight="Bold"
+                                                   Grid.Column="1"
+                                                   Margin="10,0"
+                                                   />
+                                        <TextBox Grid.Column="2"
+                                                 x:Name="id"
+                                                 Text="{Binding CreditId}"
+                                                 IsVisible="False">
+                                        </TextBox>
+                                        <Button Grid.Column="2" Content="Modificar"
+                                                Background="#613ED0"
+                                                CornerRadius="10"
+                                                Foreground="White"
+                                                Margin="10,0"
+                                                DataContext="vm:PoliticsPageViewModel"
+                                                Command="{Binding #IC.((viewModels:CreditsPageViewModel)DataContext).ModifyCommand }"
+                                                CommandParameter="{Binding #id.Text}"
+                                        >
+                                        </Button>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Border>
+           
+           <Border Grid.Row="0"
+                   IsVisible="{Binding ModifyHeader}"
+                   Background="#613ED0"
+                   Margin="18, 20, 18, 0"
+                   CornerRadius="12.5">
+                <TextBlock Text="Crédito" 
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Center"
+                       Margin="40, 15"
+                       Foreground="White" 
+                       FontSize="24"
+                       FontFamily="{StaticResource MontserratFont}"/>
+        </Border>
+           
+           <Border Grid.Row="1" 
+                   IsVisible="{Binding ModifyContent}"
+                   Background="#F8F8F8"
+                   BorderBrush="#B7B9BD"
+                   BorderThickness="0.5,0,0.5,2"
+                   Margin="18, 18, 18, 18"
+                   CornerRadius="12.5"
+                   BoxShadow="">
+            
+            <Grid ColumnDefinitions="*, *"
+                  RowDefinitions="*, 3*, *">
+                
+                <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+                    <TextBlock Text="Modificar Crédito" 
+                               HorizontalAlignment="Left"
+                               Margin="35, 15"
+                               Foreground="Black" 
+                               FontSize="24"
+                               FontFamily="{StaticResource MontserratFont}"/>
+                    <Separator Background="Black"
+                               BorderThickness="0.5"
+                               Margin="35,0,35,0"/>
+                </StackPanel>
+                
+                <StackPanel Grid.Column="0" Grid.Row="1"
+                            Spacing="10">
+                    <TextBox Watermark="Descripción" 
+                             Height="40" 
+                             Margin="35, 10, 35, 0"
+                             Background="#eee" 
+                             Foreground="#686868" 
+                             FontSize="16"
+                             FontFamily="{StaticResource MontserratFont}"
+                             BorderBrush="#613ED0"
+                             BorderThickness="0,0,0,2"
+                             Text="{Binding Description}"
+                            />
+                    <TextBox Watermark="Tasa de Interés" 
+                             Height="40" 
+                             Margin="35, 10, 35, 0"
+                             Background="#eee" 
+                             Foreground="#686868" 
+                             FontSize="16"
+                             FontFamily="{StaticResource MontserratFont}"
+                             BorderBrush="#613ED0"
+                             BorderThickness="0,0,0,2"
+                             Text="{Binding InterestRate}"
+                    />
+                    <TextBox Watermark="Plazo" 
+                             Height="40" 
+                             Margin="35, 10, 35, 0"
+                             Background="#eee" 
+                             Foreground="#686868" 
+                             FontSize="16"
+                             FontFamily="{StaticResource MontserratFont}"
+                             BorderBrush="#613ED0"
+                             BorderThickness="0,0,0,2"
+                             Text="{Binding Term}"
+                    />
+                    <TextBox Watermark="IVA" 
+                             Height="40" 
+                             Margin="35, 10, 35, 0"
+                             Background="#eee" 
+                             Foreground="#686868" 
+                             FontSize="16"
+                             FontFamily="{StaticResource MontserratFont}"
+                             BorderBrush="#613ED0"
+                             BorderThickness="0,0,0,2"
+                             Text="{Binding Iva}"
+                    />
+                    <ComboBox Margin="35, 10, 35, 0"
+                              MinWidth="350"
+                              HorizontalContentAlignment="Stretch"
+                              Height="40" 
+                              Background="#eee" 
+                              Foreground="#686868" 
+                              FontSize="16"
+                              FontFamily="{StaticResource MontserratFont}"
+                              BorderBrush="#613ED0"
+                              BorderThickness="0,0,0,2"
+                              SelectedIndex="{Binding State}">
+                        
+                        <ComboBoxItem>Estado</ComboBoxItem>
+                        <ComboBoxItem>Activo</ComboBoxItem>
+                        <ComboBoxItem>Inactivo</ComboBoxItem>
+
+                    </ComboBox>
+                </StackPanel>
+                
+                <Border Grid.Column="1" Grid.Row="1" 
+                        Background="#F8F8F8"
+                        BorderBrush="#B7B9BD"
+                        BorderThickness="0.5,0,0.5,2"
+                        Margin="15,5,35,0"
+                        CornerRadius="12.5"
+                        >
+                    
+                    <DataGrid Grid.Column="1" Grid.Row="1" 
+                              ItemsSource="{Binding Politics}"        
+                              Margin="10"
+                              GridLinesVisibility="None"
+                              HeadersVisibility="All"
+                              MinColumnWidth="150"
+                              CanUserResizeColumns="False"
+                              HorizontalAlignment="Center"
+                              BorderThickness="0"
+                    >
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding name}"
+                                                Header="Politica" 
+                                                Foreground="Black"
+                                                IsReadOnly="True"/>
+                            <DataGridCheckBoxColumn  Binding="{Binding cbPoliticState}"
+                                                     Header="Estado"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    
+                </Border>
+                
+                <StackPanel Grid.Column="1" Grid.Row="2"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Center"
+                            Spacing="10">
+                    <Button Content="Modificar Crédito" HorizontalAlignment="Center"
+                            Background="#512da8"
+                            Margin="0, 20, 0, 0"
+                            Foreground="White"
+                            FontFamily="{StaticResource MontserratFont}"
+                            Height="40"
+                            Width="150"
+                            CornerRadius="5"
+                            Command="{Binding ModifyCreditTypeCommand}"
+                            />
+                    <Button Content="Cancelar" HorizontalAlignment="Center"
+                            Background="#FF3204"
+                            Margin="0, 20, 0, 0"
+                            Foreground="White"
+                            FontFamily="{StaticResource MontserratFont}"
+                            Height="40"
+                            Width="150"
+                            CornerRadius="5"
+                    />
+                </StackPanel>
+                
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

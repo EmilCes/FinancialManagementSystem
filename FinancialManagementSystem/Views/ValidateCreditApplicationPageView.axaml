@@ -65,7 +65,7 @@
                                                    />
                                         <TextBox Grid.Column="2"
                                                  x:Name="id"
-                                                 Text="{Binding ApplicationId}"
+                                                 Text="{Binding CreditApplicationId}"
                                                  IsVisible="False">
                                         </TextBox>
                                         <Button Grid.Column="2" Content="Validar"

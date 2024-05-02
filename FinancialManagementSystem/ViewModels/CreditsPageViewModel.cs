@@ -28,6 +28,8 @@ public partial class CreditsPageViewModel : ViewModelBase
     private bool _modifyContent = false;
     
     private int selectedCreditId;
+    
+    
     private bool _validPolitics;
     private CreditType selectedCreditType;
     public ObservableCollection<Politic> Politics { get; }
@@ -82,6 +84,11 @@ public partial class CreditsPageViewModel : ViewModelBase
     [RelayCommand]
     public void ModifyCommand(string creditId)
     {
+        Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                GetPoliticsCommand();
+            }
+        );
         if (int.TryParse(creditId, out int id))
         {
             LoadHeader = false;
@@ -93,21 +100,13 @@ public partial class CreditsPageViewModel : ViewModelBase
             {
                 selectedCreditId = id;
                 
-                if (creditType.CreditId == id)
+                if (creditType.CreditTypeId == id)
                 {
                     Description = creditType.Description;
                     InterestRate = creditType.InterestRate.ToString();
                     Iva = creditType.Iva.ToString();
                     Term = creditType.Term;
-                    if (creditType.State == "Activo")
-                    {
-                        State = 0;
-                    }
-                    else
-                    {
-                        State = 1;
-                    }
-                    
+                    State = 1;
                     break;
                 }
             }
@@ -118,11 +117,6 @@ public partial class CreditsPageViewModel : ViewModelBase
     [RelayCommand]
     public async Task ModifyCreditTypeCommand()
     {
-        Dispatcher.UIThread.InvokeAsync(() =>
-            {
-                GetPoliticsCommand();
-            }
-        );
         var politics = GetSelectedPolitics();
         
         if (!Validations.ValidateFields(this) || !_validPolitics)
@@ -142,6 +136,7 @@ public partial class CreditsPageViewModel : ViewModelBase
 
             var request = new CreditType()
             {
+                CreditTypeId = selectedCreditId,
                 Description = Description,
                 InterestRate = float.Parse(InterestRate),
                 State = state,
@@ -195,8 +190,19 @@ public partial class CreditsPageViewModel : ViewModelBase
 
         return politics;
     }
+
+    [RelayCommand]
+    public void CancelCommand()
+    {
+        Politics.Clear();
+        LoadHeader = true;
+        LoadContent = true;
+        ModifyHeader = false;
+        ModifyContent = false;
+    }
     
-    
+
+
     [ObservableProperty]
     [NotifyDataErrorInfo]
     [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]

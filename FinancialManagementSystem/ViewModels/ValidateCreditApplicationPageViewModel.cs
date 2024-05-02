@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net.Http;
@@ -5,6 +6,8 @@ using System.Threading.Tasks;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using FinancialManagementSystem.Messages;
 using FinancialManagementSystem.Models;
 using FinancialManagementSystem.Models.Helpers;
 using FinancialManagementSystem.Services.CreditApplication;
@@ -22,8 +25,10 @@ public partial class ValidateCreditApplicationPageViewModel: ViewModelBase
     private bool _modifyHeader;
     [ObservableProperty] 
     private bool _modifyContent;
+
+    private readonly IMessenger _messenger = Message.Instance;
     
-    private int selectedAplication;
+    private CreditApplication selectedAplication;
 
     
     public ObservableCollection<CreditApplication> CreditApplicationList { get; set; } = new();
@@ -54,6 +59,7 @@ public partial class ValidateCreditApplicationPageViewModel: ViewModelBase
             foreach (var aplication in result)
             {
                 CreditApplicationList.Add(aplication);
+                Console.WriteLine(aplication.CreditApplicationId);
             }
         }
         catch (ApiException)
@@ -70,25 +76,15 @@ public partial class ValidateCreditApplicationPageViewModel: ViewModelBase
     [RelayCommand]
     public void ValidateCommand(string ApplicationId)
     {
-        if (int.TryParse(ApplicationId, out int id))
+        foreach (CreditApplication aplications in CreditApplicationList)
         {
-            LoadHeader = false;
-            LoadContent = false;
-            ModifyHeader = true;
-            ModifyContent = true;
-
-            foreach (var aplication in CreditApplicationList)
+            if (aplications.CreditApplicationId.ToString() == ApplicationId)
             {
-                selectedAplication = id;
-                
-                if (aplication.ApplicationId == id)
-                {
-                    
-                    
-                    break;
-                }
+                selectedAplication = aplications;
             }
         }
-            
+
+        Console.WriteLine(selectedAplication.References[1].ToString());
+        _messenger.Send(new ViewCreditAplicationMessage(selectedAplication));
     }
 }

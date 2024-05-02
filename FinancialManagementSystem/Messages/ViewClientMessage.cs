@@ -4,3 +4,5 @@ using FinancialManagementSystem.Models;
 namespace FinancialManagementSystem.Messages;
 
 public class ViewClientMessage(Client result) : ValueChangedMessage<Client>(result);
+
+public class ViewClientMessageFromValidation(Client result, string r) : ValueChangedMessage<Client>(result);

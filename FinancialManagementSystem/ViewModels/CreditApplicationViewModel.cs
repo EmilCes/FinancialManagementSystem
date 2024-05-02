@@ -8,8 +8,11 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Media;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using FinancialManagementSystem.Messages;
 using FinancialManagementSystem.Models;
 using FinancialManagementSystem.Models.Helpers;
 using FinancialManagementSystem.Services.CreditApplication;
@@ -28,13 +31,46 @@ public partial class CreditApplicationViewModel : ViewModelBase
     private byte[] _identificationDocument = null;
     private byte[] _proofOfIncome = null;
     private byte[] _proofOfAddress = null;
+
+    private CreditApplication creditAplicationValidation;
     
+    private readonly IMessenger _messenger = Message.Instance;
+
     public CreditApplicationViewModel()
     {
         _creditApplicationService = new CreditApplicationService("http://localhost:8080/api/v1/creditApplication");
         _creditTypeService = new CreditTypeService("http://localhost:8080/api/v1/credit-type");
         SetLabels();
         SetCreditTypes();
+    }
+    
+    public CreditApplicationViewModel(CreditApplication creditApplication)
+    {
+        _creditApplicationService = new CreditApplicationService("http://localhost:8080/api/v1/creditApplication");
+        _creditTypeService = new CreditTypeService("http://localhost:8080/api/v1/credit-type");
+        _gridsAreEnabledValidation = false;
+        _infoClienteVisibility = true;
+        _btnRegisterVisibility = false;
+        
+        SetCreditTypes();
+        _selectedCredit = creditApplication.SelectedCredit;
+        
+        NameReferenceOne = creditApplication.References[0].Name;
+        FirstLastnameReferenceOne = creditApplication.References[0].FirstLastname;
+        SecondLastnameReferenceOne = creditApplication.References[0].SecondLastname;
+        PhoneReferenceOne = creditApplication.References[0].PhoneNumber;
+
+        NameReferenceTwo = creditApplication.References[1].Name;
+        FirstLastnameReferenceTwo = creditApplication.References[1].FirstLastname;
+        SecondLastnameReferenceTwo = creditApplication.References[1].SecondLastname ;
+        PhoneReferenceTwo = creditApplication.References[1].PhoneNumber;
+    }
+    
+
+    [RelayCommand]
+    public async void SeeInfoClientCommand()
+    {
+        _messenger.Send(new ViewClientMessage(null));
     }
 
     private void SetLabels()
@@ -249,10 +285,20 @@ public partial class CreditApplicationViewModel : ViewModelBase
         }
     }
     
+    [RelayCommand]
+    public void CancelCommand()
+    {
+        
+    }
+    
     [ObservableProperty] private string _lblIdentificationDocument;
     [ObservableProperty] private string _lblProofOfAddressDocument;
     [ObservableProperty] private string _lblProofOfIncomeDocument;
     [ObservableProperty] private bool _gridsAreEnabled;
+    [ObservableProperty] private bool _gridsAreEnabledValidation = true;
+    [ObservableProperty] private bool _infoClienteVisibility = false;
+    [ObservableProperty] private bool _btnRegisterVisibility = true;
+
 
     [ObservableProperty] private SolidColorBrush _rfcBrush;
     [ObservableProperty] private SolidColorBrush _disableColor;

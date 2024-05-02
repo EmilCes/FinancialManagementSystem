@@ -18,6 +18,9 @@ public interface ICreditApplicationService
     
     [Get("/")]
     Task<List<Models.CreditApplication>> GetCreditAplicationsTypesAsync();
+    
+    [Get("/{id}")]
+    Task<Models.CreditApplication> GetCreditAplicationByIdAsync(int id);
 }
 
 public class VerifyClientRequest

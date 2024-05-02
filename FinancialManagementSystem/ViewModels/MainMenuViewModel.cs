@@ -37,11 +37,16 @@ public partial class MainMenuViewModel : ViewModelBase
             CurrentPage = new ClientsPageViewModel();
         });
         
+        messenger.Register<MainMenuViewModel, ViewCreditAplicationMessage>(this, (_, message) =>
+        {
+            CurrentPage = new CreditApplicationViewModel(message.Value);
+        });
+        
         //Employee employee = Employee.Instance;
         //SetItemsBasedOnRole(employee.Role);
         //string username = employee.FirstName + " " + employee.LastName;
         //Username = username;
-        SetItemsBasedOnRole("ANALISTA_COBRO");
+        SetItemsBasedOnRole("ANALISTA_CREDITO");
 
     }
 
@@ -72,6 +77,9 @@ public partial class MainMenuViewModel : ViewModelBase
                 break;
             case "ANALISTA_CREDITO":
                 Items.Add(new ListItemTemplate(typeof(HomePageViewModel), "Menu Principal", "HomeRegular"));
+                Items.Add(new ListItemTemplate(typeof(ValidateCreditApplicationPageViewModel), "Validación de solicitudes", ""));
+                Items.Add(new ListItemTemplate(typeof(CreditsPageViewModel), "Validación", ""));
+
                 break;
             case "ASESOR_CREDITO":
                 Items.Add(new ListItemTemplate(typeof(HomePageViewModel), "Menu Principal", "HomeRegular"));

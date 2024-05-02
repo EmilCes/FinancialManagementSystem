@@ -64,7 +64,7 @@
                                                    />
                                         <TextBox Grid.Column="2"
                                                  x:Name="id"
-                                                 Text="{Binding CreditId}"
+                                                 Text="{Binding CreditTypeId}"
                                                  IsVisible="False">
                                         </TextBox>
                                         <Button Grid.Column="2" Content="Modificar"
@@ -240,6 +240,7 @@
                             Height="40"
                             Width="150"
                             CornerRadius="5"
+                            Command="{Binding CancelCommand}"
                     />
                 </StackPanel>
                 

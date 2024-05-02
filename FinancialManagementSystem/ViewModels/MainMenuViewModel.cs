@@ -56,8 +56,7 @@ public partial class MainMenuViewModel : ViewModelBase
         //SetItemsBasedOnRole(employee.Role);
         //string username = employee.FirstName + " " + employee.LastName;
         //Username = username;
-        SetItemsBasedOnRole("ANALISTA_COBRO");
-        SetItemsBasedOnRole("ANALISTA_CREDITO");
+        SetItemsBasedOnRole("ADMIN");
     }
 
     partial void OnSelectedListItemChanged(ListItemTemplate? value)
@@ -82,7 +81,6 @@ public partial class MainMenuViewModel : ViewModelBase
                 Items.Add(new ListItemTemplate(typeof(CreditTypePageViewModel), "Registrar Crédito", ""));
                 Items.Add(new ListItemTemplate(typeof(EmployeeRegistrationPageViewModel), "Registrar Trabajador", ""));
                 Items.Add(new ListItemTemplate(typeof(SearchWorkerPageViewModel), "Buscar Trabajador", ""));
-                Items.Add(new ListItemTemplate(typeof(ClientsPageViewModel), "CLiente Buscar", ""));
                 break;
             case "ANALISTA_COBRO":
                 Items.Add(new ListItemTemplate(typeof(HomePageViewModel), "Menu Principal", "HomeRegular"));

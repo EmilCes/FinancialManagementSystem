@@ -95,37 +95,49 @@ public partial class CreditApplicationViewModel : ViewModelBase
 
     }
     
-
     [RelayCommand]
     public async void SeeInfoClientCommand()
     {
-        _messenger.Send(new ViewClientMessageFromValidation(clientToValidte, creditAplicationValidation));
+        ClientAndCredit clientAndCredit = new ClientAndCredit
+        {
+            CreditApplication = creditAplicationValidation,
+            Client = clientToValidte
+        };
+
+        _messenger.Send(new ViewClientMessageFromValidation(clientAndCredit));
     }
     
     [RelayCommand]
-    public async void SendValidationCommand()
+    public async Task SendValidationCommand()
     {
         List<Politic> politics = Politics.Where(politic => politic.cbPoliticInvalid).ToList();
         
         
         List<String> comments = new List<string>();
-        List<Politic> politicsToSend = new List<Politic>();
+        
         foreach (Politic politic in politics)
         {
-            var politicCopy = new Politic();
-            politicCopy.politicId = politic.politicId;
             comments.Add(politic.comment);
-            politicsToSend.Add(politicCopy);
-            Console.WriteLine(politicCopy.politicId);
+            Console.WriteLine("Politica: " + politic.politicId);
         }
         
         //Employee employee = Employee.Instance;
+        Politic politic1 = new Politic();
+        politic1.politicId = 1;
+        
+        Politic politic2 = new Politic();
+        politic1.politicId = 2;
+        
+        List<Politic> politicsTo = new List<Politic>();
+        politicsTo.Add(politic1);
+        politicsTo.Add(politic2);
+
 
         try
         {
             ICreditService.ValidateCreditApplicationRequest request = new ICreditService.ValidateCreditApplicationRequest()
             {
-                RejectedPolicies = politicsToSend,
+                RejectedPolicies = politics,
                 Comments = "comments.ToString()",
                 UserId = 1,
                 CreditApplicationId = creditAplicationIdToValidate

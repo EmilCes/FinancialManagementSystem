@@ -34,7 +34,7 @@ public partial class MainMenuViewModel : ViewModelBase
         
         messenger.Register<MainMenuViewModel, ViewClientMessageFromValidation>(this, (_, message) =>
         {
-            CurrentPage = new ClientPageViewModel(message.Value);
+            CurrentPage = new ClientPageViewModel(message.Value.Client, message.Value.CreditApplication);
         });
         
         messenger.Register<MainMenuViewModel, ViewClientsMessage>(this, (_, message) =>
@@ -61,8 +61,7 @@ public partial class MainMenuViewModel : ViewModelBase
         //SetItemsBasedOnRole(employee.Role);
         //string username = employee.FirstName + " " + employee.LastName;
         //Username = username;
-        //SetItemsBasedOnRole("ANALISTA_COBRO");
-        SetItemsBasedOnRole("ADMIN");
+        SetItemsBasedOnRole("ANALISTA_CREDITO");
     }
 
     partial void OnSelectedListItemChanged(ListItemTemplate? value)
@@ -87,7 +86,6 @@ public partial class MainMenuViewModel : ViewModelBase
                 Items.Add(new ListItemTemplate(typeof(CreditTypePageViewModel), "Registrar Crédito", ""));
                 Items.Add(new ListItemTemplate(typeof(EmployeeRegistrationPageViewModel), "Registrar Trabajador", ""));
                 Items.Add(new ListItemTemplate(typeof(SearchWorkerPageViewModel), "Buscar Trabajador", ""));
-                Items.Add(new ListItemTemplate(typeof(CreditsPageViewModel), "Tipos de Créditos", ""));
                 break;
             case "ANALISTA_COBRO":
                 Items.Add(new ListItemTemplate(typeof(HomePageViewModel), "Menu Principal", "HomeRegular"));
@@ -96,6 +94,7 @@ public partial class MainMenuViewModel : ViewModelBase
             case "ANALISTA_CREDITO":
                 Items.Add(new ListItemTemplate(typeof(HomePageViewModel), "Menu Principal", "HomeRegular"));
                 Items.Add(new ListItemTemplate(typeof(ValidateCreditApplicationPageViewModel), "Validación de solicitudes", ""));
+                Items.Add(new ListItemTemplate(typeof(CreditsPageViewModel), "Validación", ""));
 
                 break;
             case "ASESOR_CREDITO":

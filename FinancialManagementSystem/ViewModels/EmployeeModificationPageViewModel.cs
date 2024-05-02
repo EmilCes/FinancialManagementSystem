@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -34,21 +35,43 @@ public partial class EmployeeModificationPageViewModel: ViewModelBase
         
         Dispatcher.UIThread.InvokeAsync(() =>
         {
-            FillRoles();
             FillWorker(rfc);
         });
         
     }
 
-    private void FillRoles()
+    private void FillRoles(String userRole)
     {
+        
         Role user = new Role("USER", "Usuario");
         Role admin = new Role("ADMIN", "Administrador");
         Role moneyAnalist = new Role("ANALISTA_COBRO", "Analista de Cobro");
         Role creditAnalist = new Role("ANALISTA_CREDITO", "Analista de Crédito");
         Role creditAsesor = new Role("ASESOR_CREDITO", "Asesor de Crédito");
         Role manager = new Role("MANAGER", "Gerente");
-        
+
+        switch (userRole)
+        {
+            case "USER":
+                user.CbRoleState = true;
+                break;
+            case "ADMIN":
+                admin.CbRoleState = true;
+                break;
+            case "ANALISTA_COBRO":
+                moneyAnalist.CbRoleState = true;
+                break;
+            case "ANALISTA_CREDITO":
+                creditAnalist.CbRoleState = true;
+                break;
+            case "ASESOR_CREDITO":
+                creditAsesor.CbRoleState = true;
+                break;
+            case "MANAGER":
+                manager.CbRoleState = true;
+                break;
+        }
+
         Roles.Add(user);
         Roles.Add(admin);
         Roles.Add(moneyAnalist);
@@ -76,7 +99,8 @@ public partial class EmployeeModificationPageViewModel: ViewModelBase
             {
                 Lastname = user.Lastname;
             }
-            
+
+            FillRoles(user.Role);
             Rfc = user.Rfc;
             UserNumber = user.UserNumber;
             Email = user.Email;

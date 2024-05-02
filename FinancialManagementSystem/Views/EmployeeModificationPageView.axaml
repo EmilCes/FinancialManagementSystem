@@ -14,7 +14,7 @@
             Background="#613ED0"
             Margin="18, 20, 18, 0"
             CornerRadius="12.5">
-            <TextBlock Text="Registrar trabajador" 
+            <TextBlock Text="Modificar trabajador" 
                        HorizontalAlignment="Left"
                        VerticalAlignment="Center"
                        Margin="40, 15"

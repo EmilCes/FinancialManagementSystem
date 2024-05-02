@@ -547,6 +547,7 @@
 
                         />
                         <Button Content="Regresar a Validación" HorizontalAlignment="Center"
+                                
                                 Background="Goldenrod"
                                 Margin="0, 20, 0, 0"
                                 Foreground="White"
@@ -554,8 +555,7 @@
                                 Height="40"
                                 Width="150"
                                 CornerRadius="5"
-                                IsVisible="{Binding IsFormReadOnly}"
-
+                                IsVisible="{Binding BtnReturnToValid}"
                         />
                     </StackPanel>
                     

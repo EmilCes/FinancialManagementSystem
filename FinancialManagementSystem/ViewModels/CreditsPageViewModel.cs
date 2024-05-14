@@ -224,7 +224,7 @@ public partial class CreditsPageViewModel : ViewModelBase
     [ObservableProperty]
     [NotifyDataErrorInfo]
     [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
-    private string _term;
+    private int _term;
     
     [ObservableProperty]
     [NotifyDataErrorInfo]

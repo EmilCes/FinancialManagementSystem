@@ -9,8 +9,12 @@ public class CreditType: ObservableObject
     public string Description { get; set; }
     public float InterestRate { get; set; }
     public string State { get; set; }
-    public string Term { get; set; }
+    public int Term { get; set; }
+    
+    public string TermType { get; set; }
+
     public float Iva { get; set; }
+    public float Amount { get; set; }
     public List<Politic> Politics { get; set; }
 
     public override string ToString()

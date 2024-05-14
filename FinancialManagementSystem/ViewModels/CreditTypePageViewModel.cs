@@ -22,6 +22,7 @@ public partial class CreditTypePageViewModel : ViewModelBase
     private readonly IPoliticsService _politicsService;
     public ObservableCollection<Politic> Politics { get; }
     private bool _validPolitics;
+    private bool _validTermType;
     
     public CreditTypePageViewModel()
     {
@@ -40,8 +41,9 @@ public partial class CreditTypePageViewModel : ViewModelBase
     public async Task RegisterCreditTypeCommand()
     {
         var politics = GetSelectedPolitics();
+        string termType = GetSelectedTermType();
         
-        if (!Validations.ValidateFields(this) || !_validPolitics)
+        if (!Validations.ValidateFields(this) || !_validPolitics || !_validTermType)
         {
             DialogMessages.ShowInvalidFieldsMessage();
             return;
@@ -61,9 +63,11 @@ public partial class CreditTypePageViewModel : ViewModelBase
                 Description = Description,
                 InterestRate = float.Parse(InterestRate),
                 State = state,
-                Term = Term,
+                Term = int.Parse(Term),
                 Iva = float.Parse(Iva),
-                Politics = politics
+                Amount = float.Parse(Amount),
+                Politics = politics,
+                TermType = termType
             };
             
             await _creditTypeService.RegisterCreditTypeAsync(request);
@@ -110,6 +114,25 @@ public partial class CreditTypePageViewModel : ViewModelBase
 
         return politics;
     }
+
+    private string GetSelectedTermType()
+    {
+        _validTermType = true;
+        
+        if (WeeklyTermType) return "Semanal";
+        if (BiweeklyTermType) return "Quincenal";
+        if (MonthlyTermType) return "Mensual";
+
+        _validTermType = false;
+        return string.Empty;
+    }
+    
+    [ObservableProperty]
+    private bool _weeklyTermType;
+    [ObservableProperty]
+    private bool _biweeklyTermType;
+    [ObservableProperty]
+    private bool _monthlyTermType;
     
     [ObservableProperty]
     [NotifyDataErrorInfo]
@@ -131,6 +154,7 @@ public partial class CreditTypePageViewModel : ViewModelBase
     [ObservableProperty]
     [NotifyDataErrorInfo]
     [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
+    [RegularExpression(@"^\d+(\.\d+)?$", ErrorMessage = ErrorMessages.NUMERIC_FIELD_MESSAGE)]
     private string _term;
     
     [ObservableProperty]
@@ -138,4 +162,10 @@ public partial class CreditTypePageViewModel : ViewModelBase
     [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
     [RegularExpression(@"^\d+(\.\d+)?$", ErrorMessage = ErrorMessages.NUMERIC_FIELD_MESSAGE)]
     private string _iva;
+    
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
+    [RegularExpression(@"^\d+(\.\d+)?$", ErrorMessage = ErrorMessages.NUMERIC_FIELD_MESSAGE)]
+    private string _amount;
 }

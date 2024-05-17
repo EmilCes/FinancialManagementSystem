@@ -63,8 +63,8 @@ public partial class MainMenuViewModel : ViewModelBase
         Username = username;*/
         //SetItemsBasedOnRole("ASESOR_CREDITO");
         //SetItemsBasedOnRole("ANALISTA_COBRO");
-        //SetItemsBasedOnRole("ANALISTA_CREDITO");
-        SetItemsBasedOnRole("ADMIN");
+        SetItemsBasedOnRole("ANALISTA_CREDITO");
+        //SetItemsBasedOnRole("ADMIN");
     }
 
     partial void OnSelectedListItemChanged(ListItemTemplate? value)

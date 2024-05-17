@@ -63,7 +63,7 @@ public partial class CreditTypePageViewModel : ViewModelBase
                 Description = Description,
                 InterestRate = float.Parse(InterestRate),
                 State = state,
-                Term = int.Parse(Term),
+                Term = Term,
                 Iva = float.Parse(Iva),
                 Amount = float.Parse(Amount),
                 Politics = politics,
@@ -155,7 +155,7 @@ public partial class CreditTypePageViewModel : ViewModelBase
     [NotifyDataErrorInfo]
     [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
     [RegularExpression(@"^\d+(\.\d+)?$", ErrorMessage = ErrorMessages.NUMERIC_FIELD_MESSAGE)]
-    private string _term;
+    private int _term;
     
     [ObservableProperty]
     [NotifyDataErrorInfo]

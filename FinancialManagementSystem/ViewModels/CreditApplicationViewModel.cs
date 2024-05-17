@@ -4,20 +4,16 @@ using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Media;
-using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using DynamicData;
 using FinancialManagementSystem.Messages;
 using FinancialManagementSystem.Models;
 using FinancialManagementSystem.Models.Helpers;
-using FinancialManagementSystem.Services.Client;
 using FinancialManagementSystem.Services.Credit;
 using FinancialManagementSystem.Services.CreditApplication;
 using FinancialManagementSystem.Services.CreditType;
@@ -245,6 +241,8 @@ public partial class CreditApplicationViewModel : ViewModelBase
         Reference referenceOne = new Reference();
         Reference referenceTwo = new Reference();
         CreditType creditType = SelectedCredit;
+        
+        Console.WriteLine(SelectedCredit.CreditTypeId);
         
         referenceOne.Name = NameReferenceOne;
         referenceOne.FirstLastname = FirstLastnameReferenceOne;

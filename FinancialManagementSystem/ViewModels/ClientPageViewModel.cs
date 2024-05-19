@@ -38,6 +38,7 @@ public partial class ClientPageViewModel : ViewModelBase
     
     public ClientPageViewModel(Client client, CreditApplication creditApplication)
     {
+        _btnRegisterClient = false;
         _btnReturnToValid = true;
         _isFormReadOnly = false;
         _clientService = new ClientService("http://localhost:8080/api/v1/client");
@@ -353,6 +354,10 @@ public partial class ClientPageViewModel : ViewModelBase
 
     [ObservableProperty] 
     private bool _isFormReadOnly;
+    
+    [ObservableProperty] 
+    private bool _btnRegisterClient
+        ;
     
     [ObservableProperty] 
     private bool _modificationModeEnable;

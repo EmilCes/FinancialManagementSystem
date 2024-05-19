@@ -66,6 +66,7 @@ public partial class CreditApplicationViewModel : ViewModelBase
         _infoClienteVisibility = true;
         _btnRegisterVisibility = false;
         _isBorderVisible = true;
+        _titleBinding = "Validar Solicitud de Crédito";
 
         Politics = new ObservableCollection<Politic>();
 
@@ -92,7 +93,59 @@ public partial class CreditApplicationViewModel : ViewModelBase
         FirstLastnameReferenceTwo = creditApplication.References[1].FirstLastname;
         SecondLastnameReferenceTwo  = creditApplication.References[1].SecondLastname;
         PhoneReferenceTwo = creditApplication.References[1].PhoneNumber;
+        UploadDocs = false;
 
+    }
+    
+    [RelayCommand]
+    public async Task DownloadDocsCommand()
+    {
+        if (creditAplicationValidation == null) return;
+
+        var saveDialog = new SaveFileDialog
+        {
+            DefaultExtension = "pdf",
+            Filters = new List<FileDialogFilter> { new FileDialogFilter { Name = "PDF Files", Extensions = { "pdf" } } },
+            Title = "Save PDF Document"
+        };
+
+        if (Avalonia.Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            saveDialog.InitialFileName = "Identificacion.pdf";
+            var identificationFile = await saveDialog.ShowAsync(desktop.MainWindow);
+            if (identificationFile != null)
+            {
+                await SaveFileAsync(identificationFile, creditAplicationValidation.IdentificationPdf);
+            }
+
+            saveDialog.InitialFileName = "Comprobante de Ingresos.pdf";
+            var proofOfIncomeFile = await saveDialog.ShowAsync(desktop.MainWindow);
+            if (proofOfIncomeFile != null)
+            {
+                await SaveFileAsync(proofOfIncomeFile, creditAplicationValidation.ProofOfIncomePdf);
+            }
+
+            saveDialog.InitialFileName = "Comprobante de Dirección.pdf";
+            var proofOfAddressFile = await saveDialog.ShowAsync(desktop.MainWindow);
+            if (proofOfAddressFile != null)
+            {
+                await SaveFileAsync(proofOfAddressFile, creditAplicationValidation.ProofOfAddressPdf);
+            }
+        }
+    }
+
+    private async Task SaveFileAsync(string filePath, byte[] fileData)
+    {
+        if (fileData == null) return;
+
+        try
+        {
+            await File.WriteAllBytesAsync(filePath, fileData);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error saving file: {ex.Message}");
+        }
     }
     
     [RelayCommand]
@@ -135,7 +188,7 @@ public partial class CreditApplicationViewModel : ViewModelBase
                 Console.WriteLine("Politica: " + politic.politicId);
             }
         
-            //Employee employee = Employee.Instance;
+            Employee employee = Employee.Instance;
             Politic politic1 = new Politic();
             politic1.politicId = 1;
         
@@ -157,13 +210,13 @@ public partial class CreditApplicationViewModel : ViewModelBase
                 {
                     RejectedPolicies = politics,
                     Comments = comment,
-                    UserId = 1,
+                    UserId = employee.EmployeeId,
                     CreditApplicationId = creditAplicationIdToValidate
                 };
             
                 await _creditService.ValidateCreditApplicationAsync(request);
             
-                DialogMessages.ShowMessage("Modificación Exitosa", "El Credito fue actualizado correctamente.");
+                DialogMessages.ShowMessage("Validación Exitosa", "La solicitud fue validada correctamente.");
 
             }
             catch (ApiException e)
@@ -260,6 +313,9 @@ public partial class CreditApplicationViewModel : ViewModelBase
         creditApplicationRequest.FirstReference = referenceOne;
         creditApplicationRequest.SecondReference = referenceTwo;
         creditApplicationRequest.SelectedCredit = creditType;
+        creditApplicationRequest.SelectedCredit.CreditTypeId = creditType.CreditTypeId;
+        
+        
 
         if (_identificationDocument != null && _proofOfAddress != null && _proofOfIncome != null)
         {
@@ -421,7 +477,8 @@ public partial class CreditApplicationViewModel : ViewModelBase
     [ObservableProperty] private bool _infoClienteVisibility = false;
     [ObservableProperty] private bool _btnRegisterVisibility = true;
     [ObservableProperty] private bool _isBorderVisible = false;
-
+    [ObservableProperty] private bool _uploadDocs = true; 
+    [ObservableProperty] private string _titleBinding = "Crear Solicitud de Crédito";
 
     [ObservableProperty] 
     private SolidColorBrush _rfcBrush;

@@ -81,6 +81,7 @@ public partial class ValidateCreditApplicationPageViewModel: ViewModelBase
             if (aplications.CreditApplicationId.ToString() == ApplicationId)
             {
                 selectedAplication = aplications;
+                Console.WriteLine(selectedAplication.IdentificationPdf.Length);
             }
         }
         _messenger.Send(new ViewCreditAplicationMessage(selectedAplication));

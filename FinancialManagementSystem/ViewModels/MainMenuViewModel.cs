@@ -57,14 +57,14 @@ public partial class MainMenuViewModel : ViewModelBase
             CurrentPage = new SearchWorkerPageViewModel();
         });
         
-        /*Employee employee = Employee.Instance;
+        Employee employee = Employee.Instance;
         SetItemsBasedOnRole(employee.Role);
         string username = employee.FirstName + " " + employee.LastName;
-        Username = username;*/
+        Username = username;
         //SetItemsBasedOnRole("ASESOR_CREDITO");
         //SetItemsBasedOnRole("ANALISTA_COBRO");
         //SetItemsBasedOnRole("ANALISTA_CREDITO");
-        SetItemsBasedOnRole("ADMIN");
+        //SetItemsBasedOnRole("ADMIN");
     }
 
     partial void OnSelectedListItemChanged(ListItemTemplate? value)

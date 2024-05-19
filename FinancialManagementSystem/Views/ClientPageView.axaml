@@ -462,7 +462,7 @@
                                 Margin="0,0,35,15"
                                 IsVisible="{Binding !ModificationModeEnable}">
                         <Button 
-                                Content="Registrar Crédito" HorizontalAlignment="Center"
+                                Content="Registrar Cliente" HorizontalAlignment="Center"
                                 Background="#512da8"
                                 Margin="0, 20, 0, 0"
                                 Foreground="White"
@@ -500,6 +500,7 @@
                             Width="170"
                             CornerRadius="5"
                             IsEnabled="{Binding IsFormReadOnly}"
+                            Command="{Binding RegisterCreditApplicationCommand}"
                         />
                         <Button 
                             Content="Modificar Cliente" HorizontalAlignment="Center"

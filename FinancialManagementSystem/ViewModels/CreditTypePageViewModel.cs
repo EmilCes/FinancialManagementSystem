@@ -42,12 +42,20 @@ public partial class CreditTypePageViewModel : ViewModelBase
     public async Task RegisterCreditTypeCommand()
     {
         var politics = GetSelectedPolitics();
-        string termType = GetSelectedTermType();
+        var termType = GetSelectedTermType();
         
-        if (!Validations.ValidateFields(this) || !_validPolitics || !_validTermType)
+        if (!Validations.ValidateFields(this) || !_validTermType)
         {
             DialogMessages.ShowInvalidFieldsMessage();
             return;
+        }
+        else
+        {
+            if (!_validPolitics)
+            {
+                DialogMessages.ShowMessage("Politicas no Seleccionadas", "Debes seleccionar al menos una política.");
+                return;
+            }
         }
         
         try
@@ -64,7 +72,7 @@ public partial class CreditTypePageViewModel : ViewModelBase
                 Description = Description,
                 InterestRate = float.Parse(InterestRate),
                 State = state,
-                Term = Term,
+                Term = int.Parse(Term),
                 Iva = float.Parse(Iva),
                 Amount = float.Parse(Amount),
                 Politics = politics,
@@ -73,7 +81,7 @@ public partial class CreditTypePageViewModel : ViewModelBase
             
             await _creditTypeService.RegisterCreditTypeAsync(request);
 
-            DialogMessages.ShowMessage("Registro Exitoso", "El Credito fue registrado correctamente.");
+            DialogMessages.ShowMessage("Registro Exitoso", "El Crédito fue registrado correctamente.");
 
         }
         catch (ApiException)
@@ -156,7 +164,7 @@ public partial class CreditTypePageViewModel : ViewModelBase
     [NotifyDataErrorInfo]
     [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
     [RegularExpression(@"^\d+(\.\d+)?$", ErrorMessage = ErrorMessages.NUMERIC_FIELD_MESSAGE)]
-    private int _term;
+    private string _term;
     
     [ObservableProperty]
     [NotifyDataErrorInfo]

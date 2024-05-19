@@ -110,6 +110,12 @@ public partial class ClientsPageViewModel : ViewModelBase
         }
     }
 
+    [RelayCommand]
+    public void RegisterClientCommand()
+    {
+        _messenger.Send(new ViewClientPageMessage());
+    }
+
     private void FillObservableCollection<T>(ObservableCollection<T> observableCollection, List<T> listToCopy)
     {
         observableCollection.Clear();

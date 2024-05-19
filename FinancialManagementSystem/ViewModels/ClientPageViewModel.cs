@@ -129,6 +129,11 @@ public partial class ClientPageViewModel : ViewModelBase
             {
                 _messenger.Send(new CreateCreditApplication(Rfc));
             }
+
+            if (response!.Equals("Aceptar"))
+            {
+                _messenger.Send(new ViewClientsMessage());
+            }
         }
         catch (ApiException)
         {
@@ -203,7 +208,10 @@ public partial class ClientPageViewModel : ViewModelBase
         try
         {
             await _clientService.UpdateClientAsync(_currentClient.ClientId, client);
-            DialogMessages.ShowMessage("Modificación Exitosa", "Cliente Mofificado con éxito");
+            await DialogMessages.ShowCustomMessage("Modificación Exitosa", "Cliente modificado con éxito.", [
+                new() { Name = "Aceptar", }
+            ]);
+            
             SetFormAsReadOnlyCommand();
         }
         catch (ApiException)
@@ -275,8 +283,7 @@ public partial class ClientPageViewModel : ViewModelBase
     [RelayCommand]
     public void ReturnToValidationCommand()
     {
-        IMessenger messenger = Message.Instance;
-        messenger.Send(new ViewCreditAplicationMessage(_creditApplication));
+        _messenger.Send(new ViewCreditAplicationMessage(_creditApplication));
     }
     
     [RelayCommand]
@@ -292,9 +299,15 @@ public partial class ClientPageViewModel : ViewModelBase
         _messenger.Send(new ViewClientsMessage());
     }
 
+    [RelayCommand]
+    public void RegisterCreditApplicationCommand()
+    {
+        _messenger.Send(new CreateCreditApplication(Rfc));
+    }
+
     public void CancelRegistrationCommand()
     {
-        _messenger.Send(new ViewClientPageMessage());
+        _messenger.Send(new ViewClientsMessage());
     }
     
     private void LoadClientData()

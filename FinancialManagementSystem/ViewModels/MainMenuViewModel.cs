@@ -62,6 +62,11 @@ public partial class MainMenuViewModel : ViewModelBase
             CurrentPage = new SearchWorkerPageViewModel();
         });
         
+        Employee employee = Employee.Instance;
+        SetItemsBasedOnRole(employee.Role);
+        string username = employee.FirstName + " " + employee.LastName;
+        Username = username;
+        //SetItemsBasedOnRole("ASESOR_CREDITO");
         messenger.Register<MainMenuViewModel, CreateCreditApplication>(this, (_, message) =>
         {
             CurrentPage = new CreditApplicationViewModel(message.Value);

@@ -31,9 +31,9 @@ public partial class App : Application
         
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            desktop.MainWindow = new MainMenu()
+            desktop.MainWindow = new Login()
             {
-                DataContext = new MainMenuViewModel(Message.Instance),
+                DataContext = new LoginViewModel()
             };
         }
 

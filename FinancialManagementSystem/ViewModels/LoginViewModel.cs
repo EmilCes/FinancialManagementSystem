@@ -105,6 +105,7 @@ public partial class LoginViewModel : ViewModelBase
         {
             VerificationResponse response = await _authenticationService.VerifyAsync(request);
 
+            Employee.Instance.EmployeeId = response.id;
             Employee.Instance.FirstName = response.firstName;
             Employee.Instance.LastName = response.lastName;
             Employee.Instance.AccessToken = response.accessToken;

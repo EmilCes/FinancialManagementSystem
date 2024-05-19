@@ -470,6 +470,7 @@
                                 Height="40"
                                 Width="150"
                                 CornerRadius="5"
+                                IsVisible="{Binding BtnRegisterClient}"
                                 Command="{Binding RegisterClientCommand}"
                         />
                         <Button Content="Cancelar" HorizontalAlignment="Center"

@@ -5,6 +5,7 @@ public class Employee
     private static Employee instance;
     private static readonly object block = new object();
 
+    public int EmployeeId { get; set; }
     public string AccessToken { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }

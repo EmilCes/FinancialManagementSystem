@@ -4,23 +4,20 @@ using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Media;
-using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using DynamicData;
 using FinancialManagementSystem.Messages;
 using FinancialManagementSystem.Models;
 using FinancialManagementSystem.Models.Helpers;
-using FinancialManagementSystem.Services.Client;
 using FinancialManagementSystem.Services.Credit;
 using FinancialManagementSystem.Services.CreditApplication;
 using FinancialManagementSystem.Services.CreditType;
+using FinancialManagementSystem.ViewModels.Helpers;
 using Refit;
 using HttpRequestException = System.Net.Http.HttpRequestException;
 
@@ -53,6 +50,15 @@ public partial class CreditApplicationViewModel : ViewModelBase
         _creditTypeService = new CreditTypeService("http://localhost:8080/api/v1/credit-type");
         SetLabels();
         SetCreditTypes();
+    }
+    
+    public CreditApplicationViewModel(string clientRfc)
+    {
+        _creditApplicationService = new CreditApplicationService("http://localhost:8080/api/v1/creditApplication");
+        _creditTypeService = new CreditTypeService("http://localhost:8080/api/v1/credit-type");
+        SetLabels();
+        SetCreditTypes();
+        SetClient(clientRfc);
     }
     
     public CreditApplicationViewModel(CreditApplication creditApplication)
@@ -299,6 +305,8 @@ public partial class CreditApplicationViewModel : ViewModelBase
         Reference referenceTwo = new Reference();
         CreditType creditType = SelectedCredit;
         
+        Console.WriteLine(SelectedCredit.CreditTypeId);
+        
         referenceOne.Name = NameReferenceOne;
         referenceOne.FirstLastname = FirstLastnameReferenceOne;
         referenceOne.SecondLastname = SecondLastnameReferenceOne;
@@ -467,6 +475,12 @@ public partial class CreditApplicationViewModel : ViewModelBase
     public void CancelCommand()
     {
         
+    }
+
+    private async void SetClient(string clientRfc)
+    {
+        Rfc = clientRfc;
+        await SearchClientCommand();
     }
     
     [ObservableProperty] private string _lblIdentificationDocument;

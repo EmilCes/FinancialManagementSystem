@@ -32,6 +32,11 @@ public partial class MainMenuViewModel : ViewModelBase
             CurrentPage = new ClientPageViewModel(message.Value);
         });
         
+        messenger.Register<MainMenuViewModel, ViewClientPageMessage>(this, (_, message) =>
+        {
+            CurrentPage = new ClientPageViewModel();
+        });
+        
         messenger.Register<MainMenuViewModel, ViewClientMessageFromValidation>(this, (_, message) =>
         {
             CurrentPage = new ClientPageViewModel(message.Value.Client, message.Value.CreditApplication);
@@ -62,6 +67,16 @@ public partial class MainMenuViewModel : ViewModelBase
         string username = employee.FirstName + " " + employee.LastName;
         Username = username;
         //SetItemsBasedOnRole("ASESOR_CREDITO");
+        messenger.Register<MainMenuViewModel, CreateCreditApplication>(this, (_, message) =>
+        {
+            CurrentPage = new CreditApplicationViewModel(message.Value);
+        });
+        
+        /*Employee employee = Employee.Instance;
+        SetItemsBasedOnRole(employee.Role);
+        string username = employee.FirstName + " " + employee.LastName;
+        Username = username;*/
+        SetItemsBasedOnRole("ASESOR_CREDITO");
         //SetItemsBasedOnRole("ANALISTA_COBRO");
         //SetItemsBasedOnRole("ANALISTA_CREDITO");
         //SetItemsBasedOnRole("ADMIN");

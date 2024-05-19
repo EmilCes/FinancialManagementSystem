@@ -11,6 +11,7 @@ using FinancialManagementSystem.Messages;
 using FinancialManagementSystem.Models;
 using FinancialManagementSystem.Models.Helpers;
 using FinancialManagementSystem.Services.CreditApplication;
+using FinancialManagementSystem.ViewModels.Helpers;
 using Refit;
 
 namespace FinancialManagementSystem.ViewModels;

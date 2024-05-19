@@ -473,6 +473,16 @@
                                 IsVisible="{Binding BtnRegisterClient}"
                                 Command="{Binding RegisterClientCommand}"
                         />
+                        <Button Content="Cancelar" HorizontalAlignment="Center"
+                                Background="#FF3204"
+                                Margin="0, 20, 0, 0"
+                                Foreground="White"
+                                FontFamily="{StaticResource MontserratFont}"
+                                Height="40"
+                                Width="150"
+                                CornerRadius="5"
+                                Command="{Binding CancelRegistrationCommand}"
+                        />
                     </StackPanel>
                     
                     <StackPanel Orientation="Horizontal"

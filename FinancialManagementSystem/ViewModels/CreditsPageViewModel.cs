@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -12,6 +14,7 @@ using FinancialManagementSystem.Models.Helpers;
 using FinancialManagementSystem.Services.Authentication;
 using FinancialManagementSystem.Services.CreditType;
 using FinancialManagementSystem.Services.CRU_Politica;
+using FinancialManagementSystem.ViewModels.Helpers;
 using Refit;
 
 namespace FinancialManagementSystem.ViewModels;
@@ -23,14 +26,12 @@ public partial class CreditsPageViewModel : ViewModelBase
     [ObservableProperty] 
     private bool _loadContent = true;
     [ObservableProperty]
-    private bool _modifyHeader = false;
+    private bool _modifyHeader;
     [ObservableProperty] 
-    private bool _modifyContent = false;
+    private bool _modifyContent;
     
-    private int selectedCreditId;
-    
-    
-    
+    private int _selectedCreditId;
+    private bool _validTermType;
     private bool _validPolitics;
     private CreditType selectedCreditType;
     public ObservableCollection<Politic> Politics { get; }
@@ -39,8 +40,7 @@ public partial class CreditsPageViewModel : ViewModelBase
     
     private readonly ICreditTypeService _creditTypeService;
     private readonly IPoliticsService _politicsService;
-
-
+    
     
     public CreditsPageViewModel()
     {
@@ -85,11 +85,6 @@ public partial class CreditsPageViewModel : ViewModelBase
     [RelayCommand]
     public void ModifyCommand(string creditId)
     {
-        Dispatcher.UIThread.InvokeAsync(() =>
-            {
-                GetPoliticsCommand();
-            }
-        );
         if (int.TryParse(creditId, out int id))
         {
             LoadHeader = false;
@@ -99,15 +94,25 @@ public partial class CreditsPageViewModel : ViewModelBase
 
             foreach (var creditType in Credits)
             {
-                selectedCreditId = id;
+                _selectedCreditId = id;
                 
                 if (creditType.CreditTypeId == id)
                 {
+                    Amount = creditType.Amount.ToString(CultureInfo.InvariantCulture);
                     Description = creditType.Description;
-                    InterestRate = creditType.InterestRate.ToString();
-                    Iva = creditType.Iva.ToString();
-                    Term = creditType.Term;
+                    InterestRate = creditType.InterestRate.ToString(CultureInfo.InvariantCulture);
+                    Iva = creditType.Iva.ToString(CultureInfo.InvariantCulture);
+                    Term = creditType.Term.ToString(CultureInfo.InvariantCulture);
                     State = 1;
+                    
+                    SetSelectedTermType(creditType.TermType);
+                    
+                    Dispatcher.UIThread.InvokeAsync(() =>
+                        {
+                            GetPoliticsCommand(creditType.Politics);
+                        }
+                    );
+                    
                     break;
                 }
             }
@@ -119,6 +124,7 @@ public partial class CreditsPageViewModel : ViewModelBase
     public async Task ModifyCreditTypeCommand()
     {
         var politics = GetSelectedPolitics();
+        string termType = GetSelectedTermType();
         
         if (!Validations.ValidateFields(this) || !_validPolitics)
         {
@@ -135,15 +141,17 @@ public partial class CreditsPageViewModel : ViewModelBase
                 _ => ""
             };
 
-            var request = new CreditType()
+            var request = new CreditType
             {
-                CreditTypeId = selectedCreditId,
+                CreditTypeId = _selectedCreditId,
                 Description = Description,
                 InterestRate = float.Parse(InterestRate),
                 State = state,
-                Term = Term,
+                Term = int.Parse(Term),
                 Iva = float.Parse(Iva),
-                Politics = politics
+                Amount = float.Parse(Amount),
+                Politics = politics,
+                TermType = termType
             };
             
             await _creditTypeService.ModifyCreditTypeAsync(request);
@@ -151,18 +159,21 @@ public partial class CreditsPageViewModel : ViewModelBase
             DialogMessages.ShowMessage("Modificación Exitosa", "El Credito fue actualizado correctamente.");
 
         }
-        catch (ApiException)
+        catch (ApiException e)
         {
+            Console.WriteLine(e.ToString());
             DialogMessages.ShowApiExceptionMessage();
         }
-        catch (HttpRequestException)
+        catch (HttpRequestException e)
         {
+            Console.WriteLine(e.ToString());
+
             DialogMessages.ShowHttpRequestExceptionMessage();
         }
     }
     
     
-    private async Task GetPoliticsCommand()
+    private async Task GetPoliticsCommand(List<Politic> creditTypePolitics)
     {
         try
         {
@@ -170,6 +181,13 @@ public partial class CreditsPageViewModel : ViewModelBase
 
             foreach (var politic in response)
             {
+                bool containsPolitic = creditTypePolitics.Any(p => p.politicId == politic.politicId);
+                
+                if (containsPolitic)
+                {
+                    politic.cbPoliticState = true;
+                }
+                
                 Politics.Add(politic);
             }
         }
@@ -192,6 +210,37 @@ public partial class CreditsPageViewModel : ViewModelBase
         return politics;
     }
 
+    private void SetSelectedTermType(string termType)
+    {
+        switch (termType)
+        {
+            case "Quincenal":
+                BiweeklyTermType = true;
+                break;
+            case "Semanal":
+                WeeklyTermType = true;
+                break;
+            case "Mensual":
+                MonthlyTermType = true;
+                break;
+            default:
+                DialogMessages.ShowMessage("Error", "Hubo un error al cargar el tipo de credito");
+                break;
+        }
+    }
+    
+    private string GetSelectedTermType()
+    {
+        _validTermType = true;
+        
+        if (WeeklyTermType) return "Semanal";
+        if (BiweeklyTermType) return "Quincenal";
+        if (MonthlyTermType) return "Mensual";
+
+        _validTermType = false;
+        return string.Empty;
+    }
+
     [RelayCommand]
     public void CancelCommand()
     {
@@ -202,7 +251,12 @@ public partial class CreditsPageViewModel : ViewModelBase
         ModifyContent = false;
     }
     
-
+    [ObservableProperty]
+    private bool _weeklyTermType;
+    [ObservableProperty]
+    private bool _biweeklyTermType;
+    [ObservableProperty]
+    private bool _monthlyTermType;
 
     [ObservableProperty]
     [NotifyDataErrorInfo]
@@ -224,11 +278,17 @@ public partial class CreditsPageViewModel : ViewModelBase
     [ObservableProperty]
     [NotifyDataErrorInfo]
     [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
-    private int _term;
+    private string _term;
     
     [ObservableProperty]
     [NotifyDataErrorInfo]
     [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
     [RegularExpression(@"^\d+(\.\d+)?$", ErrorMessage = ErrorMessages.NUMERIC_FIELD_MESSAGE)]
     private string _iva;
+    
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required (ErrorMessage = ErrorMessages.REQUIRED_FIELD_MESSAGE)]
+    [RegularExpression(@"^\d+(\.\d+)?$", ErrorMessage = ErrorMessages.NUMERIC_FIELD_MESSAGE)]
+    private string _amount;
 }

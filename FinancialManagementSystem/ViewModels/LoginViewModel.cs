@@ -11,6 +11,7 @@ using FinancialManagementSystem.Messages;
 using FinancialManagementSystem.Models;
 using FinancialManagementSystem.Models.Helpers;
 using FinancialManagementSystem.Services.Authentication;
+using FinancialManagementSystem.ViewModels.Helpers;
 using Refit;
 using AuthenticationResponse = FinancialManagementSystem.Services.Authentication.AuthenticationResponse;
 

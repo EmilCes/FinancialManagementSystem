@@ -15,6 +15,7 @@ using CommunityToolkit.Mvvm.Input;
 using FinancialManagementSystem.Models;
 using FinancialManagementSystem.Models.Helpers;
 using FinancialManagementSystem.Services.Authentication;
+using FinancialManagementSystem.ViewModels.Helpers;
 using Refit;
 
 namespace FinancialManagementSystem.ViewModels;

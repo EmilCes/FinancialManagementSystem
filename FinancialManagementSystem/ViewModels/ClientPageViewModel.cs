@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Net.Http;
@@ -12,6 +13,8 @@ using FinancialManagementSystem.Models;
 using FinancialManagementSystem.Models.Helpers;
 using FinancialManagementSystem.Services.Client;
 using FinancialManagementSystem.Services.Client.Dto;
+using FinancialManagementSystem.ViewModels.Helpers;
+using MsBox.Avalonia.Models;
 using Refit;
 
 namespace FinancialManagementSystem.ViewModels;
@@ -22,6 +25,7 @@ public partial class ClientPageViewModel : ViewModelBase
     private bool _isCheckboxActive;
     private Client _currentClient;
     private CreditApplication _creditApplication;
+    private IMessenger _messenger = Message.Instance;
     
     public ClientPageViewModel()
     {
@@ -115,7 +119,16 @@ public partial class ClientPageViewModel : ViewModelBase
         try
         {
             await _clientService.RegisterClientAsync(client);
-            DialogMessages.ShowMessage("Registro Exitoso", "El Cliente fue registrado correctamente.");
+            
+            var response = await DialogMessages.ShowCustomMessage("Registro Exitoso", "El Cliente fue registrado correctamente.", [
+                new() { Name = "Aceptar", },
+                new() { Name = "Crear Solicitud", }
+            ]);
+
+            if (response!.Equals("Crear Solicitud"))
+            {
+                _messenger.Send(new CreateCreditApplication(Rfc));
+            }
         }
         catch (ApiException)
         {
@@ -276,8 +289,12 @@ public partial class ClientPageViewModel : ViewModelBase
     [RelayCommand]
     public void CancelCommand()
     {
-        IMessenger messenger = Message.Instance;
-        messenger.Send(new ViewClientsMessage());
+        _messenger.Send(new ViewClientsMessage());
+    }
+
+    public void CancelRegistrationCommand()
+    {
+        _messenger.Send(new ViewClientPageMessage());
     }
     
     private void LoadClientData()
@@ -295,14 +312,14 @@ public partial class ClientPageViewModel : ViewModelBase
         DateOfBirth = client.DateOfBirth;
         
         // Address Information
-        Address addres = client.Address;
-        Street = addres.Street;
-        Neighborhood = addres.Neighborhood;
-        Municipality = addres.Municipality;
-        State = addres.State;
-        PostalCode = addres.PostalCode;
-        InteriorNumber = addres.InteriorNumber.ToString();
-        ExteriorNumber = addres.ExteriorNumber.ToString();
+        Address address = client.Address;
+        Street = address.Street;
+        Neighborhood = address.Neighborhood;
+        Municipality = address.Municipality;
+        State = address.State;
+        PostalCode = address.PostalCode;
+        InteriorNumber = address.InteriorNumber.ToString();
+        ExteriorNumber = address.ExteriorNumber.ToString();
         
         // Work Place
         Workplace workplace = client.Workplace;

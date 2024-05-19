@@ -17,6 +17,7 @@ using FinancialManagementSystem.Models.Helpers;
 using FinancialManagementSystem.Services.Credit;
 using FinancialManagementSystem.Services.CreditApplication;
 using FinancialManagementSystem.Services.CreditType;
+using FinancialManagementSystem.ViewModels.Helpers;
 using Refit;
 using HttpRequestException = System.Net.Http.HttpRequestException;
 
@@ -49,6 +50,15 @@ public partial class CreditApplicationViewModel : ViewModelBase
         _creditTypeService = new CreditTypeService("http://localhost:8080/api/v1/credit-type");
         SetLabels();
         SetCreditTypes();
+    }
+    
+    public CreditApplicationViewModel(string clientRfc)
+    {
+        _creditApplicationService = new CreditApplicationService("http://localhost:8080/api/v1/creditApplication");
+        _creditTypeService = new CreditTypeService("http://localhost:8080/api/v1/credit-type");
+        SetLabels();
+        SetCreditTypes();
+        SetClient(clientRfc);
     }
     
     public CreditApplicationViewModel(CreditApplication creditApplication)
@@ -409,6 +419,12 @@ public partial class CreditApplicationViewModel : ViewModelBase
     public void CancelCommand()
     {
         
+    }
+
+    private async void SetClient(string clientRfc)
+    {
+        Rfc = clientRfc;
+        await SearchClientCommand();
     }
     
     [ObservableProperty] private string _lblIdentificationDocument;

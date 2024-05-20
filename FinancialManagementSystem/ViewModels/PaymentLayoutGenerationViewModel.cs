@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -10,9 +11,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using FinancialManagementSystem.Models.Helpers;
-using FinancialManagementSystem.Services.Credit;
-using FinancialManagementSystem.Services.Credit.Dto;
+using FinancialManagementSystem.Services.PaymentLayout;
 using FinancialManagementSystem.ViewModels.Helpers;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
@@ -29,15 +28,15 @@ public partial class PaymentLayoutGenerationViewModel : ViewModelBase
     [ObservableProperty]
     private string _rfc = null!;
     
-    private readonly ICreditService _creditService;
-    private List<GetCreditResponse> CreditsListCopy { get; set; } = new();
+    private readonly IPaymentLayoutService _paymentLayoutService;
+    private List<PaymentLayoutResponse> PaymentLayoutsListCopy { get; set; } = new();
     
-    public ObservableCollection<GetCreditResponse> CreditsList { get; set; } = new();
+    public ObservableCollection<PaymentLayoutResponse> PaymentLayoutsList { get; set; } = new();
 
 
     public PaymentLayoutGenerationViewModel()
     {
-        _creditService = new CreditService("http://localhost:8080/api/v1/credit");
+        _paymentLayoutService = new PaymentLayoutService("http://localhost:8080/api/v1/payment-layout");
 
         LoadData();
         Initialize();
@@ -57,10 +56,10 @@ public partial class PaymentLayoutGenerationViewModel : ViewModelBase
     {
         try
         {
-            var result = await _creditService.GetCreditsAsync();
-            CreditsListCopy = result;
+            var result = await _paymentLayoutService.GetPaymentLayouts();
+            PaymentLayoutsListCopy = result;
             
-            FillObservableCollection(CreditsList, result);
+            FillObservableCollection(PaymentLayoutsList, result);
         }
         catch (ApiException)
         {
@@ -77,14 +76,14 @@ public partial class PaymentLayoutGenerationViewModel : ViewModelBase
     {
         if (string.IsNullOrEmpty(Rfc))
         {
-            FillObservableCollection(CreditsList, CreditsListCopy);
+            FillObservableCollection(PaymentLayoutsList, PaymentLayoutsListCopy);
             return;
         }
 
-        var filteredCredits = CreditsListCopy.Where(credit => credit.ClientRfc.Contains(Rfc, StringComparison.OrdinalIgnoreCase));
+        var filteredCredits = PaymentLayoutsListCopy.Where(p => p.clientRfc.Contains(Rfc, StringComparison.OrdinalIgnoreCase));
 
         var enumerable = filteredCredits.ToList();
-        CreditsList.Clear();
+        PaymentLayoutsList.Clear();
 
         if (enumerable.Count == 0)
         {
@@ -94,26 +93,26 @@ public partial class PaymentLayoutGenerationViewModel : ViewModelBase
         {
             foreach (var client in enumerable.ToList())
             {
-                CreditsList.Add(client);
+                PaymentLayoutsList.Add(client);
             }
         }
     }
 
     [RelayCommand]
-    public async void DownloadPaymentLayout()
+    public async Task DownloadPaymentLayout(int paymentLayoutId)
     {
         if (Avalonia.Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             var topLevel = TopLevel.GetTopLevel(desktop.MainWindow);
 
-            var file = await topLevel.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+            var file = await topLevel!.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
             {
                 Title = "Guardar Layout de Cobro"
             });
 
             if (file != null)
             {
-                GeneratePaymentLayout(file.Path.ToString());
+                GeneratePaymentLayout(file.Path.ToString(), paymentLayoutId);
                 Console.WriteLine("PDF guardado exitosamente en: " + file.Path);
             }
 
@@ -130,89 +129,87 @@ public partial class PaymentLayoutGenerationViewModel : ViewModelBase
         }
     }
     
-    private static void GeneratePaymentLayout(string destinationPath)
+    private  void GeneratePaymentLayout(string destinationPath, int paymentLayoutId)
     {
+        PaymentLayoutResponse paymentLayoutResponse = PaymentLayoutsList.FirstOrDefault(p => p.paymentLayoutId == paymentLayoutId)!;
+        
         // Datos de ejemplo
-        int duracionPrestamoMeses = 6;
-        DateTime fechaInicio = new DateTime(2024, 1, 1);
-        string titulo = "Layout de Cobros";
-        string nombreFinanciera = "Financiera Independiente";
-        string nombreCliente = "Juan Pérez";
-        string tipoCredito = "Automoviles";
-        string montoPrestado = "80,000";
-        string plazo = "12";
-        string noCredito = "XYZ12121";
+        const string pdfTitle = "Layout de Cobros";
+        const string financialName = "Financiera Independiente";
+        var startDate = DateTime.Parse(paymentLayoutResponse.startDate);
+        var clientName = paymentLayoutResponse.clientName;
+        var creditType = paymentLayoutResponse.CreditType.Description;
+        var amount = paymentLayoutResponse.CreditType.Amount.ToString(CultureInfo.InvariantCulture);
+        var term = paymentLayoutResponse.CreditType.Term.ToString();
+        var duration = paymentLayoutResponse.CreditType.Term;
+        var termType = paymentLayoutResponse.CreditType.TermType;
         
         destinationPath = Uri.UnescapeDataString(new Uri(destinationPath).LocalPath) + ".pdf";
 
-        // Crear o abrir el documento PDF existente en modo de añadir
         using (var fs = new FileStream(destinationPath, FileMode.Create))
         {
-            // Crear un documento PDF
             Document doc = new Document(PageSize.A4);
             PdfWriter writer = PdfWriter.GetInstance(doc, fs);
 
-            // Abrir el documento
             doc.Open();
 
-            // Agregar contenido al documento
             PdfContentByte canvas = writer.DirectContent;
 
-            // Agregar título centrado
-            Paragraph title = new Paragraph(titulo, FontFactory.GetFont(FontFactory.HELVETICA, 16, Font.BOLD));
+            Paragraph title = new Paragraph(pdfTitle, FontFactory.GetFont(FontFactory.HELVETICA, 16, Font.BOLD));
             title.Alignment = Element.ALIGN_CENTER;
             title.SpacingAfter = 20f;
             doc.Add(title);
 
-            // Agregar información
             Paragraph info = new Paragraph();
-            info.Add(new Phrase("Nombre de la financiera: " + nombreFinanciera));
+            info.Add(new Phrase("Nombre de la financiera: " + financialName));
             info.Add(Chunk.NEWLINE);
-            info.Add(new Phrase("Nombre del cliente: " + nombreCliente));
+            info.Add(new Phrase("Nombre del cliente: " + clientName));
             info.Add(Chunk.NEWLINE);
-            info.Add(new Phrase("Tipo de crédito: " + tipoCredito));
+            info.Add(new Phrase("Tipo de crédito: " + creditType));
             info.Add(Chunk.NEWLINE);
-            info.Add(new Phrase("Monto prestado: " + montoPrestado));
+            info.Add(new Phrase("Monto prestado: " + amount));
             info.Add(Chunk.NEWLINE);
-            info.Add(new Phrase("Plazo: " + plazo + " meses"));
+            info.Add(new Phrase("Tipo de Plazo: " + termType));
             info.Add(Chunk.NEWLINE);
-            info.Add(new Phrase("Número de crédito: " + noCredito));
+            info.Add(new Phrase("Plazo: " + term));
             info.Add(Chunk.NEWLINE);
             info.Add(new Phrase("Fecha de elaboración: " + DateTime.Now.Date));
             doc.Add(info);
 
-            // Agregar tabla para los pagos mensuales
-            PdfPTable table = new PdfPTable(4);
-            table.WidthPercentage = 100;
-            table.HorizontalAlignment = Element.ALIGN_CENTER;
-            table.SpacingBefore = 20f;
+            var table = new PdfPTable(4)
+            {
+                WidthPercentage = 100,
+                HorizontalAlignment = Element.ALIGN_CENTER,
+                SpacingBefore = 20f
+            };
 
-            // Agregar encabezados de la tabla
             string[] headers = { "Número", "Mes", "Saldo", "Monto a Cobrar" };
             foreach (var header in headers)
             {
-                PdfPCell headerCell = new PdfPCell(new Phrase(header, FontFactory.GetFont(FontFactory.HELVETICA, 12, BaseColor.WHITE)));
-                headerCell.BackgroundColor = new BaseColor(51, 51, 51);
-                headerCell.HorizontalAlignment = Element.ALIGN_CENTER;
+                var headerCell = new PdfPCell(new Phrase(header, FontFactory.GetFont(FontFactory.HELVETICA, 12, BaseColor.WHITE)))
+                    {
+                        BackgroundColor = new BaseColor(51, 51, 51),
+                        HorizontalAlignment = Element.ALIGN_CENTER
+                    };
+                
                 table.AddCell(headerCell);
             }
 
-            // Calcular y agregar datos de pagos mensuales a la tabla
-            for (int i = 0; i < duracionPrestamoMeses; i++)
-            {
-                string mes = fechaInicio.AddMonths(i).ToString("MMMM yyyy");
-                decimal monto = 1000; // Ejemplo de monto fijo
+            var balance = paymentLayoutResponse.CreditType.Amount;
+            var amountToPay = balance / duration;
 
+            for (int i = 0; i < duration; i++)
+            {
+                var month = startDate.AddMonths(i).ToString("MMMM yyyy");
                 table.AddCell((i + 1).ToString());
-                table.AddCell(mes);
-                table.AddCell(""); // Este campo se puede llenar con los saldos
-                table.AddCell(monto.ToString());
+                table.AddCell(month);
+                table.AddCell(balance.ToString(CultureInfo.InvariantCulture));
+                table.AddCell(amountToPay.ToString(CultureInfo.InvariantCulture));
+                balance -= amountToPay;
             }
 
-            // Agregar tabla al documento
             doc.Add(table);
 
-            // Cerrar el documento
             doc.Close();
         }
     }

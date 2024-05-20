@@ -30,6 +30,7 @@ public partial class ClientPageViewModel : ViewModelBase
     public ClientPageViewModel()
     {
         _clientService = new ClientService("http://localhost:8080/api/v1/client");
+        BtnRegisterClient = true;
     }
     
     public ClientPageViewModel(Client client)

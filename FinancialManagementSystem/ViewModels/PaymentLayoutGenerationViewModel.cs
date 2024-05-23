@@ -107,7 +107,8 @@ public partial class PaymentLayoutGenerationViewModel : ViewModelBase
 
             var file = await topLevel!.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
             {
-                Title = "Guardar Layout de Cobro"
+                Title = "Guardar Layout de Cobro",
+                SuggestedFileName = "Layout"
             });
 
             if (file != null)
@@ -119,7 +120,7 @@ public partial class PaymentLayoutGenerationViewModel : ViewModelBase
         }
     }
     
-    private void FillObservableCollection<T>(ObservableCollection<T> observableCollection, List<T> listToCopy)
+    private static void FillObservableCollection<T>(ICollection<T> observableCollection, List<T> listToCopy)
     {
         observableCollection.Clear();
         
@@ -129,89 +130,122 @@ public partial class PaymentLayoutGenerationViewModel : ViewModelBase
         }
     }
     
-    private  void GeneratePaymentLayout(string destinationPath, int paymentLayoutId)
+   private void GeneratePaymentLayout(string destinationPath, int paymentLayoutId)
     {
-        PaymentLayoutResponse paymentLayoutResponse = PaymentLayoutsList.FirstOrDefault(p => p.paymentLayoutId == paymentLayoutId)!;
+        var paymentLayoutResponse = PaymentLayoutsList.FirstOrDefault(p => p.paymentLayoutId == paymentLayoutId)!;
+
+        var interestRate = paymentLayoutResponse.CreditType.Iva / 100;
+        var vatRate = paymentLayoutResponse.CreditType.Iva / 100;
+        var amountValue = paymentLayoutResponse.CreditType.Amount;
+        var vatValue = amountValue * vatRate;
+        var interestValue = amountValue * interestRate;
         
-        // Datos de ejemplo
         const string pdfTitle = "Layout de Cobros";
         const string financialName = "Financiera Independiente";
-        var startDate = DateTime.Parse(paymentLayoutResponse.startDate);
         var clientName = paymentLayoutResponse.clientName;
+        var startDate = DateTime.Parse(paymentLayoutResponse.startDate);
         var creditType = paymentLayoutResponse.CreditType.Description;
-        var amount = paymentLayoutResponse.CreditType.Amount.ToString(CultureInfo.InvariantCulture);
+        var amount = amountValue.ToString("C", CultureInfo.CurrentCulture);
         var term = paymentLayoutResponse.CreditType.Term.ToString();
         var duration = paymentLayoutResponse.CreditType.Term;
         var termType = paymentLayoutResponse.CreditType.TermType;
+        var interest = interestRate.ToString("P1", CultureInfo.CurrentCulture);
+        var vat = vatRate.ToString("P1", CultureInfo.CurrentCulture);
+        var totalAmount = (amountValue + vatValue + interestValue).ToString("C", CultureInfo.CurrentCulture);
         
         destinationPath = Uri.UnescapeDataString(new Uri(destinationPath).LocalPath) + ".pdf";
 
         using (var fs = new FileStream(destinationPath, FileMode.Create))
         {
-            Document doc = new Document(PageSize.A4);
-            PdfWriter writer = PdfWriter.GetInstance(doc, fs);
+            var doc = new Document(PageSize.A4);
+            var writer = PdfWriter.GetInstance(doc, fs);
 
             doc.Open();
 
-            PdfContentByte canvas = writer.DirectContent;
-
-            Paragraph title = new Paragraph(pdfTitle, FontFactory.GetFont(FontFactory.HELVETICA, 16, Font.BOLD));
-            title.Alignment = Element.ALIGN_CENTER;
-            title.SpacingAfter = 20f;
+            var title = new Paragraph(pdfTitle, FontFactory.GetFont(FontFactory.HELVETICA, 16, Font.BOLD))
+            {
+                Alignment = Element.ALIGN_CENTER,
+                SpacingAfter = 20f
+            };
+            
             doc.Add(title);
 
-            Paragraph info = new Paragraph();
-            info.Add(new Phrase("Nombre de la financiera: " + financialName));
-            info.Add(Chunk.NEWLINE);
-            info.Add(new Phrase("Nombre del cliente: " + clientName));
-            info.Add(Chunk.NEWLINE);
-            info.Add(new Phrase("Tipo de crédito: " + creditType));
-            info.Add(Chunk.NEWLINE);
-            info.Add(new Phrase("Monto prestado: " + amount));
-            info.Add(Chunk.NEWLINE);
-            info.Add(new Phrase("Tipo de Plazo: " + termType));
-            info.Add(Chunk.NEWLINE);
-            info.Add(new Phrase("Plazo: " + term));
-            info.Add(Chunk.NEWLINE);
-            info.Add(new Phrase("Fecha de elaboración: " + DateTime.Now.Date));
-            doc.Add(info);
+            var tableInfo = new PdfPTable(2)
+            {
+                WidthPercentage = 100,
+                SpacingBefore = 20f,
+                SpacingAfter = 20f
+            };
+            
+            AddCellToTable(tableInfo, "Financiera:", financialName, true);
+            AddCellToTable(tableInfo, "Tipo de crédito:", creditType, true);
+            AddCellToTable(tableInfo, "Cliente:", clientName, true);
+            AddCellToTable(tableInfo, "Tipo de Plazo:", termType, true);
+            AddCellToTable(tableInfo, "Monto prestado:", amount, true);
+            AddCellToTable(tableInfo, "Fecha de elaboración:", DateTime.Now.Date.ToString("d"), true);
+            AddCellToTable(tableInfo, "Monto Total:", totalAmount, true);
+            AddCellToTable(tableInfo, "Plazo:", term, true);
+            AddCellToTable(tableInfo, "", "", true);
+            AddCellToTable(tableInfo, "Interes:", interest, true);
+            AddCellToTable(tableInfo, "", "", true);
+            AddCellToTable(tableInfo, "Iva:", vat, true);
+            AddCellToTable(tableInfo, "", "", true);
+            
+            doc.Add(tableInfo);
 
-            var table = new PdfPTable(4)
+            var table = new PdfPTable(5)
             {
                 WidthPercentage = 100,
                 HorizontalAlignment = Element.ALIGN_CENTER,
                 SpacingBefore = 20f
             };
 
-            string[] headers = { "Número", "Mes", "Saldo", "Monto a Cobrar" };
+            string[] headers = { "Número", "Mes", "Saldo Capital", "Saldo Intereses", "Monto a Cobrar" };
             foreach (var header in headers)
             {
                 var headerCell = new PdfPCell(new Phrase(header, FontFactory.GetFont(FontFactory.HELVETICA, 12, BaseColor.WHITE)))
-                    {
-                        BackgroundColor = new BaseColor(51, 51, 51),
-                        HorizontalAlignment = Element.ALIGN_CENTER
-                    };
+                {
+                    BackgroundColor = new BaseColor(51, 51, 51),
+                    HorizontalAlignment = Element.ALIGN_CENTER
+                };
                 
                 table.AddCell(headerCell);
             }
 
-            var balance = paymentLayoutResponse.CreditType.Amount;
-            var amountToPay = balance / duration;
+            var capital = amountValue;
+            var interests = interestValue + vatValue;
+            
+            var capitalToPay = capital / duration;
+            var interestsToPay = interests / duration;
 
-            for (int i = 0; i < duration; i++)
+            var amountToPay = capitalToPay + interestsToPay;
+            
+            for (var i = 0; i < duration; i++)
             {
                 var month = startDate.AddMonths(i).ToString("MMMM yyyy");
                 table.AddCell((i + 1).ToString());
                 table.AddCell(month);
-                table.AddCell(balance.ToString(CultureInfo.InvariantCulture));
-                table.AddCell(amountToPay.ToString(CultureInfo.InvariantCulture));
-                balance -= amountToPay;
+                table.AddCell(capital.ToString("C", CultureInfo.CurrentCulture));
+                table.AddCell(interests.ToString("C", CultureInfo.CurrentCulture));
+                table.AddCell(amountToPay.ToString("C", CultureInfo.CurrentCulture));
+                
+                capital -= capitalToPay;
+                interests -= interestsToPay;
             }
 
             doc.Add(table);
 
             doc.Close();
         }
+    }
+
+    private static void AddCellToTable(PdfPTable table, string label, string value, bool noBorder = false)
+    {
+        var labelCell = new PdfPCell(new Phrase(label + " " + value))
+        {
+            Border = noBorder ? Rectangle.NO_BORDER : Rectangle.BOX // Eliminar bordes si noBorder es true
+        };
+        table.AddCell(labelCell);
     }
 
     

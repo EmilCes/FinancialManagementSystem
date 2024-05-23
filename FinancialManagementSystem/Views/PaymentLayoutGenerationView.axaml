@@ -40,21 +40,6 @@
                       Grid.Row="0"
                       VerticalAlignment="Top">
                     
-                    <ComboBox Grid.Column="0" Grid.Row="0"  
-                              Height="35"
-                              Width="300"
-                              Margin="20, 10, 0, 0"
-                              Background="#eee" 
-                              Foreground="#686868" 
-                              FontSize="16"
-                              FontFamily="{StaticResource MontserratFont}"
-                              BorderBrush="#613ED0"
-                              BorderThickness="0,0,0,2"
-                              PlaceholderText="Tipo de Layout"
-                              ItemsSource="{Binding LayoutTypes}"
-                              SelectedItem="{Binding SelectedItem}">
-                    </ComboBox>
-                    
                     <TextBox Grid.Column="2"
                              Grid.Row="0"
                              Watermark="RFC" 
@@ -76,7 +61,7 @@
                             FontFamily="{StaticResource MontserratFont}"
                             Height="35"
                             Width="100"
-                            Command="{Binding DownloadPaymentLayout}"
+                            Command="{Binding FilterCreditsByRfcCommand}"
                     />
                     
                     <Separator Grid.Column="0" 
@@ -94,7 +79,7 @@
                               VerticalAlignment="Top">
                 <ItemsControl ItemsSource="{Binding PaymentLayoutsList}"
                               VerticalAlignment="Top"
-                              x:Name="IC">
+                              x:Name="Ic">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Border Background="White"
@@ -150,7 +135,7 @@
                                             Grid.Column="1"
                                             Grid.Row="0"
                                             Grid.RowSpan="3"
-                                            Command="{Binding #IC.((viewModels:PaymentLayoutGenerationViewModel)DataContext).DownloadPaymentLayout}"
+                                            Command="{Binding #Ic.((viewModels:PaymentLayoutGenerationViewModel)DataContext).DownloadPaymentLayout}"
                                             CommandParameter="{Binding #PaymentLayoutId.Text}"/>
                                 </Grid>
                             </Border>

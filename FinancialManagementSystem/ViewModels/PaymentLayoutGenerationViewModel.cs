@@ -37,19 +37,13 @@ public partial class PaymentLayoutGenerationViewModel : ViewModelBase
     public PaymentLayoutGenerationViewModel()
     {
         _paymentLayoutService = new PaymentLayoutService("http://localhost:8080/api/v1/payment-layout");
-
-        LoadData();
+        
         Initialize();
     }
     
     private async void Initialize()
     {
         await LoadCommand();
-    }
-
-    private void LoadData()
-    {
-        LayoutTypes = ["Mes", "Año", "Periodo Completo"];
     }
     
     private async Task LoadCommand()
@@ -114,7 +108,7 @@ public partial class PaymentLayoutGenerationViewModel : ViewModelBase
             if (file != null)
             {
                 GeneratePaymentLayout(file.Path.ToString(), paymentLayoutId);
-                Console.WriteLine("PDF guardado exitosamente en: " + file.Path);
+                DialogMessages.ShowMessage("Generación Exitosa", "Layout de Cobro descargado con éxito.");
             }
 
         }
@@ -243,10 +237,9 @@ public partial class PaymentLayoutGenerationViewModel : ViewModelBase
     {
         var labelCell = new PdfPCell(new Phrase(label + " " + value))
         {
-            Border = noBorder ? Rectangle.NO_BORDER : Rectangle.BOX // Eliminar bordes si noBorder es true
+            Border = noBorder ? Rectangle.NO_BORDER : Rectangle.BOX
         };
         table.AddCell(labelCell);
     }
-
     
 }

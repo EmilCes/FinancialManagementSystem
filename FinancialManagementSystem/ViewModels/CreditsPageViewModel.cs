@@ -105,8 +105,6 @@ public partial class CreditsPageViewModel : ViewModelBase
                     Term = creditType.Term.ToString(CultureInfo.InvariantCulture);
                     State = 1;
                     
-                    SetSelectedTermType(creditType.TermType);
-                    
                     Dispatcher.UIThread.InvokeAsync(() =>
                         {
                             GetPoliticsCommand(creditType.Politics);
@@ -124,9 +122,9 @@ public partial class CreditsPageViewModel : ViewModelBase
     public async Task ModifyCreditTypeCommand()
     {
         var politics = GetSelectedPolitics();
-        string termType = GetSelectedTermType();
+        string termType = "Mensual";
         
-        if (!Validations.ValidateFields(this) || !_validPolitics)
+        if (!Validations.ValidateFields(this))
         {
             DialogMessages.ShowInvalidFieldsMessage();
             return;
@@ -208,37 +206,6 @@ public partial class CreditsPageViewModel : ViewModelBase
         _validPolitics = (politics.Count != 0);
 
         return politics;
-    }
-
-    private void SetSelectedTermType(string termType)
-    {
-        switch (termType)
-        {
-            case "Quincenal":
-                BiweeklyTermType = true;
-                break;
-            case "Semanal":
-                WeeklyTermType = true;
-                break;
-            case "Mensual":
-                MonthlyTermType = true;
-                break;
-            default:
-                DialogMessages.ShowMessage("Error", "Hubo un error al cargar el tipo de credito");
-                break;
-        }
-    }
-    
-    private string GetSelectedTermType()
-    {
-        _validTermType = true;
-        
-        if (WeeklyTermType) return "Semanal";
-        if (BiweeklyTermType) return "Quincenal";
-        if (MonthlyTermType) return "Mensual";
-
-        _validTermType = false;
-        return string.Empty;
     }
 
     [RelayCommand]

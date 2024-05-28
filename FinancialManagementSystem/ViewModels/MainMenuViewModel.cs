@@ -71,8 +71,8 @@ public partial class MainMenuViewModel : ViewModelBase
         SetItemsBasedOnRole(employee.Role);
         string username = employee.FirstName + " " + employee.LastName;
         Username = username;
-        //SetItemsBasedOnRole("ASESOR_CREDITO");
-        SetItemsBasedOnRole("ANALISTA_COBRO");
+        SetItemsBasedOnRole("ASESOR_CREDITO");
+        //SetItemsBasedOnRole("ANALISTA_COBRO");
         //SetItemsBasedOnRole("ANALISTA_CREDITO");
         //SetItemsBasedOnRole("ADMIN");
     }
@@ -96,6 +96,7 @@ public partial class MainMenuViewModel : ViewModelBase
                 Items.Add(new ListItemTemplate(typeof(HomePageViewModel), "Menu Principal", "HomeRegular"));
                 Items.Add(new ListItemTemplate(typeof(PoliticsPageViewModel), "Politicas", ""));
                 Items.Add(new ListItemTemplate(typeof(RegisterPoliticPageViewModel), "Registrar politica", ""));
+                Items.Add(new ListItemTemplate(typeof(CreditsPageViewModel), "Creditos", ""));
                 Items.Add(new ListItemTemplate(typeof(CreditTypePageViewModel), "Registrar Crédito", ""));
                 Items.Add(new ListItemTemplate(typeof(EmployeeRegistrationPageViewModel), "Registrar Trabajador", ""));
                 Items.Add(new ListItemTemplate(typeof(SearchWorkerPageViewModel), "Buscar Trabajador", ""));
@@ -107,7 +108,6 @@ public partial class MainMenuViewModel : ViewModelBase
             case "ANALISTA_CREDITO":
                 Items.Add(new ListItemTemplate(typeof(HomePageViewModel), "Menu Principal", "HomeRegular"));
                 Items.Add(new ListItemTemplate(typeof(ValidateCreditApplicationPageViewModel), "Validación de solicitudes", ""));
-                Items.Add(new ListItemTemplate(typeof(CreditsPageViewModel), "Validación", ""));
 
                 break;
             case "ASESOR_CREDITO":

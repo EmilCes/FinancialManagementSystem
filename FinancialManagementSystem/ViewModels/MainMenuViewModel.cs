@@ -46,6 +46,21 @@ public partial class MainMenuViewModel : ViewModelBase
         {
             CurrentPage = new ClientsPageViewModel();
         });
+        
+        messenger.Register<MainMenuViewModel, PaymentUploadMessage>(this, (_, message) =>
+        {
+            CurrentPage = new PaymentUploadPageViewModel();
+        });
+        
+        messenger.Register<MainMenuViewModel, ViewPaymentMessage>(this, (_, message) =>
+        {
+            CurrentPage = new ConductPaymentPageViewModel(message.Value);
+        });
+        
+        messenger.Register<MainMenuViewModel, ViewPaymentMessageWithoutPayment>(this, (_, message) =>
+        {
+            CurrentPage = new ConductPaymentPageViewModel(message.Value);
+        });
 
         messenger.Register<MainMenuViewModel, ViewCreditAplicationMessage>(this, (_, message) =>
         { 
@@ -104,6 +119,8 @@ public partial class MainMenuViewModel : ViewModelBase
             case "ANALISTA_COBRO":
                 Items.Add(new ListItemTemplate(typeof(HomePageViewModel), "Menu Principal", "HomeRegular"));
                 Items.Add(new ListItemTemplate(typeof(PaymentLayoutGenerationViewModel), "Layouts de Cobro", ""));
+                Items.Add(new ListItemTemplate(typeof(PaymentUploadPageViewModel), "Subir cobro", ""));
+                Items.Add(new ListItemTemplate(typeof(EfficienciesPageViewModel), "Eficiencias", ""));
                 break;
             case "ANALISTA_CREDITO":
                 Items.Add(new ListItemTemplate(typeof(HomePageViewModel), "Menu Principal", "HomeRegular"));

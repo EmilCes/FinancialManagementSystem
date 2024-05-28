@@ -17,6 +17,6 @@ public class CreditType: ObservableObject
 
     public override string ToString()
     {
-        return Description + " " + Term;
+        return Description + " " +  TermType + " " + Term + " " + Amount;
     }
 }

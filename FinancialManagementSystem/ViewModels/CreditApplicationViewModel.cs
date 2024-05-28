@@ -281,7 +281,6 @@ public partial class CreditApplicationViewModel : ViewModelBase
             DisableColor = new SolidColorBrush(Colors.DarkGray);
         }
     }
-
     
     private bool ValidateFields()
     {
@@ -322,8 +321,7 @@ public partial class CreditApplicationViewModel : ViewModelBase
         creditApplicationRequest.SecondReference = referenceTwo;
         creditApplicationRequest.SelectedCredit = creditType;
         creditApplicationRequest.SelectedCredit.CreditTypeId = creditType.CreditTypeId;
-        
-        
+        creditApplicationRequest.idCreditType = SelectedCredit.CreditTypeId;
 
         if (_identificationDocument != null && _proofOfAddress != null && _proofOfIncome != null)
         {
@@ -334,7 +332,8 @@ public partial class CreditApplicationViewModel : ViewModelBase
             try
             {
                 await _creditApplicationService.CreateAplicationAsync(creditApplicationRequest);
-                DialogMessages.ShowMessage("Registro Exitoso", "El Cliente fue registrado correctamente.");
+                DialogMessages.ShowMessage("Aplicación exitosa", "La solicitud se realizo exitosamente.");
+
             }
             catch (ApiException)
             {
@@ -399,12 +398,17 @@ public partial class CreditApplicationViewModel : ViewModelBase
         {
             string[]? directory = await openFileDialog.ShowAsync(desktop.MainWindow!);
 
-            if (directory!.Length > 0)
+            FileInfo fileInfo = new FileInfo(directory[0]);
+            long maxSizeInBytes = 10 * 1024 * 1024; 
+
+            if (fileInfo.Length > maxSizeInBytes)
             {
-                Console.WriteLine(directory[0]);
+                DialogMessages.ShowMessage("Archivo muy grande", "El archivo excede el tamaño máximo de 10mb");
+            }
+            else
+            {
                 _identificationDocument = ReadPdfFileToBytes(directory[0]);
                 LblIdentificationDocument = FILE_SELECTED;
-                
             }
         }
     }
@@ -420,9 +424,15 @@ public partial class CreditApplicationViewModel : ViewModelBase
         {
             string[] directory = await openFileDialog.ShowAsync(desktop.MainWindow);
 
-            if (directory!.Length > 0)
+            FileInfo fileInfo = new FileInfo(directory[0]);
+            long maxSizeInBytes = 10 * 1024 * 1024; 
+
+            if (fileInfo.Length > maxSizeInBytes)
             {
-                Console.WriteLine(directory[0]);
+                DialogMessages.ShowMessage("Archivo muy grande", "El archivo excede el tamaño máximo de 10mb");
+            }
+            else
+            {
                 _proofOfIncome = ReadPdfFileToBytes(directory[0]);
                 LblProofOfIncomeDocument = FILE_SELECTED;
             }
@@ -442,9 +452,18 @@ public partial class CreditApplicationViewModel : ViewModelBase
 
             if (directory!.Length > 0)
             {
-                Console.WriteLine(directory[0]);
-                _proofOfAddress = ReadPdfFileToBytes(directory[0]);
-                LblProofOfAddressDocument = FILE_SELECTED;
+                FileInfo fileInfo = new FileInfo(directory[0]);
+                long maxSizeInBytes = 10 * 1024 * 1024; 
+
+                if (fileInfo.Length > maxSizeInBytes)
+                {
+                    DialogMessages.ShowMessage("Archivo muy grande", "El archivo excede el tamaño máximo de 10mb");
+                }
+                else
+                {
+                    _proofOfAddress = ReadPdfFileToBytes(directory[0]);
+                    LblProofOfAddressDocument = FILE_SELECTED;
+                }
             }
         }
     }
@@ -469,6 +488,12 @@ public partial class CreditApplicationViewModel : ViewModelBase
             Console.WriteLine("Error al leer el archivo PDF: " + ex.Message);
             return null;
         }
+    }
+    
+    [RelayCommand]
+    public void SelectCreditCommand()
+    {
+    
     }
     
     [RelayCommand]

@@ -81,7 +81,7 @@
                                     Orientation="Horizontal">
                             <ComboBox  
                                      Height="40"
-                                     Width="160"
+                                     Width="250"
                                      Margin="35, 10, 35, 0"
                                      Background="#eee" 
                                      Foreground="#686868" 

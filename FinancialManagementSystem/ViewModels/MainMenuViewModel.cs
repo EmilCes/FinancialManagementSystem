@@ -119,7 +119,7 @@ public partial class MainMenuViewModel : ViewModelBase
                 Items.Add(new ListItemTemplate(typeof(HomePageViewModel), "Menu Principal", "HomeRegular"));
                 Items.Add(new ListItemTemplate(typeof(PaymentLayoutGenerationViewModel), "Layouts de Cobro", ""));
                 Items.Add(new ListItemTemplate(typeof(PaymentUploadPageViewModel), "Subir cobro", ""));
-
+                Items.Add(new ListItemTemplate(typeof(EfficienciesPageViewModel), "Eficiencias", ""));
                 break;
             case "ANALISTA_CREDITO":
                 Items.Add(new ListItemTemplate(typeof(HomePageViewModel), "Menu Principal", "HomeRegular"));

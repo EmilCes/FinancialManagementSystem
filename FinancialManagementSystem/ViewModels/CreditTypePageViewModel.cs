@@ -42,9 +42,9 @@ public partial class CreditTypePageViewModel : ViewModelBase
     public async Task RegisterCreditTypeCommand()
     {
         var politics = GetSelectedPolitics();
-        var termType = GetSelectedTermType();
+        var termType = "Mensual";
         
-        if (!Validations.ValidateFields(this) || !_validTermType)
+        if (!Validations.ValidateFields(this))
         {
             DialogMessages.ShowInvalidFieldsMessage();
             return;
@@ -102,7 +102,10 @@ public partial class CreditTypePageViewModel : ViewModelBase
 
             foreach (var politic in response)
             {
-                Politics.Add(politic);
+                if (politic.state.Equals("Activo"))
+                {
+                    Politics.Add(politic);
+                }
             }
         }
         catch (ApiException)
@@ -122,18 +125,6 @@ public partial class CreditTypePageViewModel : ViewModelBase
         _validPolitics = (politics.Count != 0);
 
         return politics;
-    }
-
-    private string GetSelectedTermType()
-    {
-        _validTermType = true;
-        
-        if (WeeklyTermType) return "Semanal";
-        if (BiweeklyTermType) return "Quincenal";
-        if (MonthlyTermType) return "Mensual";
-
-        _validTermType = false;
-        return string.Empty;
     }
     
     [ObservableProperty]

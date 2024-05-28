@@ -49,22 +49,7 @@
                 <ScrollViewer Grid.Column="0" Grid.Row="1" Grid.RowSpan="2">
                        <StackPanel
                             Spacing="10">
-                    <Label Margin="35, 0, 35, 0" 
-                           Content="Tipo de Plazo" />
-                    <StackPanel Margin="30, 10, 35, 0" 
-                                Orientation="Horizontal"
-                                Spacing="10"
-                                HorizontalAlignment="Center">
-                        <RadioButton GroupName="Credit Term"
-                                     Content="Semanal"
-                                     IsChecked="{Binding WeeklyTermType}"/>
-                        <RadioButton GroupName="Credit Term"
-                                     Content="Quincenal"
-                                     IsChecked="{Binding BiweeklyTermType}"/>
-                        <RadioButton GroupName="Credit Term"
-                                     Content="Mensual"
-                                     IsChecked="{Binding MonthlyTermType}"/>
-                    </StackPanel>
+    
                     <TextBox Watermark="Plazo" 
                              Height="40" 
                              Margin="35, 10, 35, 0"

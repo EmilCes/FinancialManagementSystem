@@ -5,6 +5,7 @@ public class CreditApplication
     public Client CreditApplicant { get; set; }
     public int  CreditApplicationId { get; set; }
     public string ClientRfc { get; set; }
+    public string Status { get; set; }
     public Models.CreditType SelectedCredit { get; set; }
     public Reference[] References { get; set; }
     public byte[] IdentificationPdf { get; set; }

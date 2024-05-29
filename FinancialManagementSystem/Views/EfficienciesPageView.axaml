@@ -1,0 +1,215 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:FinancialManagementSystem.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="FinancialManagementSystem.Views.EfficienciesPageView"
+             x:DataType="vm:EfficienciesPageViewModel">
+    
+    <Grid RowDefinitions="*,6*"
+          Background="Transparent">
+        
+        <Border Grid.Row="0"
+                Background="#613ED0"
+                Margin="18, 20, 18, 0"
+                CornerRadius="12.5">
+            <TextBlock Text="Crear solicitud de crédito" 
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Center"
+                       Margin="40, 15"
+                       Foreground="White" 
+                       FontSize="24"
+                       FontFamily="{StaticResource MontserratFont}"/>
+        </Border>
+        
+        <Border Grid.Row="1" 
+                Background="#F8F8F8"
+                BorderBrush="#B7B9BD"
+                BorderThickness="0.5,0,0.5,2"
+                Margin="18, 18, 18, 18"
+                CornerRadius="12.5"
+                BoxShadow="">
+            
+            <ScrollViewer Margin="1">
+                <StackPanel>
+                    <StackPanel>
+                        <TextBlock Text="Eficiencias" 
+                                   HorizontalAlignment="Left"
+                                   Margin="35, 15"
+                                   Foreground="Black" 
+                                   FontSize="24"
+                                   FontFamily="{StaticResource MontserratFont}"/>
+                        <Separator Background="Black"
+                                   BorderThickness="0.5"
+                                   Margin="35,0,35,0"/>
+                    </StackPanel>
+                    
+                    <Grid ColumnDefinitions="Auto,*"
+                          RowDefinitions="Auto, Auto"
+                          Margin="0, 10">
+                        <Grid Grid.Column="1"
+                                    ColumnDefinitions="Auto, *">
+                            <TextBlock Text="{Binding TotalPaymentObtained}" 
+                                       Grid.Column="0"
+                                       MaxWidth="250"
+                                       HorizontalAlignment="Left"
+                                       TextWrapping="Wrap"
+                                       Margin="35, 15"
+                                       Foreground="Black" 
+                                       FontSize="17"
+                                       FontFamily="{StaticResource MontserratFont}"/>
+                            
+                            <Button Content="Buscar" HorizontalAlignment="Center"
+                                    HorizontalContentAlignment="Center"
+                                    VerticalAlignment="Top"
+                                    Height="40"
+                                    Grid.Column="1"
+                                    Background="#512da8"
+                                    Margin="0, 15, 0, 5"
+                                    Foreground="White"
+                                    FontFamily="{StaticResource MontserratFont}"
+                                    Command="{Binding GetEfficiencies}"/>
+                        </Grid>
+                        
+                        <StackPanel Grid.Column="0"
+                                    Spacing="10"
+                                    Orientation="Horizontal">
+                            <ComboBox  
+                                     Height="40"
+                                     Width="250"
+                                     Margin="35, 10, 35, 0"
+                                     Background="#eee" 
+                                     Foreground="#686868" 
+                                     FontSize="16"
+                                     FontFamily="{StaticResource MontserratFont}"
+                                     BorderBrush="#613ED0"
+                                     BorderThickness="0,0,0,2"
+                                     PlaceholderText="Año..."
+                                     SelectedItem="{Binding SelectedYear}"
+                                     ItemsSource="{Binding Years}"
+                                     >
+                            </ComboBox>
+                        </StackPanel>
+                        
+                        <Grid Grid.Column="1" Grid.Row="1"
+                              ColumnDefinitions="Auto, Auto">
+                            <TextBlock Text="{Binding TotalPaymentAwaited}" 
+                                       Grid.Column="0"
+                                       MaxWidth="250"
+                                       HorizontalAlignment="Left"
+                                       TextWrapping="Wrap"
+                                       Margin="35, 15"
+                                       Foreground="Black" 
+                                       FontSize="17"
+                                       FontFamily="{StaticResource MontserratFont}"/>
+                            
+                            <TextBlock Text="{Binding TotalEfficiencies}" 
+                                       Grid.Column="1"
+                                       MaxWidth="250"
+                                       HorizontalAlignment="Left"
+                                       TextWrapping="Wrap"
+                                       Margin="35, 15"
+                                       Foreground="Black" 
+                                       FontSize="17"
+                                       FontFamily="{StaticResource MontserratFont}"/>
+                        </Grid>
+                    </Grid>
+                    
+                    <ItemsControl ItemsSource="{Binding YearList}"
+                                  VerticalAlignment="Top"
+                                  x:Name="IC">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="White"
+                                        BorderBrush="#B7B9BD"
+                                        BorderThickness="0.5"
+                                        CornerRadius="10"
+                                        Padding="10"
+                                        Margin="5">
+                                    <Grid Margin="5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" /> <!-- Columna para el nombre -->
+                                            <ColumnDefinition Width="*" /> <!-- Columna para el pago esperado -->
+                                            <ColumnDefinition Width="*"/> <!-- Columna para el pago recibido -->
+                                            <ColumnDefinition Width="*"/> <!-- Columna para eficiencia -->
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Text="Mes"
+                                                    FontSize="20"
+                                                    Height="30"
+                                                    Foreground="#613ED0"
+                                                    FontWeight="Bold"
+                                                    Margin="0,5,0,5"
+                                                    Grid.Column="0"
+                                                    Grid.Row="0"/>
+                                        <TextBlock Text="Pagos realizados"
+                                                   FontSize="20"
+                                                   Height="30"
+                                                   Foreground="#613ED0"
+                                                   FontWeight="Bold"
+                                                   Margin="0,5,0,5"
+                                                   Grid.Column="1"
+                                                   Grid.Row="0"/>
+                                        <TextBlock Text="Pagos esperados"
+                                                   FontSize="20"
+                                                   Height="30"
+                                                   Foreground="#613ED0"
+                                                   FontWeight="Bold"
+                                                   Margin="0,5,0,5"
+                                                   Grid.Column="2"
+                                                   Grid.Row="0"/>
+                                        <TextBlock Text="Eficiencia del mes"
+                                                   FontSize="20"
+                                                   Height="30"
+                                                   Foreground="#613ED0"
+                                                   FontWeight="Bold"
+                                                   Margin="0,5,0,5"
+                                                   Grid.Column="3"
+                                                   Grid.Row="0"/>
+                                        <TextBlock Text="{Binding Month , Mode=OneWay}"
+                                                   FontSize="16"
+                                                   Height="20"
+                                                   Foreground="Black"
+                                                   FontWeight="Bold"
+                                                   Margin="0,5,0,5"
+                                                   Grid.Column="0"
+                                                   Grid.Row="1"/>
+                                        <TextBlock Text="{Binding ActualAmountString, Mode=OneWay}" 
+                                                   FontSize="16" 
+                                                   Height="20"
+                                                   Foreground="Black"
+                                                   FontWeight="Bold"
+                                                   Margin="0,5,0,5"
+                                                   Grid.Row="1"
+                                                   Grid.Column="1"/>
+                                        <TextBlock Text="{Binding ExpectedAmountString , Mode=OneWay}"
+                                                   FontSize="16"
+                                                   Height="20"
+                                                   Foreground="Black"
+                                                   FontWeight="Bold"
+                                                   Margin="0,5,0,5"
+                                                   Grid.Column="2"
+                                                   Grid.Row="1"/>
+                                        <TextBlock Text="{Binding EfficienciesString, Mode=OneWay}" 
+                                                   FontSize="16" 
+                                                   Height="20"
+                                                   Foreground="Black"
+                                                   FontWeight="Bold"
+                                                   Margin="0,5,0,5"
+                                                   Grid.Row="1"
+                                                   Grid.Column="3"/>
+                                        
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+    </Grid>
+</UserControl>

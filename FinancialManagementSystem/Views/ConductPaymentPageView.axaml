@@ -1,0 +1,125 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:vm="using:FinancialManagementSystem.ViewModels"
+             x:Class="FinancialManagementSystem.Views.ConductPaymentPageView"
+             x:DataType="vm:ConductPaymentPageViewModel"
+             >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        
+        <!-- TITLE -->
+        <Border Grid.Row="0"
+                Background="#613ED0"
+                Margin="18, 20, 18, 0"
+                CornerRadius="12.5">
+            <TextBlock Text="Subir información de cobro" 
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Center"
+                       Margin="40, 15"
+                       Foreground="White" 
+                       FontSize="24"
+                       FontFamily="{StaticResource MontserratFont}"/>
+        </Border>
+        
+        <!-- Contenido Principal -->
+        <Border Grid.Row="1"
+                Background="#F8F8F8"
+                BorderBrush="#B7B9BD"
+                BorderThickness="0.5,0,0.5,2"
+                Margin="18, 18, 18, 18"
+                CornerRadius="12.5"
+                BoxShadow="">
+            
+            <StackPanel Spacing="10"                
+                        Margin="0, 0, 0, 0">
+                <Border Background="#FFFFFF" CornerRadius="12.5"
+                        Margin="18, 18, 18, 18"
+                        >
+                    <StackPanel Spacing="5"
+                                Margin="18, 0, 18, 18">
+                            <!-- Información del cobro -->
+                        <StackPanel>
+                            <TextBlock Text="Credito" 
+                                       HorizontalAlignment="Left"
+                                       Margin="5, 10"
+                                       Foreground="Black" 
+                                       FontSize="24"
+                                       FontFamily="{StaticResource MontserratFont}"/>
+                            <Separator Background="Black"
+                                       BorderThickness="0.5"
+                                       Margin="0,0,0,5"/>
+                        </StackPanel>    
+                        
+                        <Grid Margin="18, 0, 18, 5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                            
+                                <!-- Cliente -->
+                                <TextBlock Text="Cliente:" FontSize="18" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,0,5"/>
+                                <TextBlock Text="{Binding ClientName}"  FontSize="18" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,0,5"/>
+                            
+                                <!-- Monto añadido -->
+                                <TextBlock Text="Monto añadido:" FontSize="18" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,0,5"/>
+                                <TextBlock Text="{Binding AddedAmount}"  FontSize="18" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,0,5"/>
+
+                                <!-- Saldo pendiente -->
+                                <TextBlock Text="Saldo pendiente:" FontSize="18" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,0,5"/>
+                                <TextBlock Text="{Binding PendingAmount}" FontSize="18" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,0,5"/>
+
+                                <!-- Fecha de corte -->
+                                <TextBlock Text="Fecha de corte:" Grid.Row="3" Grid.Column="0" FontSize="18" VerticalAlignment="Center" Margin="0,0,0,5"/>
+                                <TextBlock Text="{Binding Deadline}" FontSize="18" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,0,5"/>
+
+                                <!-- Meses restantes -->
+                                <TextBlock Text="Fechas de corte restantes:" Grid.Row="4" Grid.Column="0" FontSize="18" VerticalAlignment="Center" Margin="0,0,0,5"/>
+                                <TextBlock Text="{Binding RemainingMonths }" FontSize="18" Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,0,5"/>
+
+                                <!-- Monto restante para no generar intereses -->
+                                <TextBlock Text="Pago para no generar intereses:" Grid.Row="5" FontSize="18" Grid.Column="0" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding RemainingAmount}" FontSize="18" Grid.Row="5" Grid.Column="1" VerticalAlignment="Center"/>
+                            </Grid>
+                    </StackPanel>
+                </Border>
+                
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10" Margin="0,0,10,0">
+                    <Button Content="Realizar cobro"  
+                            Background="#512DA8"
+                            Width="150"
+                            Height="40"
+                            Foreground="White"
+                            FontFamily="{StaticResource MontserratFont}"
+                            HorizontalContentAlignment="Center"
+                            IsVisible="{Binding PaymentButtonVisibility}"
+                            Command="{Binding ConductPaymentCommand}"/>
+                    <Button Content="{Binding CancelButtonText}"  
+                            Background="#D32F2F"
+                            Width="150"
+                            Height="40"
+                            Foreground="White"
+                            FontFamily="{StaticResource MontserratFont}"
+                            HorizontalContentAlignment="Center"
+                            Command="{Binding CancelPaymentCommand}"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

@@ -41,6 +41,7 @@ public class Reference
 public class CreditApplicationRequest
 {
     public string ClientRfc { get; set; }
+    public int idCreditType { get; set; }
     public Models.CreditType SelectedCredit { get; set; }
     public Reference FirstReference { get; set; } 
     public Reference SecondReference { get; set; }

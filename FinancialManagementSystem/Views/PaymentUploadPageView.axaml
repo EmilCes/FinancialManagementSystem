@@ -1,0 +1,95 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:vm="using:FinancialManagementSystem.ViewModels"
+             x:Class="FinancialManagementSystem.Views.PaymentUploadPageView"
+             x:DataType="vm:PaymentUploadPageViewModel">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        
+        <!-- TITLE -->
+        <Border Grid.Row="0"
+                Background="#613ED0"
+                Margin="18, 20, 18, 0"
+                CornerRadius="12.5">
+            <TextBlock Text="Información de cobros" 
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Center"
+                       Margin="40, 15"
+                       Foreground="White" 
+                       FontSize="24"
+                       FontFamily="{StaticResource MontserratFont}"/>
+        </Border>
+        
+        <!-- Contenido Principal -->
+        <Border Grid.Row="1"
+                Margin="18, 20, 18, 0"
+                CornerRadius="12.5"
+                Background="#F8F8F8"
+                >
+            <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="20">
+            
+                <!-- Subir archivo CSV -->
+                <Border Background="#FFFFFF" Width="600" Height="100" CornerRadius="30">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="10">
+                        <TextBlock Text="Insertar archivo .csv" VerticalAlignment="Center" 
+                                   FontSize="18"/>
+                        <Button Content="Subir archivo"  
+                                Background="#512DA8"
+                                Width="130"
+                                Height="30"
+                                Foreground="White"
+                                FontFamily="{StaticResource MontserratFont}"
+                                HorizontalContentAlignment="Center"
+                                Command="{Binding UploadFileCommand}"
+                        />
+                    </StackPanel>
+                </Border>
+            
+
+                <!-- Separador -->
+                <Separator Background="Black"
+                           BorderThickness="0.5"
+                           Margin="0,0,0,5"/>
+
+                <!-- Buscar cliente -->
+                <Border Background="#FFFFFF" Width="600"  CornerRadius="30">
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Spacing="10">
+                        <TextBlock Text="Buscar cliente:"
+                                   FontStyle="Normal"
+                                   FontSize="18"
+                                   HorizontalAlignment="Center" 
+                                   Margin="0,20,0,0"/>
+                        <TextBox Width="200" Watermark="Ingresar RFC" 
+                                 Margin="35, 10, 35, 0"
+                                 Background="#eee" 
+                                 Foreground="#686868" 
+                                 FontSize="16"
+                                 FontFamily="{StaticResource MontserratFont}"
+                                 BorderThickness="0,0,0,2"
+                                 Text="{Binding Rfc}"/>
+                        <Button Content="Buscar" Width="100" HorizontalAlignment="Center"
+                                Background="#512DA8"
+                                Margin="0, 15, 0, 5"
+                                Foreground="White"
+                                FontFamily="{StaticResource MontserratFont}"
+                                Command="{Binding SearchClientCommand}"
+                                />
+                    </StackPanel>
+                </Border>
+
+            </StackPanel>
+            
+        </Border>
+        
+    </Grid>
+</UserControl>
+

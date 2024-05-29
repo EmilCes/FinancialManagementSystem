@@ -59,10 +59,8 @@ public partial class ValidateCreditApplicationPageViewModel: ViewModelBase
             CreditApplications = result;
             foreach (var aplication in result)
             {
-                if (aplication.Status == "ON_HOLD_FOR_DICTAMEN")
-                {
-                    CreditApplicationList.Add(aplication);
-                }
+                CreditApplicationList.Add(aplication);
+                Console.WriteLine(aplication.CreditApplicationId);
             }
         }
         catch (ApiException)

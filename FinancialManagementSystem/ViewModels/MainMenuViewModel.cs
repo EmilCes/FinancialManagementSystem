@@ -87,7 +87,7 @@ public partial class MainMenuViewModel : ViewModelBase
         string username = employee.FirstName + " " + employee.LastName;
         Username = username;
         SetItemsBasedOnRole("ASESOR_CREDITO");
-        //SetItemsBasedOnRole("ANALISTA_COBRO");
+        SetItemsBasedOnRole("ANALISTA_COBRO");
         //SetItemsBasedOnRole("ANALISTA_CREDITO");
         //SetItemsBasedOnRole("ADMIN");
     }

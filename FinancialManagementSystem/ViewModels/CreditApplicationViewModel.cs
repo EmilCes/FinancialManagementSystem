@@ -281,6 +281,7 @@ public partial class CreditApplicationViewModel : ViewModelBase
             DisableColor = new SolidColorBrush(Colors.DarkGray);
         }
     }
+
     
     private bool ValidateFields()
     {
@@ -321,7 +322,8 @@ public partial class CreditApplicationViewModel : ViewModelBase
         creditApplicationRequest.SecondReference = referenceTwo;
         creditApplicationRequest.SelectedCredit = creditType;
         creditApplicationRequest.SelectedCredit.CreditTypeId = creditType.CreditTypeId;
-        creditApplicationRequest.idCreditType = SelectedCredit.CreditTypeId;
+        
+        
 
         if (_identificationDocument != null && _proofOfAddress != null && _proofOfIncome != null)
         {
@@ -332,8 +334,7 @@ public partial class CreditApplicationViewModel : ViewModelBase
             try
             {
                 await _creditApplicationService.CreateAplicationAsync(creditApplicationRequest);
-                DialogMessages.ShowMessage("Aplicación exitosa", "La solicitud se realizo exitosamente.");
-
+                DialogMessages.ShowMessage("Credito registrado", "El crédito fue registrado correctamente");
             }
             catch (ApiException)
             {
@@ -488,12 +489,6 @@ public partial class CreditApplicationViewModel : ViewModelBase
             Console.WriteLine("Error al leer el archivo PDF: " + ex.Message);
             return null;
         }
-    }
-    
-    [RelayCommand]
-    public void SelectCreditCommand()
-    {
-    
     }
     
     [RelayCommand]

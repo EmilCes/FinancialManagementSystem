@@ -14,12 +14,13 @@
                 Background="#613ED0"
                 Margin="18, 20, 18, 0"
                 CornerRadius="12.5">
-            <TextBlock Text="Crear solicitud de crédito" 
+            <TextBlock Text="{Binding TitleBinding}" 
                        HorizontalAlignment="Left"
                        VerticalAlignment="Center"
                        Margin="40, 15"
                        Foreground="White" 
                        FontSize="24"
+                       
                        FontFamily="{StaticResource MontserratFont}"/>
         </Border>
         
@@ -43,6 +44,10 @@
                         <Separator Background="Black"
                                    BorderThickness="0.5"
                                    Margin="35,0,35,0"/>
+                        
+                        
+                        
+                        
                         
                         
                     </StackPanel>
@@ -70,18 +75,17 @@
                                     HorizontalContentAlignment="Center"
                                     Grid.Column="1"
                                     Background="#512da8"
-                                    Margin="0, 15, 0, 5"
+                                    Margin="0, 20, 0, 0"
                                     Foreground="White"
                                     FontFamily="{StaticResource MontserratFont}"
                                     Command="{Binding SearchClientCommand}"/>
                         </Grid>
                         
                         <StackPanel Grid.Column="1"
-                                    Spacing="10"
-                                    Orientation="Horizontal">
+                                    Spacing="10">
                             <ComboBox  
                                      Height="40"
-                                     Width="250"
+                                     Width="300"
                                      Margin="35, 10, 35, 0"
                                      Background="#eee" 
                                      Foreground="#686868" 
@@ -89,10 +93,9 @@
                                      FontFamily="{StaticResource MontserratFont}"
                                      BorderBrush="#613ED0"
                                      BorderThickness="0,0,0,2"
-                                     PlaceholderText="Crédito..."
+                                     PlaceholderText="Seleccione un crédito..."
                                      SelectedItem="{Binding SelectedCredit}"
-                                     ItemsSource="{Binding CreditTypes}"
-                                     >
+                                     ItemsSource="{Binding CreditTypes}">
                             </ComboBox>
                             
                         </StackPanel>
@@ -173,6 +176,7 @@
                                              FontFamily="{StaticResource MontserratFont}"
                                              BorderBrush="#613ED0"
                                              BorderThickness="0,0,0,2"
+                                             IsVisible="{Binding UploadDocs}"
                                              Command="{Binding AddIdentificationDocumentCommand}"
                                     />
                                 </StackPanel>
@@ -232,6 +236,7 @@
                                              FontFamily="{StaticResource MontserratFont}"
                                              BorderBrush="#613ED0"
                                              BorderThickness="0,0,0,2"
+                                             IsVisible="{Binding UploadDocs}"
                                              Command="{Binding AddProofOfAddressCommand}"
                                     />
                                 </StackPanel>
@@ -291,6 +296,7 @@
                                              FontFamily="{StaticResource MontserratFont}"
                                              BorderBrush="#613ED0"
                                              BorderThickness="0,0,0,2"
+                                             IsVisible="{Binding UploadDocs}"
                                              Command="{Binding AddProofOfIncomeCommand}"
                                     />
                                 </StackPanel>
@@ -467,7 +473,7 @@
                                 Spacing="10"
                                 Margin="0,0,35,15">
                             
-                        <Button Content="Crear solicitud" HorizontalAlignment="Center"
+                        <Button Content="Registrar solicitud" HorizontalAlignment="Center"
                                 IsVisible="{Binding BtnRegisterVisibility}"
                                 Background="#512da8"
                                 Margin="0, 20, 0, 0"
@@ -491,9 +497,20 @@
                                 Command="{Binding CancelCommand}"
 
                         />
+                        <Button Content="Descargar Documentos" HorizontalAlignment="Center"
+                                IsVisible="{Binding InfoClienteVisibility}"
+                                Background="#512da8"
+                                Margin="0, 20, 0, 0"
+                                Foreground="White"
+                                FontFamily="{StaticResource MontserratFont}"
+                                Height="40"
+                                Width="150"
+                                CornerRadius="5"
+                                Command="{Binding DownloadDocsCommand}"
+                                />
                         <Button Content="Ver Info. Cliente" HorizontalAlignment="Center"
                                 IsVisible="{Binding InfoClienteVisibility}"
-                                Background="DodgerBlue"
+                                Background="#512da8"
                                 Margin="0, 20, 0, 0"
                                 Foreground="White"
                                 FontFamily="{StaticResource MontserratFont}"
@@ -501,10 +518,10 @@
                                 Width="150"
                                 CornerRadius="5"
                                 Command="{Binding SeeInfoClientCommand}"
-                                />
+                        />
                         <Button Content="Enviar Validación" HorizontalAlignment="Center"
                                 IsVisible="{Binding InfoClienteVisibility}"
-                                Background="DodgerBlue"
+                                Background="#512da8"
                                 Margin="0, 20, 0, 0"
                                 Foreground="White"
                                 FontFamily="{StaticResource MontserratFont}"

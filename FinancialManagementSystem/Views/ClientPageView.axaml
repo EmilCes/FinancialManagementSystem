@@ -499,7 +499,8 @@
                             Height="40"
                             Width="170"
                             CornerRadius="5"
-                            IsEnabled="{Binding IsFormReadOnly}"
+                            IsVisible="{Binding RegisterAplicationReadOnly}"
+                            IsEnabled="{Binding RegisterAplicationReadOnly}"
                             Command="{Binding RegisterCreditApplicationCommand}"
                         />
                         <Button 
@@ -512,7 +513,7 @@
                             Width="150"
                             CornerRadius="5"
                             Command="{Binding SetFormAsModifiableCommand}"
-                            IsVisible="{Binding IsFormReadOnly}"
+                            IsVisible="{Binding ModifyReadOnly}"
                         />
                         <Button 
                             Content="Actualizar" HorizontalAlignment="Center"
@@ -524,7 +525,7 @@
                             Width="150"
                             CornerRadius="5"
                             Command="{Binding UpdateClientCommand}"
-                            IsVisible="{Binding !IsFormReadOnly}"
+                            IsVisible="{Binding UpdateNotReadOnly}"
                         />
                         <Button Content="Cancelar" HorizontalAlignment="Center"
                                 Background="#FF3204"
@@ -535,7 +536,7 @@
                                 Width="150"
                                 CornerRadius="5"
                                 Command="{Binding SetFormAsReadOnlyCommand}"
-                                IsVisible="{Binding !IsFormReadOnly}"
+                                IsVisible="{Binding CancelNotReadOnly}"
                         />
                         <Button Content="Cancelar" HorizontalAlignment="Center"
                                 Background="#FF3204"
@@ -546,7 +547,7 @@
                                 Width="150"
                                 CornerRadius="5"
                                 Command="{Binding CancelCommand}"
-                                IsVisible="{Binding IsFormReadOnly}"
+                                IsVisible="{Binding CancelReadOnly}"
 
                         />
                         <Button Content="Regresar a Validación" HorizontalAlignment="Center"

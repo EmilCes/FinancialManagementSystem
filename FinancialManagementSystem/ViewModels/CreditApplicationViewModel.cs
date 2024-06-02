@@ -333,7 +333,6 @@ public partial class CreditApplicationViewModel : ViewModelBase
             {
                 await _creditApplicationService.CreateAplicationAsync(creditApplicationRequest);
                 DialogMessages.ShowMessage("Aplicación exitosa", "La solicitud se realizo exitosamente.");
-
             }
             catch (ApiException)
             {

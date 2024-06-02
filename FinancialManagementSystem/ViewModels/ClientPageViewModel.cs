@@ -26,6 +26,15 @@ public partial class ClientPageViewModel : ViewModelBase
     private Client _currentClient;
     private CreditApplication _creditApplication;
     private IMessenger _messenger = Message.Instance;
+
+    [ObservableProperty] private bool _cancelReadOnly = true;
+    [ObservableProperty] private bool _cancelNotReadOnly = false;
+    [ObservableProperty] private bool _updateNotReadOnly = false;
+    [ObservableProperty] private bool _modifyReadOnly = true;
+    [ObservableProperty] private bool _registerReadOnly = true;
+    [ObservableProperty] private bool _registerAplicationReadOnly = true;
+    [ObservableProperty] private bool _btnReturnToValid;
+    
     
     public ClientPageViewModel()
     {
@@ -45,7 +54,7 @@ public partial class ClientPageViewModel : ViewModelBase
     {
         _btnRegisterClient = false;
         _btnReturnToValid = true;
-        _isFormReadOnly = false;
+        _isFormReadOnly = true;
         _clientService = new ClientService("http://localhost:8080/api/v1/client");
         _currentClient = client;
         _creditApplication = creditApplication;
@@ -53,6 +62,12 @@ public partial class ClientPageViewModel : ViewModelBase
         BtnReturnToValid = true;
         LoadClientData();
         SetFormAsReadOnlyCommand();
+        _cancelReadOnly = false;
+        _cancelNotReadOnly = false;
+        _updateNotReadOnly = false;
+        _modifyReadOnly = false;
+        _registerReadOnly = false;
+        _registerAplicationReadOnly = false;
     }
 
     private void HideAllButtons()
@@ -280,6 +295,12 @@ public partial class ClientPageViewModel : ViewModelBase
     public void SetFormAsModifiableCommand()
     {
         IsFormReadOnly = false;
+        _cancelReadOnly = false;
+        _cancelNotReadOnly = true;
+        _updateNotReadOnly = false;
+        _modifyReadOnly = false;
+        _registerAplicationReadOnly = false;
+        _registerReadOnly = true;
     }
     
     [RelayCommand]
@@ -292,7 +313,13 @@ public partial class ClientPageViewModel : ViewModelBase
     public void SetFormAsReadOnlyCommand()
     {
         IsFormReadOnly = true;
+        _cancelReadOnly = true;
+        _cancelNotReadOnly = false;
+        _updateNotReadOnly = true;
+        _modifyReadOnly = true;
+        _registerReadOnly = false;
         ModificationModeEnable = true;
+        _registerAplicationReadOnly = true;
     }
     
     [RelayCommand]
@@ -376,9 +403,6 @@ public partial class ClientPageViewModel : ViewModelBase
 
     [ObservableProperty] 
     private SolidColorBrush _clientRfcBrush;
-    
-    [ObservableProperty] 
-    private bool _btnReturnToValid;
 
     [ObservableProperty] 
     private bool _registerClientIsEnable;

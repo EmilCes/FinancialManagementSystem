@@ -82,14 +82,10 @@ public partial class MainMenuViewModel : ViewModelBase
             CurrentPage = new CreditApplicationViewModel(message.Value);
         });
         
-        //Employee employee = Employee.Instance;
-        //SetItemsBasedOnRole(employee.Role);
-        //string username = employee.FirstName + " " + employee.LastName;
-        //Username = username;
-        SetItemsBasedOnRole("ASESOR_CREDITO");
-        //SetItemsBasedOnRole("ANALISTA_COBRO");
-        //SetItemsBasedOnRole("ANALISTA_CREDITO");
-        //SetItemsBasedOnRole("ADMIN");
+        Employee employee = Employee.Instance;
+        SetItemsBasedOnRole(employee.Role);
+        string username = employee.FirstName + " " + employee.LastName;
+        Username = username; 
     }
 
     partial void OnSelectedListItemChanged(ListItemTemplate? value)

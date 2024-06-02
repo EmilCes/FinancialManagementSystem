@@ -98,7 +98,18 @@ public partial class PaymentUploadPageViewModel: ViewModelBase
                             var records = csv.GetRecords<PaymentRecord>();
                             foreach (var record in records)
                             {
-                                _messenger.Send(new ViewPaymentMessage(record));
+                                VerifyClientExistenceRequest verifyClientExistenceRequest = new VerifyClientExistenceRequest();
+                                verifyClientExistenceRequest.clientRfc = record.rfc;
+                                VerifyClientExistenceResponse response = await _clientService.VerifyClientExistenceAsync(verifyClientExistenceRequest);
+
+                                if (response.clientRegistered == true)
+                                {
+                                    _messenger.Send(new ViewPaymentMessage(record));
+                                }
+                                else
+                                {
+                                    DialogMessages.ShowMessage("Cliente no encontrado", "El cliente no se encontro en el sistema, verifique el RFC del archivo");
+                                }
                                 break;
                             }
                         }

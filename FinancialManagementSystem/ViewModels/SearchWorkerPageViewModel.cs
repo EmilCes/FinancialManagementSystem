@@ -105,6 +105,10 @@ public partial class SearchWorkerPageViewModel: ViewModelBase
         {
             DialogMessages.ShowHttpRequestExceptionMessage();
         }
+        catch (Exception)
+        {
+            DialogMessages.ShowApiExceptionMessage();
+        }
     }
     
     [ObservableProperty] 
